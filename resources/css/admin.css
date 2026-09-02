@@ -1,0 +1,384 @@
+.admin-panel {
+    background: #F2FAF5;
+}
+
+.admin-panel .main-content {
+    background: #F2FAF5;
+    min-height: 100vh;
+}
+
+.admin-panel .sidebar {
+    min-height: 100vh;
+
+    background: linear-gradient(
+        180deg,
+        #217346 0%,
+        #1D6F42 55%,
+        #185C37 100%
+    );
+
+    color: white;
+}
+
+.admin-panel .sidebar a {
+    display: block;
+
+    padding: 12px 14px;
+
+    margin-bottom: 6px;
+
+    border-radius: 10px;
+
+    color: rgba(255,255,255,.82);
+
+    text-decoration: none;
+
+    transition: .2s ease;
+}
+
+.admin-panel .sidebar a:hover {
+    background: rgba(255,255,255,.10);
+    color: white;
+}
+
+.admin-panel .sidebar a.active {
+    background: white;
+    color: #0F172A;
+    font-weight: 700;
+}
+
+.admin-panel .sidebar-separator {
+    border: 0;
+    border-top: 1px solid rgba(255,255,255,.25);
+
+    margin: 28px 0 24px;
+}
+
+.admin-panel .topbar {
+    background: white;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.admin-panel .avatar {
+    width: 54px;
+    height: 54px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #E2E8F0;
+    color: #0F172A;
+
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.admin-panel .stat-card,
+.admin-panel .profile-card {
+    background: white;
+
+    border: none;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 30px rgba(15,23,42,.07);
+}
+.admin-page-card{
+    background:#ffffff;
+    border-radius:22px;
+    padding:28px;
+
+    box-shadow:
+        0 10px 30px rgba(15,23,42,.06);
+}
+
+.admin-page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:24px;
+}
+
+.admin-count{
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    background:#E2E8F0;
+    color:#0F172A;
+
+    font-size:13px;
+    font-weight:700;
+}
+
+.admin-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:22px;
+}
+
+.admin-search-wrap{
+    width:100%;
+    max-width:520px;
+}
+
+.admin-search-input{
+    width:100%;
+
+    height:48px;
+
+    padding:0 16px;
+
+    border:1px solid #CBD5E1;
+    border-radius:14px;
+
+    background:#F8FAFC;
+
+    outline:none;
+
+    transition:.2s ease;
+}
+
+.admin-search-input:focus{
+    border-color:#334155;
+    background:#ffffff;
+
+    box-shadow:
+        0 0 0 4px rgba(51,65,85,.08);
+}
+
+.admin-teachers-table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+}
+
+.admin-teachers-table thead th{
+    padding:14px 16px;
+
+    background:#F8FAFC;
+
+    color:#64748B;
+
+    font-size:12px;
+    font-weight:700;
+
+    text-transform:uppercase;
+    letter-spacing:.5px;
+
+    border-bottom:1px solid #E2E8F0;
+}
+
+.admin-teachers-table tbody td{
+    padding:18px 16px;
+
+    border-bottom:1px solid #EEF2F7;
+
+    vertical-align:middle;
+}
+
+.admin-teachers-table tbody tr{
+    transition:.2s ease;
+}
+
+.admin-teachers-table tbody tr:hover{
+    background:#F8FAFC;
+}
+
+.teacher-person{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.teacher-avatar{
+    width:44px;
+    height:44px;
+
+    border-radius:14px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#E2E8F0;
+    color:#0F172A;
+
+    font-weight:800;
+}
+
+.teacher-name{
+    font-weight:700;
+    color:#0F172A;
+}
+
+.teacher-email{
+    margin-top:2px;
+
+    font-size:13px;
+    color:#64748B;
+}
+
+.teacher-location{
+    color:#0F172A;
+    font-weight:600;
+}
+
+.teacher-location span{
+    display:block;
+
+    margin-top:2px;
+
+    font-size:13px;
+    font-weight:400;
+
+    color:#64748B;
+}
+
+.teacher-styles{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+
+    max-width:360px;
+}
+
+.teacher-style-badge{
+    display:inline-flex;
+
+    padding:5px 9px;
+
+    border-radius:999px;
+
+    background:#F1F5F9;
+    color:#334155;
+
+    border:1px solid #E2E8F0;
+
+    font-size:12px;
+    font-weight:600;
+}
+
+.teacher-value{
+    color:#0F172A;
+    font-weight:600;
+}
+
+.admin-edit-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:8px 14px;
+
+    border-radius:10px;
+
+    background:#0F172A;
+    color:white;
+
+    text-decoration:none;
+    font-weight:700;
+
+    transition:.2s ease;
+}
+
+.admin-edit-btn:hover{
+    background:#334155;
+    color:white;
+}
+/* ADMIN FORM INPUTS */
+
+.admin-panel .form-control,
+.admin-panel .form-select {
+    background: #F4FBF6;
+    border: 1px solid #A7D7B8;
+    color: #185C37;
+    border-radius: 10px;
+}
+
+.admin-panel .form-control:focus,
+.admin-panel .form-select:focus {
+    background: #FFFFFF;
+    border-color: #217346;
+
+    box-shadow: 0 0 0 3px rgba(33, 115, 70, .15);
+}
+
+
+/* SAVE CHANGES BUTTON */
+
+.admin-panel .btn-dark {
+    background: #217346;
+    border-color: #217346;
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+.admin-panel .btn-dark:hover {
+    background: #185C37;
+    border-color: #185C37;
+    color: #FFFFFF;
+}
+/* =========================
+   ADMIN TEACHERS - GREEN THEME
+========================= */
+
+/* Search */
+.admin-panel .admin-search-input {
+    background: #F4FBF6;
+    border: 1px solid #A7D7B8;
+}
+
+.admin-panel .admin-search-input:focus {
+    background: #FFFFFF;
+    border-color: #217346;
+    box-shadow: 0 0 0 3px rgba(33, 115, 70, .15);
+}
+
+
+/* Table Header */
+.admin-panel .admin-teachers-table thead th {
+    background: #E8F5EC;
+    color: #217346;
+    border-bottom: 1px solid #C8E6D1;
+}
+
+
+/* Teacher Count */
+.admin-panel .admin-count {
+    background: #E8F5EC;
+    color: #217346;
+}
+
+
+/* Avatar */
+.admin-panel .teacher-avatar {
+    background: #E8F5EC;
+    color: #217346;
+}
+
+
+/* Edit Button */
+.admin-panel .admin-edit-btn {
+    background: #217346;
+    color: #FFFFFF;
+    border: none;
+}
+
+.admin-panel .admin-edit-btn:hover {
+    background: #185C37;
+    color: #FFFFFF;
+}
+
+
+/* Row Hover */
+.admin-panel .admin-teachers-table tbody tr:hover {
+    background: #F4FBF6;
+}

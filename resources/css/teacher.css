@@ -1,0 +1,839 @@
+/* ========================================
+   TEACHER PANEL
+======================================== */
+
+.teacher-panel {
+    background: #F8F5FF;
+    color: #1F2937;
+}
+
+.teacher-panel .main-content {
+    min-height: 100vh;
+    background: #F8F5FF;
+}
+
+
+/* ========================================
+   SIDEBAR
+======================================== */
+
+.teacher-panel .sidebar {
+    min-height: 100vh;
+
+    background: linear-gradient(
+        180deg,
+        #5B21B6 0%,
+        #7C3AED 50%,
+        #9333EA 100%
+    );
+
+    color: #FFFFFF;
+}
+
+
+/* SIDEBAR LINKS */
+
+.teacher-panel .sidebar a {
+    display: block;
+
+    padding: 12px 14px;
+    margin-bottom: 6px;
+
+    border-radius: 10px;
+
+    color: rgba(255, 255, 255, 0.88);
+
+    text-decoration: none;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
+}
+
+
+.teacher-panel .sidebar a:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: #FFFFFF;
+
+    transform: translateX(2px);
+}
+
+
+/* ACTIVE MENU */
+
+.teacher-panel .sidebar a.active {
+    background: #FFFFFF;
+
+    color: #7C3AED;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 8px 20px rgba(40, 15, 80, 0.18);
+}
+
+
+/* SIDEBAR SEPARATOR */
+
+.teacher-panel .sidebar hr {
+    border: 0;
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.22);
+
+    margin: 26px 0 22px;
+}
+
+
+/* SIDEBAR LOGOUT */
+
+.teacher-panel .sidebar .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.55);
+
+    color: #FFFFFF;
+
+    border-radius: 10px;
+
+    font-weight: 600;
+}
+
+.teacher-panel .sidebar .btn-outline-light:hover {
+    background: #FFFFFF;
+
+    color: #7C3AED;
+
+    border-color: #FFFFFF;
+}
+
+
+/* ========================================
+   TOPBAR
+======================================== */
+
+.teacher-panel .topbar {
+    background: #FFFFFF;
+
+    border-bottom:
+        1px solid #E9E1F7;
+}
+
+
+/* AVATAR */
+
+.teacher-panel .avatar {
+    width: 54px;
+    height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #EEE5FF;
+
+    color: #6D28D9;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+/* ========================================
+   CARDS
+======================================== */
+
+.teacher-panel .card,
+.teacher-panel .profile-card,
+.teacher-panel .stat-card,
+.teacher-panel .teacher-card {
+    background: #EEE5FF;
+
+    border: 1px solid #DDCCFF;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 10px 30px rgba(124, 58, 237, 0.08);
+}
+
+
+/* ========================================
+   INPUTS
+======================================== */
+
+.teacher-panel .form-control,
+.teacher-panel .form-select {
+    background: #FFFFFF;
+
+    border: 1px solid #D8C8F5;
+
+    border-radius: 10px;
+
+    color: #1F2937;
+}
+
+
+.teacher-panel .form-control:focus,
+.teacher-panel .form-select:focus {
+    background: #FFFFFF;
+
+    border-color: #7C3AED;
+
+    box-shadow:
+        0 0 0 3px rgba(124, 58, 237, 0.12);
+}
+
+
+/* ========================================
+   PRIMARY BUTTON
+======================================== */
+
+.teacher-panel .btn-primary {
+    background: #7C3AED;
+
+    border-color: #7C3AED;
+
+    color: #FFFFFF;
+
+    border-radius: 10px;
+
+    font-weight: 600;
+}
+
+
+.teacher-panel .btn-primary:hover {
+    background: #6D28D9;
+
+    border-color: #6D28D9;
+
+    color: #FFFFFF;
+}
+
+
+/* OUTLINE PRIMARY */
+
+.teacher-panel .btn-outline-primary {
+    border-color: #7C3AED;
+
+    color: #7C3AED;
+
+    border-radius: 10px;
+}
+
+.teacher-panel .btn-outline-primary:hover {
+    background: #7C3AED;
+
+    border-color: #7C3AED;
+
+    color: #FFFFFF;
+}
+
+
+/* ========================================
+   TEACHER REQUEST LIST
+======================================== */
+
+.teacher-request-list {
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+/* EACH REQUEST ROW */
+
+.teacher-request-row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(180px, 1.35fr)  /* Student */
+        minmax(140px, 1fr)     /* Dance */
+        minmax(130px, .9fr)    /* Date */
+        minmax(120px, .85fr)   /* Time */
+        105px                  /* Status */
+        310px;                 /* Actions */
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 12px 4px;
+
+    border-bottom: 1px solid #DDD1F2;
+
+    font-size: 13px;
+}
+
+
+.teacher-request-row:last-child {
+    border-bottom: none;
+}
+
+
+/* ========================================
+   STUDENT INFO
+======================================== */
+
+.request-student-name {
+    font-size: 14px;
+
+    margin-bottom: 2px;
+
+    line-height: 1.25;
+}
+
+
+.request-location {
+    color: #6B7280;
+
+    font-size: 11px;
+
+    font-weight: 400;
+
+    margin-top: 2px;
+}
+
+
+/* ========================================
+   REQUEST COLUMNS
+======================================== */
+
+.request-column {
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.request-column strong {
+    font-size: 13px;
+
+    line-height: 1.25;
+}
+
+
+.request-label {
+    color: #8B7AA8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    text-transform: uppercase;
+
+    letter-spacing: .35px;
+
+    margin-bottom: 2px;
+}
+
+
+/* ========================================
+   READ / UNREAD REQUEST
+======================================== */
+
+.teacher-request-row.request-unread
+.request-student-name,
+
+.teacher-request-row.request-unread
+.request-column strong {
+    font-weight: 700;
+}
+
+
+.teacher-request-row.request-read
+.request-student-name,
+
+.teacher-request-row.request-read
+.request-column strong {
+    font-weight: 400;
+}
+
+
+/* ========================================
+   REQUEST STATUS
+======================================== */
+
+.teacher-request-status {
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* PENDING */
+
+.teacher-request-status.pending {
+    background: #FFF3CD;
+
+    color: #7A5B00;
+}
+
+
+/* ACCEPTED */
+
+.teacher-request-status.accepted {
+    background: #D1FAE5;
+
+    color: #047857;
+}
+
+
+/* REFUSED */
+
+.teacher-request-status.refused {
+    background: #FEE2E2;
+
+    color: #B91C1C;
+}
+
+
+/* COMPLETED */
+
+.teacher-request-status.completed {
+    background: #DBEAFE;
+
+    color: #1D4ED8;
+}
+
+
+/* ========================================
+   REQUEST ACTIONS
+======================================== */
+
+.teacher-request-actions {
+    width: 310px;
+
+    display: grid;
+
+    grid-template-columns:
+        72px
+        105px
+        72px
+        72px;
+
+    align-items: center;
+
+    justify-content: end;
+
+    gap: 6px;
+}
+
+
+.teacher-request-actions .btn {
+    width: 100%;
+
+    font-size: 11px;
+
+    padding: 6px 8px;
+
+    border-radius: 8px;
+
+    white-space: nowrap;
+}
+
+/* ACCEPT BUTTON */
+
+.teacher-request-actions .btn-success {
+    background: #16A34A;
+
+    border-color: #16A34A;
+
+    color: #FFFFFF;
+}
+
+.teacher-request-actions .btn-success:hover {
+    background: #15803D;
+
+    border-color: #15803D;
+}
+
+
+/* REFUSE BUTTON */
+
+.teacher-request-actions .btn-outline-danger {
+    border-color: #DC2626;
+
+    color: #DC2626;
+}
+
+.teacher-request-actions .btn-outline-danger:hover {
+    background: #DC2626;
+
+    color: #FFFFFF;
+}
+
+
+/* ========================================
+   REVIEW BUTTON
+======================================== */
+
+.teacher-review-btn,
+.student-review-btn {
+    background: #FFFFFF !important;
+
+    border: 1px solid #7C3AED !important;
+
+    color: #5B21B6 !important;
+
+    font-size: 11px !important;
+
+    font-weight: 600;
+
+    padding: 5px 10px !important;
+
+    border-radius: 8px !important;
+
+    white-space: nowrap;
+
+    transition:
+        background .15s ease,
+        color .15s ease,
+        border-color .15s ease;
+}
+
+
+.teacher-review-btn .review-star,
+.student-review-btn .review-star {
+    color: #F5B301;
+
+    margin-right: 3px;
+}
+
+
+.teacher-review-btn:hover,
+.teacher-review-btn:focus,
+.student-review-btn:hover,
+.student-review-btn:focus {
+    background: #7C3AED !important;
+
+    border-color: #7C3AED !important;
+
+    color: #FFFFFF !important;
+}
+
+
+.teacher-review-btn:hover .review-star,
+.teacher-review-btn:focus .review-star,
+.student-review-btn:hover .review-star,
+.student-review-btn:focus .review-star {
+    color: #FFD54A;
+}
+
+
+/* ========================================
+   REVIEW AREA
+======================================== */
+
+.teacher-panel .student-review-area,
+.teacher-panel .teacher-review-area {
+    padding: 14px;
+
+    background: #FFFDF4;
+
+    border-top: 1px solid #EADCA0;
+
+    border-bottom: 1px solid #EADCA0;
+}
+
+
+.teacher-panel .student-review-area .form-label,
+.teacher-panel .teacher-review-area .form-label {
+    display: block;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
+
+    color: #374151;
+}
+
+
+/* ========================================
+   REVIEW STARS
+======================================== */
+
+.teacher-panel .student-review-stars,
+.teacher-panel .teacher-review-stars {
+    display: flex !important;
+
+    flex-direction: row-reverse !important;
+
+    justify-content: flex-end !important;
+
+    align-items: center !important;
+
+    gap: 4px !important;
+}
+
+
+/* HIDE RADIO BUTTONS COMPLETELY */
+
+.teacher-panel .student-review-stars input[type="radio"],
+.teacher-panel .teacher-review-stars input[type="radio"] {
+    display: none !important;
+
+    visibility: hidden !important;
+
+    opacity: 0 !important;
+
+    width: 0 !important;
+
+    height: 0 !important;
+
+    position: absolute !important;
+
+    pointer-events: none !important;
+}
+
+
+/* STAR */
+
+.teacher-panel .student-review-stars label,
+.teacher-panel .teacher-review-stars label {
+    display: inline-block !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    cursor: pointer;
+
+    font-size: 28px !important;
+
+    line-height: 1 !important;
+
+    color: #CBD5E1 !important;
+
+    transition:
+        color .15s ease,
+        transform .15s ease;
+}
+
+
+/* SELECTED STARS */
+
+.teacher-panel
+.student-review-stars
+input[type="radio"]:checked ~ label,
+
+.teacher-panel
+.teacher-review-stars
+input[type="radio"]:checked ~ label {
+    color: #F5B301 !important;
+}
+
+
+/* HOVER STARS */
+
+.teacher-panel .student-review-stars label:hover,
+.teacher-panel .student-review-stars label:hover ~ label,
+.teacher-panel .teacher-review-stars label:hover,
+.teacher-panel .teacher-review-stars label:hover ~ label {
+    color: #F5B301 !important;
+}
+
+
+.teacher-panel .student-review-stars label:hover,
+.teacher-panel .teacher-review-stars label:hover {
+    transform: scale(1.08);
+}
+
+
+/* CURRENT REVIEW */
+
+.teacher-panel .student-review-existing,
+.teacher-panel .teacher-review-existing {
+    margin-top: 8px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: #047857;
+}
+
+
+/* ========================================
+   PROFILE STUDENT PAGE
+======================================== */
+
+.teacher-panel .student-profile-section {
+    padding: 18px;
+
+    background: #FFFFFF;
+
+    border: 1px solid #DDD1F2;
+
+    border-radius: 14px;
+}
+
+
+/* ========================================
+   DANCE STYLE PRICE
+======================================== */
+
+.dance-style-price-card {
+    padding: 16px;
+
+    border: 1px solid #D8C8F5;
+
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.45);
+}
+
+
+.dance-style-rate {
+    margin-top: 10px;
+}
+
+
+.dance-style-price-card .input-group-text {
+    background: #F8F5FF;
+
+    border-color: #D8C8F5;
+}
+
+
+/* ========================================
+   TABLES
+======================================== */
+
+.teacher-panel .table {
+    background: transparent;
+}
+
+
+.teacher-panel .table thead th {
+    background: #E7DAFF;
+
+    color: #6D28D9;
+
+    border-bottom: 1px solid #D8C8F5;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.teacher-panel .table tbody td {
+    border-color: #DDD1F2;
+
+    font-size: 13px;
+}
+
+
+.teacher-panel .table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+
+/* ========================================
+   ALERTS
+======================================== */
+
+.teacher-panel .alert-success {
+    background: #DCFCE7;
+
+    color: #166534;
+
+    border-color: #BBF7D0;
+}
+
+
+.teacher-panel .alert-danger {
+    background: #FEE2E2;
+
+    color: #991B1B;
+
+    border-color: #FECACA;
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 1200px) {
+
+    .teacher-request-row {
+        grid-template-columns:
+            minmax(150px, 1.35fr)
+            minmax(90px, 0.75fr)
+            minmax(115px, 0.85fr)
+            minmax(105px, 0.85fr)
+            110px
+            230px;
+    }
+
+}
+
+
+@media (max-width: 1100px) {
+
+    .teacher-request-row {
+        grid-template-columns:
+            1fr
+            1fr;
+
+        gap: 10px;
+
+        padding: 14px 4px;
+    }
+
+
+    .teacher-request-actions {
+        grid-column: 1 / -1;
+
+        justify-content: flex-start;
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .teacher-panel .sidebar {
+        min-height: auto;
+    }
+
+
+    .teacher-request-row {
+        grid-template-columns: 1fr;
+    }
+
+
+    .teacher-request-actions {
+        grid-column: auto;
+
+        flex-wrap: wrap;
+
+        justify-content: flex-start;
+    }
+
+
+    .teacher-panel .student-review-area,
+    .teacher-panel .teacher-review-area {
+        padding: 12px;
+    }
+
+
+    .teacher-panel .student-review-stars label,
+    .teacher-panel .teacher-review-stars label {
+        font-size: 25px !important;
+    }
+
+}

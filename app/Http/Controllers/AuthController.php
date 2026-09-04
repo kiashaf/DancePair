@@ -6,11 +6,20 @@ use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Student;
 
+use App\Notifications\WelcomeToDancePairNotification;
+
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use App\Notifications\WelcomeToDancePairNotification;
+use Illuminate\Support\Facades\Password;
+
+use Illuminate\Support\Str;
+
 
 class AuthController extends Controller
 {
@@ -34,13 +43,8 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | VALIDATION
-        |--------------------------------------------------------------------------
-        */
-
         $validated = $request->validate([
+
             'name' => [
                 'required',
                 'string',
@@ -70,61 +74,59 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | CREATE ACCOUNT
+        | CREATE USER + PROFILE
         |--------------------------------------------------------------------------
         */
 
-        $user = DB::transaction(function () use ($validated) {
+        $user = DB::transaction(
+            function () use ($validated) {
 
-            /*
-            |--------------------------------------------------------------------------
-            | CREATE USER
-            |--------------------------------------------------------------------------
-            */
+                $user = User::create([
 
-            $user = User::create([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'password' => Hash::make(
-                    $validated['password']
-                ),
-                'role' => $validated['role'],
+                    'name' =>
+                        $validated['name'],
 
-                // New accounts are active by default.
-                'active' => true,
-            ]);
+                    'email' =>
+                        strtolower(
+                            trim(
+                                $validated['email']
+                            )
+                        ),
 
+                    'password' =>
+                        Hash::make(
+                            $validated['password']
+                        ),
 
-            /*
-            |--------------------------------------------------------------------------
-            | CREATE TEACHER PROFILE
-            |--------------------------------------------------------------------------
-            */
+                    'role' =>
+                        $validated['role'],
 
-            if ($user->role === 'teacher') {
-
-                Teacher::create([
-                    'user_id' => $user->id,
+                    'active' =>
+                        true,
                 ]);
+
+
+                if ($user->role === 'teacher') {
+
+                    Teacher::create([
+                        'user_id' =>
+                            $user->id,
+                    ]);
+                }
+
+
+                if ($user->role === 'student') {
+
+                    Student::create([
+                        'user_id' =>
+                            $user->id,
+                    ]);
+                }
+
+
+                return $user;
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | CREATE STUDENT PROFILE
-            |--------------------------------------------------------------------------
-            */
-
-            if ($user->role === 'student') {
-
-                Student::create([
-                    'user_id' => $user->id,
-                ]);
-            }
-
-
-            return $user;
-        });
+        );
 
 
         /*
@@ -132,10 +134,9 @@ class AuthController extends Controller
         | LOGIN NEW USER
         |--------------------------------------------------------------------------
         */
-        $user->notify(
-            new WelcomeToDancePairNotification()
-        );
+
         Auth::login($user);
+
 
         $request
             ->session()
@@ -144,33 +145,34 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | REDIRECT BY ROLE
+        | SEND EMAIL VERIFICATION
+        |--------------------------------------------------------------------------
+        |
+        | We DO NOT send Welcome email yet.
+        |
+        | First:
+        | User must prove that the email belongs to them.
+        |
+        */
+
+        $user
+            ->sendEmailVerificationNotification();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VERIFY EMAIL SCREEN
         |--------------------------------------------------------------------------
         */
 
-        if ($user->role === 'teacher') {
-
-            return redirect()
-                ->route('teacher.dashboard')
-                ->with(
-                    'success',
-                    'Welcome to DancePair! Your teacher account has been created successfully.'
-                );
-        }
-
-
-        if ($user->role === 'student') {
-
-            return redirect()
-                ->route('student.dashboard')
-                ->with(
-                    'success',
-                    'Welcome to DancePair! Your student account has been created successfully.'
-                );
-        }
-
-
-        return redirect('/');
+        return redirect()
+            ->route(
+                'verification.notice'
+            )
+            ->with(
+                'status',
+                'verification-link-sent'
+            );
     }
 
 
@@ -194,22 +196,18 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | VALIDATION
-        |--------------------------------------------------------------------------
-        */
+        $credentials =
+            $request->validate([
 
-        $credentials = $request->validate([
-            'email' => [
-                'required',
-                'email',
-            ],
+                'email' => [
+                    'required',
+                    'email',
+                ],
 
-            'password' => [
-                'required',
-            ],
-        ]);
+                'password' => [
+                    'required',
+                ],
+            ]);
 
 
         /*
@@ -218,43 +216,46 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if (!Auth::attempt($credentials)) {
+        if (
+            !Auth::attempt(
+                $credentials
+            )
+        ) {
 
             return back()
                 ->withErrors([
+
                     'email' =>
-                        'Email or password is incorrect.',
+                        app()->getLocale() === 'fr'
+                            ? 'L’adresse courriel ou le mot de passe est incorrect.'
+                            : 'Email or password is incorrect.',
+
                 ])
-                ->onlyInput('email');
+                ->onlyInput(
+                    'email'
+                );
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | GET AUTHENTICATED USER
-        |--------------------------------------------------------------------------
-        */
-
-        $user = Auth::user();
+        $user =
+            Auth::user();
 
 
         /*
         |--------------------------------------------------------------------------
         | BLOCK INACTIVE ACCOUNT
         |--------------------------------------------------------------------------
-        |
-        | The admin can deactivate a Teacher or Student without deleting
-        | their account. An inactive user cannot log in.
-        |
         */
 
         if (!$user->active) {
 
             Auth::logout();
 
+
             $request
                 ->session()
                 ->invalidate();
+
 
             $request
                 ->session()
@@ -263,10 +264,16 @@ class AuthController extends Controller
 
             return back()
                 ->withErrors([
+
                     'email' =>
-                        'Your DancePair account is currently inactive. Please contact support.',
+                        app()->getLocale() === 'fr'
+                            ? 'Votre compte DancePair est actuellement inactif. Veuillez contacter le support.'
+                            : 'Your DancePair account is currently inactive. Please contact support.',
+
                 ])
-                ->onlyInput('email');
+                ->onlyInput(
+                    'email'
+                );
         }
 
 
@@ -283,6 +290,48 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
+        | ADMIN
+        |--------------------------------------------------------------------------
+        |
+        | Admin account is managed internally by DancePair.
+        |
+        | If an old admin account existed before verification was added,
+        | we consider it trusted.
+        |
+        */
+
+        if (
+            $user->role === 'admin'
+            &&
+            !$user->hasVerifiedEmail()
+        ) {
+
+            $user
+                ->markEmailAsVerified();
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | REQUIRE EMAIL VERIFICATION
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $user->role !== 'admin'
+            &&
+            !$user->hasVerifiedEmail()
+        ) {
+
+            return redirect()
+                ->route(
+                    'verification.notice'
+                );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
         | REDIRECT BY ROLE
         |--------------------------------------------------------------------------
         */
@@ -291,7 +340,9 @@ class AuthController extends Controller
 
             return redirect()
                 ->intended(
-                    route('admin.dashboard')
+                    route(
+                        'admin.dashboard'
+                    )
                 );
         }
 
@@ -300,7 +351,9 @@ class AuthController extends Controller
 
             return redirect()
                 ->intended(
-                    route('teacher.dashboard')
+                    route(
+                        'teacher.dashboard'
+                    )
                 );
         }
 
@@ -309,18 +362,386 @@ class AuthController extends Controller
 
             return redirect()
                 ->intended(
-                    route('student.dashboard')
+                    route(
+                        'student.dashboard'
+                    )
+                );
+        }
+
+
+        return redirect('/');
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SHOW VERIFY EMAIL
+    |--------------------------------------------------------------------------
+    */
+
+    public function showVerifyEmail(
+        Request $request
+    ) {
+
+        $user =
+            $request->user();
+
+
+        if (
+            $user
+            &&
+            $user->hasVerifiedEmail()
+        ) {
+
+            return $this
+                ->redirectByRole(
+                    $user
+                );
+        }
+
+
+        return view(
+            'verify-email'
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESEND VERIFICATION EMAIL
+    |--------------------------------------------------------------------------
+    */
+
+    public function resendVerificationEmail(
+        Request $request
+    ) {
+
+        $user =
+            $request->user();
+
+
+        if (
+            $user->hasVerifiedEmail()
+        ) {
+
+            return $this
+                ->redirectByRole(
+                    $user
+                );
+        }
+
+
+        $user
+            ->sendEmailVerificationNotification();
+
+
+        return back()
+            ->with(
+                'status',
+                'verification-link-sent'
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFY EMAIL
+    |--------------------------------------------------------------------------
+    */
+
+    public function verifyEmail(
+        EmailVerificationRequest $request
+    ) {
+
+        $user =
+            $request->user();
+
+
+        $alreadyVerified =
+            $user->hasVerifiedEmail();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VERIFY
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$alreadyVerified) {
+
+            $request
+                ->fulfill();
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | WELCOME EMAIL
+            |--------------------------------------------------------------------------
+            |
+            | Welcome email is sent ONLY after email ownership
+            | has been successfully verified.
+            |
+            */
+
+            try {
+
+                $user->notify(
+                    new WelcomeToDancePairNotification()
+                );
+
+            } catch (\Throwable $exception) {
+
+                /*
+                 * Verification must remain successful even if
+                 * the Welcome email temporarily fails.
+                 */
+
+                report(
+                    $exception
+                );
+            }
+        }
+
+
+        return $this
+            ->redirectByRole(
+                $user
+            )
+            ->with(
+                'success',
+
+                app()->getLocale() === 'fr'
+                    ? 'Votre adresse courriel a été vérifiée avec succès.'
+                    : 'Your email address has been verified successfully.'
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SHOW FORGOT PASSWORD
+    |--------------------------------------------------------------------------
+    */
+
+    public function showForgotPassword()
+    {
+        return view(
+            'forgot-password'
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SEND PASSWORD RESET LINK
+    |--------------------------------------------------------------------------
+    */
+
+    public function sendPasswordResetLink(
+        Request $request
+    ) {
+
+        $validated =
+            $request->validate([
+
+                'email' => [
+                    'required',
+                    'email',
+                ],
+            ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SEND LINK
+        |--------------------------------------------------------------------------
+        |
+        | IMPORTANT:
+        |
+        | We intentionally ignore the result publicly.
+        |
+        | This prevents someone from discovering whether
+        | an email address has a DancePair account.
+        |
+        */
+
+        Password::sendResetLink([
+            'email' =>
+                strtolower(
+                    trim(
+                        $validated['email']
+                    )
+                ),
+        ]);
+
+
+        return back()
+            ->with(
+                'status',
+
+                app()->getLocale() === 'fr'
+
+                    ? 'Si un compte existe pour cette adresse courriel, un lien de réinitialisation a été envoyé.'
+
+                    : 'If an account exists for this email address, a password reset link has been sent.'
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SHOW RESET PASSWORD
+    |--------------------------------------------------------------------------
+    */
+
+    public function showResetPassword(
+        Request $request,
+        string $token
+    ) {
+
+        return view(
+            'reset-password',
+            [
+
+                'token' =>
+                    $token,
+
+                'email' =>
+                    $request->query(
+                        'email'
+                    ),
+            ]
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESET PASSWORD
+    |--------------------------------------------------------------------------
+    */
+
+    public function resetPassword(
+        Request $request
+    ) {
+
+        $validated =
+            $request->validate([
+
+                'token' => [
+                    'required',
+                ],
+
+                'email' => [
+                    'required',
+                    'email',
+                ],
+
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'confirmed',
+                ],
+            ]);
+
+
+        $status =
+            Password::reset(
+
+                $validated,
+
+                function (
+                    User $user,
+                    string $password
+                ) {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | SAVE NEW PASSWORD
+                    |--------------------------------------------------------------------------
+                    |
+                    | User model already has:
+                    |
+                    | 'password' => 'hashed'
+                    |
+                    */
+
+                    $user->password =
+                        $password;
+
+
+                    /*
+                     * Invalidate old remember-me tokens.
+                     */
+
+                    $user->setRememberToken(
+                        Str::random(60)
+                    );
+
+
+                    $user->save();
+
+
+                    event(
+                        new PasswordReset(
+                            $user
+                        )
+                    );
+                }
+            );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SUCCESS
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $status
+            ===
+            Password::PASSWORD_RESET
+        ) {
+
+            return redirect()
+                ->route(
+                    'login'
+                )
+                ->with(
+                    'status',
+
+                    app()->getLocale() === 'fr'
+
+                        ? 'Votre mot de passe a été réinitialisé. Vous pouvez maintenant vous connecter.'
+
+                        : 'Your password has been reset. You can now log in.'
                 );
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | FALLBACK
+        | INVALID / EXPIRED TOKEN
         |--------------------------------------------------------------------------
         */
 
-        return redirect('/');
+        return back()
+            ->withErrors([
+
+                'email' =>
+                    app()->getLocale() === 'fr'
+
+                        ? 'Ce lien de réinitialisation est invalide ou a expiré.'
+
+                        : 'This password reset link is invalid or has expired.',
+
+            ])
+            ->withInput(
+                $request->only(
+                    'email'
+                )
+            );
     }
 
 
@@ -330,13 +751,17 @@ class AuthController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function logout(Request $request)
-    {
+    public function logout(
+        Request $request
+    ) {
+
         Auth::logout();
+
 
         $request
             ->session()
             ->invalidate();
+
 
         $request
             ->session()
@@ -344,6 +769,49 @@ class AuthController extends Controller
 
 
         return redirect()
-            ->route('login');
+            ->route(
+                'login'
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | REDIRECT BY ROLE
+    |--------------------------------------------------------------------------
+    */
+
+    private function redirectByRole(
+        User $user
+    ) {
+
+        if ($user->role === 'admin') {
+
+            return redirect()
+                ->route(
+                    'admin.dashboard'
+                );
+        }
+
+
+        if ($user->role === 'teacher') {
+
+            return redirect()
+                ->route(
+                    'teacher.dashboard'
+                );
+        }
+
+
+        if ($user->role === 'student') {
+
+            return redirect()
+                ->route(
+                    'student.dashboard'
+                );
+        }
+
+
+        return redirect('/');
     }
 }

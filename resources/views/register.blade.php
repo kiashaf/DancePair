@@ -136,12 +136,13 @@
                 </label>
 
                 <input
-                    type="password"
-                    name="password"
-                    class="form-control login-input"
-                    placeholder="{{ __('auth.create_password') }}"
-                    required
-                >
+    type="password"
+    name="password"
+    class="form-control login-input"
+    placeholder="{{ __('auth.create_password') }}"
+    autocomplete="new-password"
+    required
+>
 
             </div>
 
@@ -153,12 +154,13 @@
                 </label>
 
                 <input
-                    type="password"
-                    name="password_confirmation"
-                    class="form-control login-input"
-                    placeholder="{{ __('auth.confirm_password_placeholder') }}"
-                    required
-                >
+    type="password"
+    name="password_confirmation"
+    class="form-control login-input"
+    placeholder="{{ __('auth.confirm_password_placeholder') }}"
+    autocomplete="new-password"
+    required
+>
 
             </div>
 

@@ -290,28 +290,117 @@ Route::get('/language/{locale}', function ($locale) {
     return redirect()->back();
 
 })->name('language.switch');
+
+/*
+|--------------------------------------------------------------------------
+| EMAIL VERIFICATION
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/email/verify',
+    [AuthController::class, 'showVerifyEmail']
+)
+    ->middleware('auth')
+    ->name('verification.notice');
+
+
+Route::get(
+    '/email/verify/{id}/{hash}',
+    [AuthController::class, 'verifyEmail']
+)
+    ->middleware([
+        'auth',
+        'signed',
+        'throttle:6,1',
+    ])
+    ->name('verification.verify');
+
+
+Route::post(
+    '/email/verification-notification',
+    [AuthController::class, 'resendVerificationEmail']
+)
+    ->middleware([
+        'auth',
+        'throttle:3,1',
+    ])
+    ->name('verification.send');
+
+
+/*
+|--------------------------------------------------------------------------
+| FORGOT PASSWORD
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/forgot-password',
+    [AuthController::class, 'showForgotPassword']
+)
+    ->middleware('guest')
+    ->name('password.request');
+
+
+Route::post(
+    '/forgot-password',
+    [AuthController::class, 'sendPasswordResetLink']
+)
+    ->middleware([
+        'guest',
+        'throttle:5,1',
+    ])
+    ->name('password.email');
+
+
+Route::get(
+    '/reset-password/{token}',
+    [AuthController::class, 'showResetPassword']
+)
+    ->middleware('guest')
+    ->name('password.reset');
+
+
+Route::post(
+    '/reset-password',
+    [AuthController::class, 'resetPassword']
+)
+    ->middleware([
+        'guest',
+        'throttle:5,1',
+    ])
+    ->name('password.update');
 /*
 |--------------------------------------------------------------------------
 | DancePair Client Messages
 |--------------------------------------------------------------------------
 */
 
-Route::get(
-    '/platform-messages/inbox',
-    [PlatformMessageController::class, 'inbox']
-)->name('platform-messages.inbox');
+Route::middleware([
+    'auth',
+    'verified',
+])->group(function () {
 
 
-Route::post(
-    '/platform-messages/{recipient}/shown',
-    [PlatformMessageController::class, 'shown']
-)->name('platform-messages.shown');
+    Route::get(
+        '/platform-messages/inbox',
+        [PlatformMessageController::class, 'inbox']
+    )->name('platform-messages.inbox');
 
 
-Route::post(
-    '/platform-messages/{recipient}/dismiss',
-    [PlatformMessageController::class, 'dismiss']
-)->name('platform-messages.dismiss');
+    Route::post(
+        '/platform-messages/{recipient}/shown',
+        [PlatformMessageController::class, 'shown']
+    )->name('platform-messages.shown');
+
+
+    Route::post(
+        '/platform-messages/{recipient}/dismiss',
+        [PlatformMessageController::class, 'dismiss']
+    )->name('platform-messages.dismiss');
+
+
+});
 /*
 |--------------------------------------------------------------------------
 | LOGIN
@@ -327,12 +416,19 @@ Route::get(
 Route::post(
     '/login',
     [AuthController::class, 'login']
-)->name('login.store');
+)
+    ->middleware('throttle:10,1')
+    ->name('login.store');
 
-Route::post(
-    '/bookings/{booking}/messages',
-    [BookingMessageController::class, 'store']
-)->name('bookings.messages.store');
+    Route::post(
+        '/bookings/{booking}/messages',
+        [BookingMessageController::class, 'store']
+    )
+        ->middleware([
+            'auth',
+            'verified',
+        ])
+        ->name('bookings.messages.store');
 /*
 |--------------------------------------------------------------------------
 | LOGOUT
@@ -353,7 +449,10 @@ Route::post(
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware([
+    'auth',
+    'verified',
+])->group(function () {
 
 
     /*

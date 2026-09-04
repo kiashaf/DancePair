@@ -1498,7 +1498,195 @@
             }
 
         }
+/* =========================================================
+   MOBILE NAVIGATION ONLY
+========================================================= */
 
+.home-mobile-menu-btn,
+.home-mobile-menu {
+    display: none;
+}
+
+@media (max-width: 720px) {
+
+    .home-navbar {
+        height: 72px;
+    }
+
+    .home-navbar-inner {
+        width: calc(100% - 28px);
+        gap: 10px;
+    }
+
+    .home-brand {
+        min-width: 0;
+    }
+
+    .home-brand-logo,
+    .home-brand-logo img {
+        width: 52px;
+        height: 52px;
+    }
+
+    /* Desktop navigation hidden only on mobile */
+    .home-nav-links {
+        display: none;
+    }
+
+    .home-nav-actions .home-login-btn,
+    .home-nav-actions .home-register-btn,
+    .home-nav-actions .home-dashboard-btn,
+    .home-nav-actions .home-logout-btn,
+    .home-nav-actions .home-user-name {
+        display: none;
+    }
+
+    .home-nav-actions {
+        margin-left: auto;
+        gap: 12px;
+    }
+
+    .home-language-switch {
+        font-size: 12px;
+        gap: 6px;
+    }
+
+    /* Hamburger */
+    .home-mobile-menu-btn {
+        width: 42px;
+        height: 42px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 0;
+
+        border: 1px solid rgba(255,255,255,.14);
+        border-radius: 10px;
+
+        background: rgba(255,255,255,.04);
+        color: #FFFFFF;
+
+        font-size: 23px;
+        line-height: 1;
+
+        cursor: pointer;
+    }
+
+    /* Dropdown mobile menu */
+    .home-mobile-menu {
+        position: absolute;
+
+        top: 72px;
+        left: 14px;
+        right: 14px;
+
+        z-index: 500;
+
+        padding: 14px;
+
+        border: 1px solid rgba(255,255,255,.10);
+        border-radius: 14px;
+
+        background: rgba(10,8,29,.98);
+
+        box-shadow:
+            0 20px 50px rgba(0,0,0,.45);
+
+        backdrop-filter: blur(20px);
+    }
+
+    .home-mobile-menu.open {
+        display: block;
+    }
+
+    .home-mobile-menu-links {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .home-mobile-menu-links a {
+        display: flex;
+        align-items: center;
+
+        min-height: 44px;
+
+        padding: 0 14px;
+
+        border-radius: 9px;
+
+        color: #E9E5F0;
+
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .home-mobile-menu-links a:hover {
+        background: rgba(255,255,255,.05);
+        color: #FFFFFF;
+    }
+
+    .home-mobile-menu-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        gap: 9px;
+
+        margin-top: 12px;
+        padding-top: 12px;
+
+        border-top:
+            1px solid rgba(255,255,255,.08);
+    }
+
+    .home-mobile-menu-actions a,
+    .home-mobile-menu-actions button {
+        min-height: 44px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+
+        border-radius: 10px;
+
+        font-size: 12px;
+        font-weight: 850;
+    }
+
+    .home-mobile-login,
+    .home-mobile-logout {
+        border:
+            1px solid rgba(255,255,255,.16);
+
+        background:
+            rgba(255,255,255,.03);
+
+        color: #FFFFFF;
+    }
+
+    .home-mobile-register,
+    .home-mobile-dashboard {
+        border: 0;
+
+        background:
+            linear-gradient(
+                90deg,
+                #F72585,
+                #7437FF
+            );
+
+        color: #FFFFFF;
+    }
+
+    .home-mobile-menu-actions form {
+        margin: 0;
+    }
+
+}
     </style>
 
 </head>
@@ -1673,7 +1861,14 @@
                 </a>
 
             @endauth
-
+            <button
+    type="button"
+    class="home-mobile-menu-btn"
+    id="homeMobileMenuBtn"
+    aria-label="Open menu"
+>
+    ☰
+</button>
         </div>
 
     </div>

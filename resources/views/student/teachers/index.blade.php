@@ -886,6 +886,93 @@
 
 
         {{-- =====================================================
+           TEACHING TYPE FILTER
+        ====================================================== --}}
+
+        <div class="row g-3 mt-1">
+
+
+            <div class="col-md-4">
+
+                <label class="form-label">
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Type de cours'
+                        : 'Teaching Type'
+                    }}
+
+                </label>
+
+
+                <select
+                    name="teaching_type"
+                    class="form-select"
+                >
+
+                    <option value="">
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Tous les types'
+                            : 'All Teaching Types'
+                        }}
+
+                    </option>
+
+
+                    <option
+                        value="face_to_face"
+                        @selected(
+                            request('teaching_type')
+                            ===
+                            'face_to_face'
+                        )
+                    >
+                        {{ app()->getLocale() === 'fr'
+                            ? 'En personne'
+                            : 'Face to Face'
+                        }}
+                    </option>
+
+
+                    <option
+                        value="public_place"
+                        @selected(
+                            request('teaching_type')
+                            ===
+                            'public_place'
+                        )
+                    >
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Lieu public'
+                            : 'Public Place'
+                        }}
+                    </option>
+
+
+                    <option
+                        value="online"
+                        @selected(
+                            request('teaching_type')
+                            ===
+                            'online'
+                        )
+                    >
+                        {{ app()->getLocale() === 'fr'
+                            ? 'En ligne'
+                            : 'Online'
+                        }}
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+
+        {{-- =====================================================
            NEW AVAILABILITY FILTERS
         ====================================================== --}}
 

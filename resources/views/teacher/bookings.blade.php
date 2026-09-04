@@ -805,17 +805,25 @@
 
                                             <span>
 
-                                                @if($isMine)
+                                            @if(
+    ($message->sender->role ?? null)
+    ===
+    'admin'
+)
 
-                                                    {{ __('teacher.you') }}
+    DancePair Support
 
-                                                @else
+@elseif($isMine)
 
-                                                    {{ $message->sender->name
-                                                        ?? __('teacher.student')
-                                                    }}
+    {{ __('teacher.you') }}
 
-                                                @endif
+@else
+
+    {{ $message->sender->name
+        ?? __('teacher.student')
+    }}
+
+@endif
 
                                             </span>
 

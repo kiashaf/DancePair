@@ -1700,23 +1700,32 @@
 
                                             <span>
 
-                                                @if($isMine)
+                                            @if(
+        ($message->sender->role ?? null)
+        ===
+        'admin'
+    )
 
-                                                    {{ app()->getLocale() === 'fr'
-                                                        ? 'Vous'
-                                                        : 'You'
-                                                    }}
+        DancePair Support
 
-                                                @else
+    @elseif($isMine)
 
-                                                    {{ $message->sender->name
-                                                        ?? (
-                                                            $booking->teacher->user->name
-                                                            ?? __('student.teacher')
-                                                        )
-                                                    }}
+        {{ app()->getLocale() === 'fr'
+            ? 'Vous'
+            : 'You'
+        }}
 
-                                                @endif
+    @else
+
+        {{ $message->sender->name
+            ?? (
+                $booking->teacher->user->name
+                ?? __('student.teacher')
+            )
+        }}
+
+    @endif
+
 
                                             </span>
 

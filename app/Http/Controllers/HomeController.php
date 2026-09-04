@@ -3,69 +3,208 @@
 namespace App\Http\Controllers;
 
 use App\Models\Teacher;
+use App\Models\DanceStyle;
+
 use Illuminate\Http\Request;
+
 
 class HomeController extends Controller
 {
-    public function index()
+    /*
+    |--------------------------------------------------------------------------
+    | HOME
+    |--------------------------------------------------------------------------
+    */
+
+    public function index(Request $request)
     {
         /*
         |--------------------------------------------------------------------------
-        | TOP TEACHERS
+        | DANCE STYLES FOR SEARCH COMBO
         |--------------------------------------------------------------------------
-        |
-        | - فقط Userهایی که واقعاً Teacher هستند
-        | - Rating و Review Count
-        | - Dance Styles + prices
-        | - حداکثر 10 نفر
-        |
         */
 
-        $topTeachers = Teacher::with([
-            'user',
+        $danceStyles = DanceStyle::query()
+            ->where('active', true)
+            ->orderBy('name')
+            ->get();
 
-            'danceStyles' => function ($query) {
-                $query->orderBy('name');
-            },
-        ])
-            ->whereHas('user', function ($query) {
 
-                $query->where(
-                    'role',
-                    'teacher'
+        /*
+        |--------------------------------------------------------------------------
+        | TEACHERS QUERY
+        |--------------------------------------------------------------------------
+        */
+
+        $query = Teacher::query()
+
+            ->with([
+                'user',
+
+                'danceStyles' => function ($query) {
+                    $query->orderBy('name');
+                },
+            ])
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | APPROVED REVIEW COUNT
+            |--------------------------------------------------------------------------
+            */
+
+            ->withCount([
+                'reviews' => function ($query) {
+
+                    $query
+                        ->where(
+                            'reviewer_type',
+                            'student'
+                        )
+                        ->where(
+                            'approved',
+                            true
+                        );
+                },
+            ])
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | APPROVED REVIEW AVERAGE
+            |--------------------------------------------------------------------------
+            */
+
+            ->withAvg([
+                'reviews' => function ($query) {
+
+                    $query
+                        ->where(
+                            'reviewer_type',
+                            'student'
+                        )
+                        ->where(
+                            'approved',
+                            true
+                        );
+                },
+            ], 'rating')
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | ONLY REAL + ACTIVE TEACHER ACCOUNTS
+            |--------------------------------------------------------------------------
+            */
+
+            ->whereHas(
+                'user',
+                function ($query) {
+
+                    $query
+                        ->where(
+                            'role',
+                            'teacher'
+                        )
+                        ->where(
+                            'active',
+                            true
+                        );
+                }
+            );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CITY / LOCATION SEARCH
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('location')) {
+
+            $location =
+                trim(
+                    $request->input('location')
                 );
-            })
 
-            ->withAvg(
-                'reviews',
-                'rating'
-            )
 
-            ->withCount(
-                'reviews'
-            )
+            $query->where(
+                function ($locationQuery) use ($location) {
 
+                    $locationQuery
+                        ->where(
+                            'city',
+                            'like',
+                            '%' . $location . '%'
+                        )
+
+                        ->orWhere(
+                            'province',
+                            'like',
+                            '%' . $location . '%'
+                        );
+                }
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DANCE STYLE SEARCH
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('dance_style_id')) {
+
+            $danceStyleId =
+                (int) $request->input(
+                    'dance_style_id'
+                );
+
+
+            $query->whereHas(
+                'danceStyles',
+                function ($danceStyleQuery) use ($danceStyleId) {
+
+                    $danceStyleQuery->where(
+                        'dance_styles.id',
+                        $danceStyleId
+                    );
+                }
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | RESULTS
+        |--------------------------------------------------------------------------
+        */
+
+        $topTeachers = $query
             ->orderByDesc(
                 'reviews_avg_rating'
             )
-
             ->orderByDesc(
                 'reviews_count'
             )
-
-            ->orderBy(
+            ->orderByDesc(
                 'id'
             )
-
-            ->take(10)
-
             ->get();
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | VIEW
+        |--------------------------------------------------------------------------
+        */
 
         return view(
             'home',
             compact(
-                'topTeachers'
+                'topTeachers',
+                'danceStyles'
             )
         );
     }

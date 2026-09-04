@@ -26,7 +26,8 @@ use App\Http\Controllers\AdminSettingsController;
 use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\AdminReviewController;
 use App\Http\Controllers\AdminPaymentController;
-
+use App\Http\Controllers\AdminConversationController;
+use App\Http\Controllers\AdminPageViewController;
 use App\Http\Controllers\HomeController;
 
 use App\Models\Teacher;
@@ -752,7 +753,28 @@ Route::delete(
     |--------------------------------------------------------------------------
     */
 
+/*
+|--------------------------------------------------------------------------
+| ADMIN CLIENT CONVERSATIONS
+|--------------------------------------------------------------------------
+*/
 
+Route::get(
+    '/admin/conversations',
+    [AdminConversationController::class, 'index']
+)->name('admin.conversations');
+
+
+Route::get(
+    '/admin/conversations/{booking}',
+    [AdminConversationController::class, 'show']
+)->name('admin.conversations.show');
+
+
+Route::post(
+    '/admin/conversations/{booking}/reply',
+    [AdminConversationController::class, 'reply']
+)->name('admin.conversations.reply');
     /*
     |--------------------------------------------------------------------------
     | Admin Bookings
@@ -834,6 +856,23 @@ Route::delete(
     '/admin/platform-messages/{platformMessage}',
     [AdminPlatformMessageController::class, 'destroy']
 )->name('admin.platform-messages.destroy');
+
+
+/*
+|--------------------------------------------------------------------------
+| Admin Page Views
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/admin/page-views',
+    [
+        AdminPageViewController::class,
+        'index'
+    ]
+)->name(
+    'admin.page-views'
+);
     /*
     |--------------------------------------------------------------------------
     | Dashboard
@@ -922,5 +961,43 @@ Route::delete(
         '/admin/settings',
         [AdminSettingsController::class, 'update']
     )->name('admin.settings.update');
+
+    /*
+|--------------------------------------------------------------------------
+| ADMIN DANCE TYPES
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/admin/settings/dance-styles',
+    [
+        AdminSettingsController::class,
+        'storeDanceStyle'
+    ]
+)->name(
+    'admin.settings.dance-styles.store'
+);
+
+
+Route::put(
+    '/admin/settings/dance-styles/{danceStyle}',
+    [
+        AdminSettingsController::class,
+        'updateDanceStyle'
+    ]
+)->name(
+    'admin.settings.dance-styles.update'
+);
+
+
+Route::patch(
+    '/admin/settings/dance-styles/{danceStyle}/toggle',
+    [
+        AdminSettingsController::class,
+        'toggleDanceStyle'
+    ]
+)->name(
+    'admin.settings.dance-styles.toggle'
+);
 
 });

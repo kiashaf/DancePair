@@ -152,6 +152,18 @@
 >
     Bookings
 </a>
+<a
+    href="{{ route('admin.conversations') }}"
+    class="{{ request()->routeIs('admin.conversations*')
+        ? 'active'
+        : ''
+    }}"
+>
+    {{ app()->getLocale() === 'fr'
+        ? 'Conversations clients'
+        : 'Client Conversations'
+    }}
+</a>
 
 
 <a href="{{ route('admin.reviews') }}"
@@ -184,7 +196,18 @@
                 </a>
 
             </div>
-
+            <a
+    href="{{ route('admin.page-views') }}"
+    class="{{ request()->routeIs('admin.page-views*')
+        ? 'active'
+        : ''
+    }}"
+>
+    {{ app()->getLocale() === 'fr'
+        ? 'Visites du site'
+        : 'Page Views'
+    }}
+</a>
 
             <hr class="sidebar-separator">
 

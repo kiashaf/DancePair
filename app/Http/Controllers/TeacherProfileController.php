@@ -242,6 +242,28 @@ class TeacherProfileController extends Controller
 
                 /*
                 |--------------------------------------------------------------------------
+                | TEACHING OPTIONS
+                |--------------------------------------------------------------------------
+                */
+
+                'teaches_in_person' => [
+                    'nullable',
+                    'boolean',
+                ],
+
+                'teaches_public_place' => [
+                    'nullable',
+                    'boolean',
+                ],
+
+                'teaches_online' => [
+                    'nullable',
+                    'boolean',
+                ],
+
+
+                /*
+                |--------------------------------------------------------------------------
                 | DANCE STYLES
                 |--------------------------------------------------------------------------
                 */
@@ -277,6 +299,37 @@ class TeacherProfileController extends Controller
                     'max:99999.99',
                 ],
             ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | AT LEAST ONE TEACHING OPTION
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            !$request->boolean(
+                'teaches_in_person'
+            )
+            &&
+            !$request->boolean(
+                'teaches_public_place'
+            )
+            &&
+            !$request->boolean(
+                'teaches_online'
+            )
+        ) {
+
+            return back()
+                ->withInput()
+                ->withErrors([
+
+                    'teaching_options' =>
+
+                        'Please select at least one teaching option.',
+                ]);
+        }
 
 
         /*
@@ -513,6 +566,30 @@ class TeacherProfileController extends Controller
                 'country'
             ]
             ?? 'Canada';
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | TEACHING OPTIONS
+        |--------------------------------------------------------------------------
+        */
+
+        $teacher->teaches_in_person =
+            $request->boolean(
+                'teaches_in_person'
+            );
+
+
+        $teacher->teaches_public_place =
+            $request->boolean(
+                'teaches_public_place'
+            );
+
+
+        $teacher->teaches_online =
+            $request->boolean(
+                'teaches_online'
+            );
 
 
         /*

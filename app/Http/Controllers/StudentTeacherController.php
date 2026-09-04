@@ -61,6 +61,11 @@ class StudentTeacherController extends Controller
                 'exists:dance_styles,id',
             ],
 
+            'teaching_type' => [
+                'nullable',
+                'in:face_to_face,public_place,online',
+            ],
+
             'availability_date' => [
                 'nullable',
                 'date',
@@ -90,6 +95,8 @@ class StudentTeacherController extends Controller
             $request->filled('city')
             ||
             $request->filled('dance_style_id')
+            ||
+            $request->filled('teaching_type')
             ||
             $request->filled('availability_date')
             ||
@@ -265,6 +272,45 @@ class StudentTeacherController extends Controller
                         );
                     }
                 );
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | SEARCH BY TEACHING TYPE
+            |--------------------------------------------------------------------------
+            */
+
+            if ($request->filled('teaching_type')) {
+
+                $teachingType =
+                    $validated['teaching_type'];
+
+
+                $teachingColumn =
+                    match ($teachingType) {
+
+                        'face_to_face' =>
+                            'teaches_in_person',
+
+                        'public_place' =>
+                            'teaches_public_place',
+
+                        'online' =>
+                            'teaches_online',
+
+                        default =>
+                            null,
+                    };
+
+
+                if ($teachingColumn) {
+
+                    $query->where(
+                        $teachingColumn,
+                        true
+                    );
+                }
             }
 
 

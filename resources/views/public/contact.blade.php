@@ -71,6 +71,33 @@
     }
 
 
+
+
+    /* =========================================================
+       SUCCESS MESSAGE
+    ========================================================= */
+
+    .contact-success {
+        margin-top: 22px;
+        padding: 16px 18px;
+
+        border:
+            1px solid rgba(34,197,94,.28);
+
+        border-radius: 14px;
+
+        color: #DDFCE7;
+
+        background:
+            rgba(34,197,94,.10);
+
+        font-size: 14px;
+        font-weight: 700;
+
+        line-height: 1.6;
+    }
+
+
     /* =========================================================
        FORM
     ========================================================= */
@@ -335,11 +362,24 @@
 
 
 
+
+            @if (session('success'))
+
+                <div
+                    class="contact-success"
+                    role="alert"
+                >
+                    Thank you! Your message has been sent successfully. We’ll get back to you as soon as possible.
+                </div>
+
+            @endif
+
+
             <form
-    method="POST"
-    action="{{ route('public.contact.send') }}"
-    class="contact-form"
->
+                method="POST"
+                action="{{ route('public.contact.send') }}"
+                class="contact-form"
+            >
 
                 @csrf
 

@@ -260,6 +260,11 @@ Route::view(
     'public.contact'
 )->name('public.contact');
 
+Route::post(
+    '/contact',
+    [\App\Http\Controllers\ContactController::class, 'send']
+)->name('public.contact.send');
+
 
 /*
 |--------------------------------------------------------------------------

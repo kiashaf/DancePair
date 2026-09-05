@@ -336,10 +336,10 @@
 
 
             <form
-                method="POST"
-                action="#"
-                class="contact-form"
-            >
+    method="POST"
+    action="{{ route('public.contact.send') }}"
+    class="contact-form"
+>
 
                 @csrf
 

@@ -523,6 +523,53 @@
 }
 
 
+.booking-type-select {
+    width: 100%;
+    height: 42px;
+
+    margin-bottom: 8px;
+
+    padding: 0 12px;
+
+    border: 1px solid #C9DDEA;
+    border-radius: 10px;
+
+    background: #FFFFFF;
+    color: #1F2937;
+
+    font-size: 13px;
+
+    outline: none;
+    cursor: pointer;
+}
+
+.booking-type-select:focus {
+    border-color: #0284C7;
+
+    box-shadow:
+        0 0 0 3px rgba(2,132,199,.10);
+}
+
+.booking-type-policy {
+    margin-bottom: 16px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #D7E9F5;
+    border-radius: 10px;
+
+    background: #F7FBFE;
+    color: #64748B;
+
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+.booking-type-policy strong {
+    color: #334155;
+}
+
+
 /* =========================================================
    MOBILE
 ========================================================= */
@@ -1337,6 +1384,102 @@
                                     >
 
 
+                                    {{-- =================================================
+                                       TEACHING TYPE
+                                    ================================================== --}}
+
+                                    <label
+                                        for="teaching_type_{{ $availability->id }}"
+                                        class="message-form-label"
+                                    >
+                                        {{ app()->getLocale() === 'fr'
+                                            ? 'Type de cours'
+                                            : 'Lesson type'
+                                        }}
+                                    </label>
+
+
+                                    <select
+                                        id="teaching_type_{{ $availability->id }}"
+                                        name="teaching_type"
+                                        class="booking-type-select"
+                                        required
+                                    >
+                                        <option value="">
+                                            {{ app()->getLocale() === 'fr'
+                                                ? 'Sélectionnez un type de cours'
+                                                : 'Select a lesson type'
+                                            }}
+                                        </option>
+
+                                        <option
+                                            value="online"
+                                            @selected(old('teaching_type') === 'online')
+                                        >
+                                            {{ app()->getLocale() === 'fr'
+                                                ? 'En ligne'
+                                                : 'Online'
+                                            }}
+                                        </option>
+
+                                        <option
+                                            value="face_to_face"
+                                            @selected(old('teaching_type') === 'face_to_face')
+                                        >
+                                            {{ app()->getLocale() === 'fr'
+                                                ? 'En personne'
+                                                : 'Face to Face'
+                                            }}
+                                        </option>
+
+                                        <option
+                                            value="public_place"
+                                            @selected(old('teaching_type') === 'public_place')
+                                        >
+                                            {{ app()->getLocale() === 'fr'
+                                                ? 'Lieu public'
+                                                : 'Public Place'
+                                            }}
+                                        </option>
+                                    </select>
+
+
+                                    {{-- =================================================
+                                       REFUND POLICY INFO
+                                    ================================================== --}}
+
+                                    <div class="booking-type-policy">
+
+                                        @if(app()->getLocale() === 'fr')
+
+                                            <strong>
+                                                Politique d’annulation :
+                                            </strong>
+
+                                            En ligne : remboursement complet jusqu’à
+                                            2 heures avant le cours.
+                                            En personne : jusqu’à 6 heures avant.
+                                            Lieu public : jusqu’à 24 heures avant.
+
+                                        @else
+
+                                            <strong>
+                                                Cancellation policy:
+                                            </strong>
+
+                                            Online: full refund up to 2 hours before the lesson.
+                                            Face to Face: up to 6 hours before.
+                                            Public Place: up to 24 hours before.
+
+                                        @endif
+
+                                    </div>
+
+
+                                    {{-- =================================================
+                                       MESSAGE
+                                    ================================================== --}}
+
                                     <label
                                         for="request_message_{{ $availability->id }}"
                                         class="message-form-label"
@@ -1351,7 +1494,7 @@
                                         class="message-textarea"
                                         maxlength="3000"
                                         placeholder="{{ __('student.message_to_teacher_placeholder') }}"
-                                    ></textarea>
+                                    >{{ old('message') }}</textarea>
 
 
                                     <small class="message-warning">

@@ -8,6 +8,55 @@
     <title>{{ __('auth.register_title') }} | DancePair</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+
+        .register-terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+
+            margin-bottom: 22px;
+
+            color: #9B95A8;
+
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .register-terms input {
+            width: 16px;
+            height: 16px;
+
+            margin-top: 2px;
+
+            flex: 0 0 auto;
+
+            cursor: pointer;
+
+            accent-color: #F72585;
+        }
+
+        .register-terms label {
+            margin: 0;
+
+            cursor: pointer;
+        }
+
+        .register-terms a {
+            color: #F72585;
+
+            font-weight: 800;
+
+            text-decoration: none;
+        }
+
+        .register-terms a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
 </head>
 
 <body class="login-page">
@@ -136,13 +185,13 @@
                 </label>
 
                 <input
-    type="password"
-    name="password"
-    class="form-control login-input"
-    placeholder="{{ __('auth.create_password') }}"
-    autocomplete="new-password"
-    required
->
+                    type="password"
+                    name="password"
+                    class="form-control login-input"
+                    placeholder="{{ __('auth.create_password') }}"
+                    autocomplete="new-password"
+                    required
+                >
 
             </div>
 
@@ -154,13 +203,62 @@
                 </label>
 
                 <input
-    type="password"
-    name="password_confirmation"
-    class="form-control login-input"
-    placeholder="{{ __('auth.confirm_password_placeholder') }}"
-    autocomplete="new-password"
-    required
->
+                    type="password"
+                    name="password_confirmation"
+                    class="form-control login-input"
+                    placeholder="{{ __('auth.confirm_password_placeholder') }}"
+                    autocomplete="new-password"
+                    required
+                >
+
+            </div>
+
+
+            {{-- =====================================================
+               TERMS & CONDITIONS
+            ===================================================== --}}
+
+            <div class="register-terms">
+
+                <input
+                    type="checkbox"
+                    id="terms"
+                    name="terms"
+                    value="1"
+                    {{ old('terms') ? 'checked' : '' }}
+                    required
+                >
+
+
+                <label for="terms">
+
+                    @if(app()->getLocale() === 'fr')
+
+                        J’accepte les
+
+                        <a
+                            href="{{ route('public.terms') }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Conditions générales et la Politique d’annulation et de remboursement
+                        </a>.
+
+                    @else
+
+                        I agree to the
+
+                        <a
+                            href="{{ route('public.terms') }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Terms & Conditions and Cancellation & Refund Policy
+                        </a>.
+
+                    @endif
+
+                </label>
 
             </div>
 

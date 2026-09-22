@@ -350,7 +350,7 @@
  * RED
  */
 
- .student-more-btn.student-more-btn-payment-required {
+.student-more-btn.student-more-btn-payment-required {
     background: #FEE2E2 !important;
     border-color: #DC2626 !important;
     color: #B91C1C !important;
@@ -1214,6 +1214,109 @@
 
 
                 /*
+                |--------------------------------------------------------------------------
+                | CANCELLATION / REFUND INFO
+                |--------------------------------------------------------------------------
+                */
+
+                $isPaidForCancellation =
+                    (bool) $booking->paid
+                    ||
+                    in_array(
+                        $booking->payment?->status,
+                        [
+                            'paid',
+                            'refund_pending',
+                            'refunded',
+                        ],
+                        true
+                    );
+
+
+                $cancelPolicyHours = match(
+                    $booking->teaching_type
+                ) {
+                    'online' => 2,
+
+                    'face_to_face' => 6,
+
+                    'public_place' => 24,
+
+                    default => null,
+                };
+
+
+                $canCancel =
+                    $booking->status === 'confirmed'
+                    &&
+                    now()->lt($lessonDateTime);
+
+
+                $refundEligible = false;
+
+
+                if (
+                    $canCancel
+                    &&
+                    $isPaidForCancellation
+                    &&
+                    $cancelPolicyHours !== null
+                ) {
+
+                    $refundCutoff =
+                        $lessonDateTime
+                            ->copy()
+                            ->subHours(
+                                $cancelPolicyHours
+                            );
+
+
+                    $refundEligible =
+                        now()->lte(
+                            $refundCutoff
+                        );
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | CANCELLATION CONFIRMATION MESSAGE
+                |--------------------------------------------------------------------------
+                */
+
+                if (!$isPaidForCancellation) {
+
+                    $cancelConfirmationMessage =
+                        app()->getLocale() === 'fr'
+                            ? 'Voulez-vous vraiment annuler ce cours ? Aucun paiement n’a été effectué.'
+                            : 'Are you sure you want to cancel this lesson? No payment has been made.';
+
+                } elseif (
+                    $cancelPolicyHours === null
+                ) {
+
+                    $cancelConfirmationMessage =
+                        app()->getLocale() === 'fr'
+                            ? 'Le type de cours ne peut pas être déterminé. Veuillez contacter le soutien DancePair pour l’annulation.'
+                            : 'The lesson type cannot be determined. Please contact DancePair Support to cancel this lesson.';
+
+                } elseif ($refundEligible) {
+
+                    $cancelConfirmationMessage =
+                        app()->getLocale() === 'fr'
+                            ? 'Voulez-vous vraiment annuler ce cours ? Vous êtes admissible à un remboursement complet de 100 % vers le mode de paiement d’origine.'
+                            : 'Are you sure you want to cancel this lesson? You are eligible for a 100% full refund to the original payment method.';
+
+                } else {
+
+                    $cancelConfirmationMessage =
+                        app()->getLocale() === 'fr'
+                            ? 'Voulez-vous vraiment annuler ce cours ? Le délai d’annulation est dépassé. Aucun remboursement automatique ne sera effectué.'
+                            : 'Are you sure you want to cancel this lesson? The cancellation deadline has passed. No automatic refund will be issued.';
+                }
+
+
+                /*
                  * Availability فقط برای همان Teacher
                  * و همان Dance Style
                  */
@@ -1390,7 +1493,10 @@
                     @elseif($booking->status === 'cancelled')
 
                         <span class="student-request-status refused">
-                            {{ __('student.refused') }}
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Annulé'
+                                : 'Cancelled'
+                            }}
                         </span>
 
 
@@ -1564,6 +1670,107 @@
 
 
 
+                            {{-- =================================================
+                               CANCEL CONFIRMED LESSON
+                            ================================================= --}}
+
+                            @if($canCancel)
+
+                                @if(
+                                    !$isPaidForCancellation
+                                    ||
+                                    $cancelPolicyHours !== null
+                                )
+
+                                    <div class="dropdown-divider"></div>
+
+
+                                    <form
+                                        method="POST"
+                                        action="{{ route(
+                                            'student.bookings.cancel',
+                                            $booking
+                                        ) }}"
+                                        onsubmit="return confirm(@js($cancelConfirmationMessage));"
+                                    >
+
+                                        @csrf
+
+
+                                        <button
+                                            type="submit"
+                                            class="dropdown-item text-danger"
+                                        >
+
+                                            {{ app()->getLocale() === 'fr'
+                                                ? 'Annuler le cours'
+                                                : 'Cancel Lesson'
+                                            }}
+
+                                        </button>
+
+                                    </form>
+
+
+                                    @if($isPaidForCancellation)
+
+                                        <div
+                                            style="
+                                                padding:6px 9px 8px;
+                                                font-size:9px;
+                                                line-height:1.4;
+                                                color:#64748b;
+                                            "
+                                        >
+
+                                            @if($refundEligible)
+
+                                                {{ app()->getLocale() === 'fr'
+                                                    ? 'Admissible à un remboursement de 100 %.'
+                                                    : 'Eligible for a 100% refund.'
+                                                }}
+
+                                            @else
+
+                                                {{ app()->getLocale() === 'fr'
+                                                    ? 'Aucun remboursement automatique après le délai applicable.'
+                                                    : 'No automatic refund after the applicable deadline.'
+                                                }}
+
+                                            @endif
+
+                                        </div>
+
+                                    @endif
+
+
+                                @else
+
+                                    <div class="dropdown-divider"></div>
+
+                                    <span
+                                        class="dropdown-item-text"
+                                        style="
+                                            color:#b45309 !important;
+                                            background:#fffbeb;
+                                            white-space:normal;
+                                            line-height:1.4;
+                                        "
+                                    >
+
+                                        {{ app()->getLocale() === 'fr'
+                                            ? 'Contactez le soutien DancePair pour annuler ce cours.'
+                                            : 'Contact DancePair Support to cancel this lesson.'
+                                        }}
+
+                                    </span>
+
+                                @endif
+
+                            @endif
+
+
+
                             {{-- REVIEW --}}
 
                             <button
@@ -1655,7 +1862,10 @@
 
                                 @elseif($booking->status === 'cancelled')
 
-                                    {{ __('student.refused') }}
+                                    {{ app()->getLocale() === 'fr'
+                                        ? 'Annulé'
+                                        : 'Cancelled'
+                                    }}
 
                                 @elseif($booking->status === 'completed')
 
@@ -1701,30 +1911,30 @@
                                             <span>
 
                                             @if(
-        ($message->sender->role ?? null)
-        ===
-        'admin'
-    )
+                                                ($message->sender->role ?? null)
+                                                ===
+                                                'admin'
+                                            )
 
-        DancePair Support
+                                                DancePair Support
 
-    @elseif($isMine)
+                                            @elseif($isMine)
 
-        {{ app()->getLocale() === 'fr'
-            ? 'Vous'
-            : 'You'
-        }}
+                                                {{ app()->getLocale() === 'fr'
+                                                    ? 'Vous'
+                                                    : 'You'
+                                                }}
 
-    @else
+                                            @else
 
-        {{ $message->sender->name
-            ?? (
-                $booking->teacher->user->name
-                ?? __('student.teacher')
-            )
-        }}
+                                                {{ $message->sender->name
+                                                    ?? (
+                                                        $booking->teacher->user->name
+                                                        ?? __('student.teacher')
+                                                    )
+                                                }}
 
-    @endif
+                                            @endif
 
 
                                             </span>

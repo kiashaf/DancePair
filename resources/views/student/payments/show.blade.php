@@ -447,6 +447,70 @@
 
 
 /* =========================================================
+   CANCELLATION & REFUND POLICY
+========================================================= */
+
+.payment-policy {
+    margin: 0 0 18px;
+
+    padding: 14px 16px;
+
+    border: 1px solid #CDE9F8;
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.72);
+}
+
+.payment-policy-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 12px;
+    line-height: 1.55;
+
+    cursor: pointer;
+}
+
+.payment-policy-label input {
+    width: 16px;
+    height: 16px;
+
+    margin-top: 2px;
+
+    flex: 0 0 auto;
+
+    accent-color: #0284C7;
+
+    cursor: pointer;
+}
+
+.payment-policy-label span {
+    display: block;
+}
+
+.payment-policy-label a {
+    color: #0369A1;
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.payment-policy-label a:hover {
+    text-decoration: underline;
+}
+
+.payment-checkout-form {
+    margin: 0;
+}
+
+
+/* =========================================================
    MOBILE
 ========================================================= */
 
@@ -827,27 +891,90 @@
 
 
         {{-- =====================================================
-           ACTIONS
+           CANCELLATION & REFUND POLICY
         ====================================================== --}}
 
-        <div class="payment-actions">
+        <form
+            method="POST"
+            action="{{ route(
+                'student.payments.checkout',
+                $booking
+            ) }}"
+            class="payment-checkout-form"
+        >
 
-            <a
-                href="{{ route('student.bookings') }}"
-                class="payment-back-btn"
-            >
-                {{ __('student.back_to_bookings') }}
-            </a>
+            @csrf
 
 
-            <form
-                method="POST"
-                action="{{ route(
-                    'student.payments.checkout',
-                    $booking
-                ) }}"
-            >
-                @csrf
+            <div class="payment-policy">
+
+                <label
+                    for="cancellation_policy"
+                    class="payment-policy-label"
+                >
+
+                    <input
+                        type="checkbox"
+                        id="cancellation_policy"
+                        name="cancellation_policy"
+                        value="1"
+                        {{ old('cancellation_policy') ? 'checked' : '' }}
+                        required
+                    >
+
+
+                    <span>
+
+                        @if(app()->getLocale() === 'fr')
+
+                            J’ai lu et j’accepte la
+
+                            <a
+                                href="{{ route('public.terms') }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                politique d’annulation et de remboursement
+                            </a>
+
+                            applicable à cette réservation.
+
+                        @else
+
+                            I have read and agree to the
+
+                            <a
+                                href="{{ route('public.terms') }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Cancellation & Refund Policy
+                            </a>
+
+                            applicable to this booking.
+
+                        @endif
+
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            {{-- =====================================================
+               ACTIONS
+            ====================================================== --}}
+
+            <div class="payment-actions">
+
+                <a
+                    href="{{ route('student.bookings') }}"
+                    class="payment-back-btn"
+                >
+                    {{ __('student.back_to_bookings') }}
+                </a>
+
 
                 <button
                     type="submit"
@@ -861,9 +988,9 @@
                     ) }}
                 </button>
 
-            </form>
+            </div>
 
-        </div>
+        </form>
 
 
         <div class="payment-secure">

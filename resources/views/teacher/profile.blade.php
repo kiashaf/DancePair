@@ -189,7 +189,6 @@
     font-size: 11px;
 }
 
-
 /* =========================================================
    RESPONSIVE
 ========================================================= */
@@ -955,6 +954,7 @@
 
                         <div class="row g-3">
 
+
                             @foreach($danceStyles as $style)
 
                                 @php
@@ -1092,6 +1092,64 @@
 
             </form>
 
+            @include('profiles.secondary')
+
+            {{-- ========================================= --}}
+{{-- PAYOUT ACCOUNT --}}
+{{-- ========================================= --}}
+
+<div class="card profile-card p-4 mb-4">
+
+    <h4 class="mb-3">
+        {{ app()->getLocale() === 'fr'
+            ? 'Compte de versement'
+            : 'Payout Account'
+        }}
+    </h4>
+
+    <p class="text-muted mb-4">
+        {{ app()->getLocale() === 'fr'
+            ? 'Connectez votre compte de versement pour recevoir vos revenus de DancePair en toute sécurité.'
+            : 'Connect your payout account to securely receive your DancePair earnings.'
+        }}
+    </p>
+
+    @if($teacher->stripe_payouts_enabled)
+
+        <div class="alert alert-success mb-0">
+
+            <strong>
+                ✓
+                {{ app()->getLocale() === 'fr'
+                    ? 'Compte connecté'
+                    : 'Account connected'
+                }}
+            </strong>
+
+            <div class="mt-1">
+                {{ app()->getLocale() === 'fr'
+                    ? 'Votre compte est prêt à recevoir des versements.'
+                    : 'Your account is ready to receive payouts.'
+                }}
+            </div>
+
+        </div>
+
+    @else
+
+        <a
+            href="{{ route('teacher.stripe.connect') }}"
+            class="btn btn-primary"
+        >
+            {{ app()->getLocale() === 'fr'
+                ? 'Connecter mon compte'
+                : 'Connect payout account'
+            }}
+        </a>
+
+    @endif
+
+</div>
         </div>
 
     </div>
@@ -1197,7 +1255,6 @@ document.addEventListener(
                     );
             }
         );
-
 
 
         document

@@ -1,15 +1,24 @@
 @extends('public.layout')
 
-@section('title', 'Become a Teacher | DancePair')
+@section(
+    'title',
+    app()->getLocale() === 'fr'
+        ? 'Devenir professeur | DancePair'
+        : 'Become a Teacher | DancePair'
+)
 
 
 @push('styles')
 <style>
 
+    /* =====================================================
+       HERO
+    ===================================================== */
+
     .teach-hero {
         position: relative;
 
-        min-height: 650px;
+        min-height: 330px;
 
         display: flex;
         align-items: center;
@@ -71,9 +80,9 @@
     .teach-kicker {
         display: inline-flex;
 
-        padding: 9px 15px;
+        padding: 7px 13px;
 
-        margin-bottom: 22px;
+        margin-bottom: 14px;
 
         border:
             1px solid rgba(247,37,133,.28);
@@ -97,13 +106,13 @@
 
         color: white;
 
-        font-size: clamp(50px,6vw,88px);
+        font-size: clamp(38px,4.3vw,58px);
 
         line-height: .96;
 
         font-weight: 950;
 
-        letter-spacing: -4px;
+        letter-spacing: -3px;
     }
 
 
@@ -128,12 +137,12 @@
     .teach-copy p {
         max-width: 590px;
 
-        margin: 25px 0;
+        margin: 14px 0 0;
 
         color: #B5AFBF;
 
-        font-size: 17px;
-        line-height: 1.75;
+        font-size: 13px;
+        line-height: 1.55;
     }
 
 
@@ -142,23 +151,23 @@
 
         align-items: center;
 
-        gap: 12px;
+        gap: 10px;
 
-        margin-top: 30px;
+        margin-top: 16px;
     }
 
 
     .teach-primary {
-        min-height: 50px;
+        min-height: 42px;
 
         display: inline-flex;
 
         align-items: center;
         justify-content: center;
 
-        padding: 0 25px;
+        padding: 0 21px;
 
-        border-radius: 12px;
+        border-radius: 11px;
 
         color: #FFFFFF;
 
@@ -171,7 +180,7 @@
 
         text-decoration: none;
 
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 900;
 
         box-shadow:
@@ -181,24 +190,24 @@
 
 
     .teach-secondary {
-        min-height: 50px;
+        min-height: 42px;
 
         display: inline-flex;
 
         align-items: center;
 
-        padding: 0 22px;
+        padding: 0 19px;
 
         border:
             1px solid rgba(255,255,255,.16);
 
-        border-radius: 12px;
+        border-radius: 11px;
 
         color: white;
 
         text-decoration: none;
 
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 800;
     }
 
@@ -208,14 +217,14 @@
     ===================================================== */
 
     .teach-benefits {
-        padding: 90px 0;
+        padding: 34px 0;
     }
 
 
     .teach-section-head {
         max-width: 650px;
 
-        margin-bottom: 40px;
+        margin-bottom: 20px;
     }
 
 
@@ -233,15 +242,15 @@
 
 
     .teach-section-head h2 {
-        margin: 8px 0 12px;
+        margin: 6px 0 8px;
 
         color: white;
 
-        font-size: 40px;
+        font-size: 28px;
 
         font-weight: 950;
 
-        letter-spacing: -2px;
+        letter-spacing: -1.5px;
     }
 
 
@@ -250,9 +259,9 @@
 
         color: #878290;
 
-        font-size: 14px;
+        font-size: 12px;
 
-        line-height: 1.7;
+        line-height: 1.55;
     }
 
 
@@ -262,19 +271,19 @@
         grid-template-columns:
             repeat(4,1fr);
 
-        gap: 16px;
+        gap: 12px;
     }
 
 
     .teach-card {
-        min-height: 220px;
+        min-height: 135px;
 
-        padding: 28px;
+        padding: 18px;
 
         border:
             1px solid rgba(255,255,255,.07);
 
-        border-radius: 20px;
+        border-radius: 18px;
 
         background:
             linear-gradient(
@@ -290,22 +299,22 @@
 
     .teach-card:hover {
         transform:
-            translateY(-6px);
+            translateY(-5px);
     }
 
 
     .teach-number {
-        width: 42px;
-        height: 42px;
+        width: 32px;
+        height: 32px;
 
         display: flex;
 
         align-items: center;
         justify-content: center;
 
-        margin-bottom: 30px;
+        margin-bottom: 13px;
 
-        border-radius: 12px;
+        border-radius: 10px;
 
         color: #FFFFFF;
 
@@ -316,17 +325,17 @@
                 #7937FF
             );
 
-        font-size: 12px;
+        font-size: 10px;
         font-weight: 900;
     }
 
 
     .teach-card h3 {
-        margin: 0 0 9px;
+        margin: 0 0 6px;
 
         color: white;
 
-        font-size: 18px;
+        font-size: 14px;
         font-weight: 900;
     }
 
@@ -336,9 +345,9 @@
 
         color: #817B8C;
 
-        font-size: 12px;
+        font-size: 10px;
 
-        line-height: 1.7;
+        line-height: 1.5;
     }
 
 
@@ -347,7 +356,7 @@
     ===================================================== */
 
     .teach-steps-section {
-        padding: 85px 0;
+        padding: 34px 0;
 
         background:
             radial-gradient(
@@ -365,16 +374,16 @@
         grid-template-columns:
             repeat(5,1fr);
 
-        gap: 12px;
+        gap: 10px;
     }
 
 
     .teach-step {
         position: relative;
 
-        padding: 25px;
+        padding: 16px;
 
-        border-radius: 18px;
+        border-radius: 16px;
 
         border:
             1px solid rgba(255,255,255,.07);
@@ -387,20 +396,20 @@
     .teach-step strong {
         display: block;
 
-        margin-bottom: 8px;
+        margin-bottom: 6px;
 
         color: #FFFFFF;
 
-        font-size: 14px;
+        font-size: 11px;
     }
 
 
     .teach-step span {
         color: #797485;
 
-        font-size: 11px;
+        font-size: 9px;
 
-        line-height: 1.6;
+        line-height: 1.5;
     }
 
 
@@ -409,7 +418,7 @@
     ===================================================== */
 
     .teach-final {
-        padding: 90px 0;
+        padding: 34px 0;
     }
 
 
@@ -418,9 +427,9 @@
 
         overflow: hidden;
 
-        padding: 70px;
+        padding: 30px;
 
-        border-radius: 26px;
+        border-radius: 22px;
 
         text-align: center;
 
@@ -447,24 +456,24 @@
 
         color: white;
 
-        font-size: 45px;
+        font-size: 29px;
 
         font-weight: 950;
 
-        letter-spacing: -2px;
+        letter-spacing: -1.5px;
     }
 
 
     .teach-final-box p {
         max-width: 550px;
 
-        margin: 15px auto 28px;
+        margin: 9px auto 17px;
 
         color: #9A95A5;
 
-        line-height: 1.7;
+        line-height: 1.55;
 
-        font-size: 14px;
+        font-size: 12px;
     }
 
 
@@ -490,14 +499,24 @@
         }
 
         .teach-hero {
-            min-height: 600px;
+            min-height: 430px;
 
-            background-size: auto 65%;
+            background-size: auto 67%;
             background-position: 80% bottom;
         }
 
         .teach-copy h1 {
+            font-size: 40px;
             letter-spacing: -2px;
+        }
+
+        .teach-copy p {
+            font-size: 12px;
+        }
+
+        .teach-hero-actions {
+            align-items: flex-start;
+            flex-direction: column;
         }
 
         .teach-grid,
@@ -506,11 +525,11 @@
         }
 
         .teach-final-box {
-            padding: 40px 22px;
+            padding: 26px 20px;
         }
 
         .teach-final-box h2 {
-            font-size: 35px;
+            font-size: 26px;
         }
 
     }
@@ -523,6 +542,10 @@
 @section('content')
 
 
+{{-- =========================================================
+   HERO
+========================================================= --}}
+
 <section class="teach-hero">
 
     <div class="teach-container">
@@ -530,18 +553,41 @@
         <div class="teach-copy">
 
             <div class="teach-kicker">
-                TEACH • INSPIRE • GROW
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'ENSEIGNEZ • INSPIREZ • ÉVOLUEZ'
+                    : 'TEACH • INSPIRE • GROW'
+                }}
+
             </div>
 
+
             <h1>
-                Your Dance Skills
-                <span>Deserve an Audience.</span>
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Votre talent en danse'
+                    : 'Your Dance Skills'
+                }}
+
+                <span>
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'mérite d’être partagé.'
+                        : 'Deserve to Be Seen.'
+                    }}
+
+                </span>
+
             </h1>
 
+
             <p>
-                Turn your experience into opportunity.
-                Build your professional DancePair profile,
-                reach new students and teach on your own terms.
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Transformez votre expérience en nouvelles occasions. Créez votre profil professionnel DancePair, rejoignez de nouveaux élèves et enseignez selon vos propres conditions.'
+                    : 'Turn your experience into new opportunities. Build your professional DancePair profile, reach new students, and teach on your own terms.'
+                }}
+
             </p>
 
 
@@ -553,7 +599,12 @@
                         href="{{ route('register') }}"
                         class="teach-primary"
                     >
-                        Become a Teacher
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Devenir professeur'
+                            : 'Become a Teacher'
+                        }}
+
                     </a>
 
                 @else
@@ -564,7 +615,12 @@
                             href="{{ route('teacher.dashboard') }}"
                             class="teach-primary"
                         >
-                            Teacher Dashboard
+
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Tableau de bord professeur'
+                                : 'Teacher Dashboard'
+                            }}
+
                         </a>
 
                     @endif
@@ -576,7 +632,12 @@
                     href="#how-teaching-works"
                     class="teach-secondary"
                 >
-                    See How It Works
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Voir comment ça fonctionne'
+                        : 'See How It Works'
+                    }}
+
                 </a>
 
             </div>
@@ -589,6 +650,10 @@
 
 
 
+{{-- =========================================================
+   BENEFITS
+========================================================= --}}
+
 <section class="teach-benefits">
 
     <div class="teach-container">
@@ -597,17 +662,32 @@
         <div class="teach-section-head">
 
             <small>
-                Why DancePair
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'POURQUOI DANCEPAIR'
+                    : 'WHY DANCEPAIR'
+                }}
+
             </small>
 
+
             <h2>
-                Build Your Teaching Business
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Développez votre activité d’enseignement'
+                    : 'Build Your Teaching Business'
+                }}
+
             </h2>
 
+
             <p>
-                DancePair gives independent dance teachers
-                a professional place to showcase their skills,
-                manage their availability and connect with students.
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'DancePair offre aux professeurs de danse indépendants un espace professionnel pour présenter leur expertise, gérer leurs disponibilités et entrer en contact avec de nouveaux élèves.'
+                    : 'DancePair gives independent dance teachers a professional place to showcase their expertise, manage their availability, and connect with new students.'
+                }}
+
             </p>
 
         </div>
@@ -616,76 +696,124 @@
         <div class="teach-grid">
 
 
+            {{-- CARD 01 --}}
             <article class="teach-card">
 
                 <div class="teach-number">
                     01
                 </div>
 
+
                 <h3>
-                    Set Your Own Rates
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Fixez vos propres tarifs'
+                        : 'Set Your Own Rates'
+                    }}
+
                 </h3>
 
+
                 <p>
-                    Decide what your lessons are worth
-                    and set rates for the dance styles
-                    you teach.
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Déterminez la valeur de vos cours et fixez vos tarifs pour chaque style de danse que vous enseignez.'
+                        : 'Decide what your lessons are worth and set your own rates for each dance style you teach.'
+                    }}
+
                 </p>
 
             </article>
 
 
+
+            {{-- CARD 02 --}}
             <article class="teach-card">
 
                 <div class="teach-number">
                     02
                 </div>
 
+
                 <h3>
-                    Control Your Schedule
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Contrôlez votre horaire'
+                        : 'Control Your Schedule'
+                    }}
+
                 </h3>
 
+
                 <p>
-                    Choose the dates and times you want
-                    to teach without giving up control
-                    of your calendar.
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Choisissez les jours et les heures où vous souhaitez enseigner tout en gardant le contrôle de votre emploi du temps.'
+                        : 'Choose the days and times you want to teach while staying in control of your schedule.'
+                    }}
+
                 </p>
 
             </article>
 
 
+
+            {{-- CARD 03 --}}
             <article class="teach-card">
 
                 <div class="teach-number">
                     03
                 </div>
 
+
                 <h3>
-                    Reach New Students
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Rejoignez de nouveaux élèves'
+                        : 'Reach New Students'
+                    }}
+
                 </h3>
 
+
                 <p>
-                    Get discovered by students actively
-                    searching for dance teachers
-                    in their area.
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Faites-vous découvrir par des élèves qui recherchent activement des professeurs de danse correspondant à leurs besoins.'
+                        : 'Get discovered by students who are actively searching for dance teachers that match their needs.'
+                    }}
+
                 </p>
 
             </article>
 
 
+
+            {{-- CARD 04 --}}
             <article class="teach-card">
 
                 <div class="teach-number">
                     04
                 </div>
 
+
                 <h3>
-                    Build Your Reputation
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Développez votre réputation'
+                        : 'Build Your Reputation'
+                    }}
+
                 </h3>
 
+
                 <p>
-                    Grow your profile through real student
-                    reviews, experience and successful lessons.
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Renforcez votre profil grâce à votre expérience, vos cours réussis et aux évaluations de vos élèves.'
+                        : 'Strengthen your profile through your experience, successful lessons, and genuine student reviews.'
+                    }}
+
                 </p>
 
             </article>
@@ -698,6 +826,10 @@
 </section>
 
 
+
+{{-- =========================================================
+   STEPS
+========================================================= --}}
 
 <section
     class="teach-steps-section"
@@ -710,11 +842,22 @@
         <div class="teach-section-head">
 
             <small>
-                Getting Started
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'POUR COMMENCER'
+                    : 'GETTING STARTED'
+                }}
+
             </small>
 
+
             <h2>
-                Start Teaching in a Few Steps
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Commencez à enseigner en quelques étapes'
+                    : 'Start Teaching in a Few Simple Steps'
+                }}
+
             </h2>
 
         </div>
@@ -723,66 +866,130 @@
         <div class="teach-steps">
 
 
+            {{-- STEP 01 --}}
             <div class="teach-step">
 
                 <strong>
-                    01. Create Account
+
+                    {{ app()->getLocale() === 'fr'
+                        ? '01. Créez votre compte'
+                        : '01. Create Your Account'
+                    }}
+
                 </strong>
 
+
                 <span>
-                    Join DancePair as a teacher.
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Inscrivez-vous sur DancePair comme professeur.'
+                        : 'Join DancePair and register as a teacher.'
+                    }}
+
                 </span>
 
             </div>
 
 
+
+            {{-- STEP 02 --}}
             <div class="teach-step">
 
                 <strong>
-                    02. Build Profile
+
+                    {{ app()->getLocale() === 'fr'
+                        ? '02. Créez votre profil'
+                        : '02. Build Your Profile'
+                    }}
+
                 </strong>
 
+
                 <span>
-                    Add your photo, bio and experience.
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Ajoutez votre photo, votre présentation et votre expérience.'
+                        : 'Add your photo, bio, and teaching experience.'
+                    }}
+
                 </span>
 
             </div>
 
 
+
+            {{-- STEP 03 --}}
             <div class="teach-step">
 
                 <strong>
-                    03. Add Styles
+
+                    {{ app()->getLocale() === 'fr'
+                        ? '03. Ajoutez vos styles'
+                        : '03. Add Your Dance Styles'
+                    }}
+
                 </strong>
 
+
                 <span>
-                    Choose what you teach and set rates.
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Choisissez les styles que vous enseignez et fixez vos tarifs.'
+                        : 'Choose the styles you teach and set your rates.'
+                    }}
+
                 </span>
 
             </div>
 
 
+
+            {{-- STEP 04 --}}
             <div class="teach-step">
 
                 <strong>
-                    04. Set Availability
+
+                    {{ app()->getLocale() === 'fr'
+                        ? '04. Définissez vos disponibilités'
+                        : '04. Set Your Availability'
+                    }}
+
                 </strong>
 
+
                 <span>
-                    Tell students when you're available.
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Indiquez aux élèves les moments où vous êtes disponible.'
+                        : 'Let students know when you are available to teach.'
+                    }}
+
                 </span>
 
             </div>
 
 
+
+            {{-- STEP 05 --}}
             <div class="teach-step">
 
                 <strong>
-                    05. Start Teaching
+
+                    {{ app()->getLocale() === 'fr'
+                        ? '05. Commencez à enseigner'
+                        : '05. Start Teaching'
+                    }}
+
                 </strong>
 
+
                 <span>
-                    Receive requests and grow your profile.
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Recevez des demandes de cours et développez votre présence sur DancePair.'
+                        : 'Receive lesson requests and grow your presence on DancePair.'
+                    }}
+
                 </span>
 
             </div>
@@ -796,20 +1003,34 @@
 
 
 
+{{-- =========================================================
+   FINAL CTA
+========================================================= --}}
+
 <section class="teach-final">
 
     <div class="teach-container">
 
         <div class="teach-final-box">
 
+
             <h2>
-                Ready to Share Your Passion?
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Prêt à partager votre passion ?'
+                    : 'Ready to Share Your Passion?'
+                }}
+
             </h2>
 
+
             <p>
-                Create your teacher profile and start
-                connecting with dancers looking for
-                exactly what you teach.
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Créez votre profil de professeur et commencez à rencontrer des danseurs qui recherchent exactement ce que vous enseignez.'
+                    : 'Create your teacher profile and start connecting with dancers who are looking for exactly what you teach.'
+                }}
+
             </p>
 
 
@@ -819,7 +1040,12 @@
                     href="{{ route('register') }}"
                     class="teach-primary"
                 >
-                    Join DancePair as a Teacher
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Rejoindre DancePair comme professeur'
+                        : 'Join DancePair as a Teacher'
+                    }}
+
                 </a>
 
             @else
@@ -830,7 +1056,12 @@
                         href="{{ route('teacher.dashboard') }}"
                         class="teach-primary"
                     >
-                        Go to Teacher Dashboard
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Accéder au tableau de bord'
+                            : 'Go to Teacher Dashboard'
+                        }}
+
                     </a>
 
                 @endif
@@ -842,5 +1073,6 @@
     </div>
 
 </section>
+
 
 @endsection

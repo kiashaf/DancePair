@@ -20,6 +20,7 @@
         'resources/js/app.js'
     ])
 
+
     <style>
 
         body {
@@ -132,7 +133,27 @@
 
 
         {{-- SIDEBAR --}}
-        <div class="col-md-3 col-lg-2 sidebar p-4">
+        <div
+            class="col-md-3 col-lg-2 sidebar p-4"
+            data-mobile-sidebar
+        >
+
+
+            {{-- =================================================
+               MOBILE SIDEBAR CLOSE BUTTON
+            ================================================== --}}
+
+            <button
+                type="button"
+                class="mobile-sidebar-close"
+                data-mobile-sidebar-close
+                aria-label="{{ app()->getLocale() === 'fr'
+                    ? 'Fermer le menu'
+                    : 'Close menu'
+                }}"
+            >
+                ×
+            </button>
 
 
             <x-ui.logo />
@@ -274,6 +295,17 @@
 
 
 
+        {{-- =================================================
+           MOBILE SIDEBAR OVERLAY
+        ================================================== --}}
+
+        <div
+            class="mobile-sidebar-overlay"
+            data-mobile-sidebar-overlay
+        ></div>
+
+
+
         {{-- MAIN --}}
         <div class="col-md-9 col-lg-10 p-0 main-content">
 
@@ -289,19 +321,49 @@
                 "
             >
 
-                <div>
 
-                    <h4 class="mb-0">
-                        @yield('page-title')
-                    </h4>
+                {{-- =================================================
+                   LEFT SIDE
+                ================================================== --}}
 
-                    <small class="text-muted">
-                        {{ __('teacher.welcome_back') }},
-                        {{ auth()->user()->name }}
-                    </small>
+                <div class="dashboard-topbar-left">
+
+
+                    {{-- MOBILE MENU BUTTON --}}
+                    <button
+                        type="button"
+                        class="mobile-sidebar-toggle"
+                        data-mobile-sidebar-open
+                        aria-expanded="false"
+                        aria-label="{{ app()->getLocale() === 'fr'
+                            ? 'Ouvrir le menu'
+                            : 'Open menu'
+                        }}"
+                    >
+                        ☰
+                    </button>
+
+
+                    <div class="dashboard-topbar-title">
+
+                        <h4 class="mb-0">
+                            @yield('page-title')
+                        </h4>
+
+                        <small class="text-muted">
+                            {{ __('teacher.welcome_back') }},
+                            {{ auth()->user()->name }}
+                        </small>
+
+                    </div>
 
                 </div>
 
+
+
+                {{-- =================================================
+                   RIGHT SIDE
+                ================================================== --}}
 
                 <div
                     style="
@@ -424,7 +486,10 @@
 
 </div>
 
+
 @include('partials.platform-message-widget')
+
+
 </body>
 
 </html>

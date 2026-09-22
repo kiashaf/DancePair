@@ -43,33 +43,54 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validated = $request->validate([
+        $validated = $request->validate(
+            [
 
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-            ],
+                'name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                ],
 
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                'unique:users,email',
-            ],
+                'email' => [
+                    'required',
+                    'email',
+                    'max:255',
+                    'unique:users,email',
+                ],
 
-            'role' => [
-                'required',
-                'in:student,teacher',
-            ],
+                'role' => [
+                    'required',
+                    'in:student,teacher',
+                ],
 
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'confirmed',
+                ],
+
+                'terms' => [
+                    'required',
+                    'accepted',
+                ],
+
             ],
-        ]);
+            [
+
+                'terms.required' =>
+                    app()->getLocale() === 'fr'
+                        ? 'Vous devez accepter les conditions générales et la politique d’annulation et de remboursement.'
+                        : 'You must accept the Terms & Conditions and Cancellation & Refund Policy.',
+
+                'terms.accepted' =>
+                    app()->getLocale() === 'fr'
+                        ? 'Vous devez accepter les conditions générales et la politique d’annulation et de remboursement.'
+                        : 'You must accept the Terms & Conditions and Cancellation & Refund Policy.',
+
+            ]
+        );
 
 
         /*
@@ -98,11 +119,13 @@ class AuthController extends Controller
                             $validated['password']
                         ),
 
-                    'role' =>
+                        'role' =>
                         $validated['role'],
-
                     'active' =>
                         true,
+
+                    'terms_accepted_at' =>
+                         now(),
                 ]);
 
 
@@ -286,6 +309,9 @@ class AuthController extends Controller
         $request
             ->session()
             ->regenerate();
+
+        // Do not reuse a destination saved for a previous account.
+        $request->session()->forget('url.intended');
 
 
         /*

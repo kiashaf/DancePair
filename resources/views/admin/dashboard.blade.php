@@ -605,7 +605,254 @@
             repeat(2, minmax(0,1fr));
     }
 }
+/* =========================================================
+   FINAL MOBILE / TABLET RESPONSIVE
+   ADMIN DASHBOARD
+========================================================= */
 
+@media (max-width: 991.98px) {
+
+.admin-dashboard {
+    width: 100%;
+    max-width: 100%;
+
+    gap: 18px;
+}
+
+.admin-dashboard-section {
+    width: 100%;
+    max-width: 100%;
+
+    padding: 20px;
+}
+
+.admin-section-heading {
+    min-width: 0;
+}
+
+.admin-section-heading > div:first-child {
+    min-width: 0;
+}
+
+.admin-section-heading h3 {
+    overflow-wrap: anywhere;
+}
+
+.admin-section-heading p {
+    max-width: 100%;
+
+    line-height: 1.55;
+}
+
+.admin-stats-grid {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.admin-stat-card {
+    min-width: 0;
+}
+
+.admin-detail-panel {
+    width: 100%;
+    max-width: 100%;
+}
+
+.admin-row {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+}
+}
+
+
+/* =========================================================
+PHONE
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+.admin-dashboard {
+    gap: 14px;
+}
+
+.admin-dashboard-section {
+    padding: 15px;
+
+    border-radius: 16px;
+}
+
+.admin-section-heading {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+}
+
+.admin-section-heading h3 {
+    font-size: 19px;
+}
+
+.admin-section-heading p {
+    margin-top: 4px;
+
+    font-size: 10px;
+
+    line-height: 1.55;
+}
+
+.admin-section-badge {
+    height: 28px;
+
+    padding: 0 10px;
+
+    font-size: 9px;
+}
+
+.admin-stats-grid {
+    grid-template-columns: 1fr;
+
+    gap: 10px;
+}
+
+.admin-stat-card {
+    min-height: 122px;
+
+    padding: 15px;
+
+    border-radius: 14px;
+}
+
+.admin-stat-number {
+    margin-top: 13px;
+
+    font-size: 23px;
+}
+
+.admin-stat-number.money {
+    font-size: 21px;
+}
+
+.admin-stat-footer {
+    padding-top: 12px;
+}
+
+.admin-detail-panel {
+    padding: 16px;
+
+    border-radius: 16px;
+}
+
+.admin-detail-header {
+    align-items: flex-start;
+
+    margin-bottom: 15px;
+}
+
+.admin-detail-title {
+    font-size: 18px;
+}
+
+.admin-detail-subtitle {
+    padding-right: 8px;
+
+    line-height: 1.5;
+}
+
+.admin-close-btn {
+    width: 36px;
+    height: 36px;
+
+    flex: 0 0 36px;
+}
+
+.admin-row {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+    padding: 13px;
+}
+
+.admin-action-btn {
+    min-height: 38px;
+
+    padding: 8px 12px;
+}
+}
+
+
+/* =========================================================
+SMALL PHONE
+========================================================= */
+
+@media (max-width: 520px) {
+
+.admin-dashboard-section {
+    padding: 13px;
+}
+
+.admin-row {
+    grid-template-columns: 1fr;
+}
+
+.admin-row > div {
+    min-width: 0;
+}
+
+.admin-label {
+    font-size: 8px;
+}
+
+.admin-value {
+    font-size: 11px;
+
+    line-height: 1.45;
+}
+
+.admin-action-btn {
+    width: 100%;
+}
+
+.admin-detail-panel {
+    padding: 14px;
+}
+
+.admin-detail-header {
+    gap: 10px;
+}
+}
+
+
+/* =========================================================
+VERY SMALL PHONE
+========================================================= */
+
+@media (max-width: 360px) {
+
+.admin-dashboard-section {
+    padding: 11px;
+}
+
+.admin-stat-card {
+    padding: 14px;
+}
+
+.admin-stat-label {
+    font-size: 9px;
+}
+
+.admin-section-heading h3 {
+    font-size: 18px;
+}
+}
 </style>
 
 

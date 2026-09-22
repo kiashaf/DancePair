@@ -1,6 +1,11 @@
 @extends('public.layout')
 
-@section('title', 'Contact Us | DancePair')
+@section(
+    'title',
+    app()->getLocale() === 'fr'
+        ? 'Nous contacter | DancePair'
+        : 'Contact Us | DancePair'
+)
 
 
 @push('styles')
@@ -12,9 +17,20 @@
     ========================================================= */
 
     .contact-page {
-        padding: 55px 0 70px;
+        padding: 32px 0 36px;
 
-        background: #070615;
+        background:
+            radial-gradient(
+                circle at 80% 10%,
+                rgba(121,55,255,.08),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 15% 30%,
+                rgba(247,37,133,.06),
+                transparent 26%
+            ),
+            #070615;
     }
 
 
@@ -33,12 +49,12 @@
     ========================================================= */
 
     .contact-form-card {
-        padding: 34px;
+        padding: 24px 26px;
 
         border:
             1px solid rgba(255,255,255,.08);
 
-        border-radius: 28px;
+        border-radius: 22px;
 
         background:
             linear-gradient(
@@ -46,6 +62,9 @@
                 #100E25,
                 #17102F
             );
+
+        box-shadow:
+            0 20px 60px rgba(0,0,0,.18);
     }
 
 
@@ -54,7 +73,7 @@
 
         color: #FFFFFF;
 
-        font-size: 30px;
+        font-size: 27px;
         font-weight: 900;
 
         letter-spacing: -.7px;
@@ -62,15 +81,13 @@
 
 
     .contact-form-subtitle {
-        margin: 7px 0 0;
+        margin: 5px 0 0;
 
         color: #918BA5;
 
-        font-size: 14px;
-        line-height: 1.6;
+        font-size: 12px;
+        line-height: 1.55;
     }
-
-
 
 
     /* =========================================================
@@ -78,23 +95,24 @@
     ========================================================= */
 
     .contact-success {
-        margin-top: 22px;
-        padding: 16px 18px;
+        margin-top: 16px;
+
+        padding: 12px 14px;
 
         border:
             1px solid rgba(34,197,94,.28);
 
-        border-radius: 14px;
+        border-radius: 12px;
 
         color: #DDFCE7;
 
         background:
             rgba(34,197,94,.10);
 
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 700;
 
-        line-height: 1.6;
+        line-height: 1.5;
     }
 
 
@@ -103,7 +121,7 @@
     ========================================================= */
 
     .contact-form {
-        margin-top: 36px;
+        margin-top: 22px;
     }
 
 
@@ -113,7 +131,7 @@
         grid-template-columns:
             repeat(2, minmax(0, 1fr));
 
-        gap: 20px;
+        gap: 14px;
     }
 
 
@@ -130,11 +148,11 @@
     .contact-field label {
         display: block;
 
-        margin-bottom: 9px;
+        margin-bottom: 6px;
 
         color: #AAA3BE;
 
-        font-size: 13px;
+        font-size: 11px;
         font-weight: 800;
     }
 
@@ -149,13 +167,13 @@
 
         outline: none;
 
-        border-radius: 15px;
+        border-radius: 11px;
 
         color: #FFFFFF;
 
         background: #070615;
 
-        font-size: 14px;
+        font-size: 12px;
 
         transition:
             border-color .2s ease,
@@ -165,20 +183,20 @@
 
     .contact-field input,
     .contact-field select {
-        height: 62px;
+        height: 48px;
 
-        padding: 0 18px;
+        padding: 0 14px;
     }
 
 
     .contact-field textarea {
-        min-height: 195px;
+        min-height: 130px;
 
-        padding: 18px;
+        padding: 14px;
 
         resize: vertical;
 
-        line-height: 1.6;
+        line-height: 1.55;
     }
 
 
@@ -215,7 +233,7 @@
     ========================================================= */
 
     .contact-form-footer {
-        margin-top: 28px;
+        margin-top: 18px;
 
         display: flex;
 
@@ -231,24 +249,25 @@
 
         color: #777184;
 
-        font-size: 11px;
+        font-size: 10px;
         line-height: 1.5;
     }
 
 
     .contact-submit-btn {
-        min-width: 170px;
-        height: 48px;
+        min-width: 150px;
+        height: 42px;
 
         display: inline-flex;
 
         align-items: center;
         justify-content: center;
 
-        padding: 0 25px;
+        padding: 0 20px;
 
         border: 0;
-        border-radius: 12px;
+
+        border-radius: 10px;
 
         color: #FFFFFF;
 
@@ -260,9 +279,10 @@
             );
 
         box-shadow:
-            0 10px 25px rgba(247,37,133,.18);
+            0 10px 25px
+            rgba(247,37,133,.18);
 
-        font-size: 13px;
+        font-size: 11px;
         font-weight: 850;
 
         cursor: pointer;
@@ -274,10 +294,12 @@
 
 
     .contact-submit-btn:hover {
-        transform: translateY(-2px);
+        transform:
+            translateY(-2px);
 
         box-shadow:
-            0 14px 30px rgba(247,37,133,.25);
+            0 14px 30px
+            rgba(247,37,133,.25);
     }
 
 
@@ -289,9 +311,9 @@
 
         .contact-page {
             padding:
-                30px
+                22px
                 0
-                50px;
+                30px;
         }
 
 
@@ -302,14 +324,15 @@
 
 
         .contact-form-card {
-            padding: 24px 18px;
+            padding:
+                20px 16px;
 
-            border-radius: 20px;
+            border-radius: 18px;
         }
 
 
         .contact-form-card h1 {
-            font-size: 25px;
+            font-size: 24px;
         }
 
 
@@ -344,6 +367,7 @@
 
 @section('content')
 
+
 <section class="contact-page">
 
     <div class="contact-container">
@@ -352,14 +376,23 @@
 
 
             <h1>
-                Send a Message
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Envoyez-nous un message'
+                    : 'Send Us a Message'
+                }}
+
             </h1>
 
 
             <p class="contact-form-subtitle">
-                Fill out the form below and tell us how we can help.
-            </p>
 
+                {{ app()->getLocale() === 'fr'
+                    ? 'Remplissez le formulaire ci-dessous et dites-nous comment nous pouvons vous aider.'
+                    : 'Fill out the form below and let us know how we can help.'
+                }}
+
+            </p>
 
 
 
@@ -369,10 +402,16 @@
                     class="contact-success"
                     role="alert"
                 >
-                    Thank you! Your message has been sent successfully. We’ll get back to you as soon as possible.
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Merci ! Votre message a bien été envoyé. Nous vous répondrons dès que possible.'
+                        : 'Thank you! Your message has been sent successfully. We’ll get back to you as soon as possible.'
+                    }}
+
                 </div>
 
             @endif
+
 
 
             <form
@@ -387,19 +426,31 @@
                 <div class="contact-form-grid">
 
 
-                    {{-- FIRST NAME --}}
+                    {{-- =====================================================
+                       FIRST NAME
+                    ===================================================== --}}
+
                     <div class="contact-field">
 
                         <label for="first_name">
-                            First Name
+
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Prénom'
+                                : 'First Name'
+                            }}
+
                         </label>
+
 
                         <input
                             type="text"
                             id="first_name"
                             name="first_name"
                             value="{{ old('first_name') }}"
-                            placeholder="Your first name"
+                            placeholder="{{ app()->getLocale() === 'fr'
+                                ? 'Votre prénom'
+                                : 'Your first name'
+                            }}"
                             required
                         >
 
@@ -407,19 +458,31 @@
 
 
 
-                    {{-- LAST NAME --}}
+                    {{-- =====================================================
+                       LAST NAME
+                    ===================================================== --}}
+
                     <div class="contact-field">
 
                         <label for="last_name">
-                            Last Name
+
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Nom'
+                                : 'Last Name'
+                            }}
+
                         </label>
+
 
                         <input
                             type="text"
                             id="last_name"
                             name="last_name"
                             value="{{ old('last_name') }}"
-                            placeholder="Your last name"
+                            placeholder="{{ app()->getLocale() === 'fr'
+                                ? 'Votre nom'
+                                : 'Your last name'
+                            }}"
                             required
                         >
 
@@ -427,18 +490,25 @@
 
 
 
-                    {{-- EMAIL --}}
+                    {{-- =====================================================
+                       EMAIL
+                    ===================================================== --}}
+
                     <div class="contact-field">
 
                         <label for="email">
                             Email
                         </label>
 
+
                         <input
                             type="email"
                             id="email"
                             name="email"
-                            value="{{ old('email', auth()->user()->email ?? '') }}"
+                            value="{{ old(
+                                'email',
+                                auth()->user()->email ?? ''
+                            ) }}"
                             placeholder="you@example.com"
                             required
                         >
@@ -447,12 +517,21 @@
 
 
 
-                    {{-- TOPIC --}}
+                    {{-- =====================================================
+                       TOPIC
+                    ===================================================== --}}
+
                     <div class="contact-field">
 
                         <label for="topic">
-                            Topic
+
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Sujet de la demande'
+                                : 'Topic'
+                            }}
+
                         </label>
+
 
                         <select
                             id="topic"
@@ -465,49 +544,108 @@
                                 disabled
                                 {{ old('topic') ? '' : 'selected' }}
                             >
-                                Choose a topic
+
+                                {{ app()->getLocale() === 'fr'
+                                    ? 'Choisissez un sujet'
+                                    : 'Choose a topic'
+                                }}
+
                             </option>
+
 
                             <option
                                 value="account"
-                                {{ old('topic') === 'account' ? 'selected' : '' }}
+                                {{ old('topic') === 'account'
+                                    ? 'selected'
+                                    : ''
+                                }}
                             >
-                                Account
+
+                                {{ app()->getLocale() === 'fr'
+                                    ? 'Compte'
+                                    : 'Account'
+                                }}
+
                             </option>
+
 
                             <option
                                 value="teacher"
-                                {{ old('topic') === 'teacher' ? 'selected' : '' }}
+                                {{ old('topic') === 'teacher'
+                                    ? 'selected'
+                                    : ''
+                                }}
                             >
-                                Teacher
+
+                                {{ app()->getLocale() === 'fr'
+                                    ? 'Professeur'
+                                    : 'Teacher'
+                                }}
+
                             </option>
+
 
                             <option
                                 value="booking"
-                                {{ old('topic') === 'booking' ? 'selected' : '' }}
+                                {{ old('topic') === 'booking'
+                                    ? 'selected'
+                                    : ''
+                                }}
                             >
-                                Booking
+
+                                {{ app()->getLocale() === 'fr'
+                                    ? 'Réservation'
+                                    : 'Booking'
+                                }}
+
                             </option>
+
 
                             <option
                                 value="payment"
-                                {{ old('topic') === 'payment' ? 'selected' : '' }}
+                                {{ old('topic') === 'payment'
+                                    ? 'selected'
+                                    : ''
+                                }}
                             >
-                                Payment
+
+                                {{ app()->getLocale() === 'fr'
+                                    ? 'Paiement'
+                                    : 'Payment'
+                                }}
+
                             </option>
+
 
                             <option
                                 value="technical"
-                                {{ old('topic') === 'technical' ? 'selected' : '' }}
+                                {{ old('topic') === 'technical'
+                                    ? 'selected'
+                                    : ''
+                                }}
                             >
-                                Technical Issue
+
+                                {{ app()->getLocale() === 'fr'
+                                    ? 'Problème technique'
+                                    : 'Technical Issue'
+                                }}
+
                             </option>
+
 
                             <option
                                 value="other"
-                                {{ old('topic') === 'other' ? 'selected' : '' }}
+                                {{ old('topic') === 'other'
+                                    ? 'selected'
+                                    : ''
+                                }}
                             >
-                                Other
+
+                                {{ app()->getLocale() === 'fr'
+                                    ? 'Autre'
+                                    : 'Other'
+                                }}
+
                             </option>
 
                         </select>
@@ -516,19 +654,31 @@
 
 
 
-                    {{-- SUBJECT --}}
+                    {{-- =====================================================
+                       SUBJECT
+                    ===================================================== --}}
+
                     <div class="contact-field contact-field-full">
 
                         <label for="subject">
-                            Subject
+
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Objet'
+                                : 'Subject'
+                            }}
+
                         </label>
+
 
                         <input
                             type="text"
                             id="subject"
                             name="subject"
                             value="{{ old('subject') }}"
-                            placeholder="What can we help you with?"
+                            placeholder="{{ app()->getLocale() === 'fr'
+                                ? 'Comment pouvons-nous vous aider ?'
+                                : 'What can we help you with?'
+                            }}"
                             required
                         >
 
@@ -536,17 +686,29 @@
 
 
 
-                    {{-- MESSAGE --}}
+                    {{-- =====================================================
+                       MESSAGE
+                    ===================================================== --}}
+
                     <div class="contact-field contact-field-full">
 
                         <label for="message">
-                            Message
+
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Message'
+                                : 'Message'
+                            }}
+
                         </label>
+
 
                         <textarea
                             id="message"
                             name="message"
-                            placeholder="Tell us more about your question..."
+                            placeholder="{{ app()->getLocale() === 'fr'
+                                ? 'Donnez-nous plus de détails sur votre demande...'
+                                : 'Tell us more about your question...'
+                            }}"
                             required
                         >{{ old('message') }}</textarea>
 
@@ -557,10 +719,20 @@
 
 
 
+                {{-- =====================================================
+                   FORM FOOTER
+                ===================================================== --}}
+
                 <div class="contact-form-footer">
 
+
                     <p class="contact-form-note">
-                        Please don't include passwords or sensitive payment information.
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'N’incluez jamais de mots de passe ni de renseignements de paiement sensibles.'
+                            : 'Please do not include passwords or sensitive payment information.'
+                        }}
+
                     </p>
 
 
@@ -568,8 +740,14 @@
                         type="submit"
                         class="contact-submit-btn"
                     >
-                        Send Message
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Envoyer le message'
+                            : 'Send Message'
+                        }}
+
                     </button>
+
 
                 </div>
 
@@ -582,5 +760,6 @@
     </div>
 
 </section>
+
 
 @endsection

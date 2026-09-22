@@ -1,6 +1,11 @@
 @extends('public.layout')
 
-@section('title', 'Find a Teacher | DancePair')
+@section(
+    'title',
+    app()->getLocale() === 'fr'
+        ? 'Trouver un professeur | DancePair'
+        : 'Find a Teacher | DancePair'
+)
 
 
 @push('styles')
@@ -12,7 +17,7 @@
 
     .find-hero {
         position: relative;
-        min-height: 640px;
+        min-height: 430px;
         display: flex;
         align-items: center;
         overflow: hidden;
@@ -27,7 +32,7 @@
             ),
             url('{{ asset('images/home/hero-dance.jpg') }}');
 
-        background-size: auto 95%;
+        background-size: auto 100%;
         background-position: right bottom;
         background-repeat: no-repeat;
     }
@@ -64,7 +69,7 @@
 
 
     .find-hero-copy {
-        max-width: 710px;
+        max-width: 640px;
     }
 
 
@@ -72,9 +77,9 @@
         display: inline-flex;
         align-items: center;
 
-        padding: 9px 15px;
+        padding: 7px 13px;
 
-        margin-bottom: 22px;
+        margin-bottom: 16px;
 
         border: 1px solid rgba(247,37,133,.30);
         border-radius: 999px;
@@ -83,7 +88,7 @@
 
         color: #FF85BC;
 
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 900;
         letter-spacing: .15em;
     }
@@ -94,12 +99,12 @@
 
         color: #FFFFFF;
 
-        font-size: clamp(50px, 6vw, 88px);
+        font-size: clamp(44px, 5vw, 68px);
         line-height: .96;
 
         font-weight: 950;
 
-        letter-spacing: -4px;
+        letter-spacing: -3px;
     }
 
 
@@ -124,12 +129,12 @@
     .find-hero-copy > p {
         max-width: 600px;
 
-        margin: 25px 0 0;
+        margin: 18px 0 0;
 
         color: #BAB5C5;
 
-        font-size: 17px;
-        line-height: 1.75;
+        font-size: 15px;
+        line-height: 1.65;
     }
 
 
@@ -144,7 +149,7 @@
 
         width: min(1450px, calc(100% - 80px));
 
-        margin: -54px auto 0;
+        margin: -38px auto 0;
     }
 
 
@@ -159,13 +164,13 @@
 
         align-items: end;
 
-        gap: 12px;
+        gap: 10px;
 
-        padding: 20px;
+        padding: 15px;
 
         border: 1px solid rgba(255,255,255,.10);
 
-        border-radius: 22px;
+        border-radius: 18px;
 
         background:
             rgba(18,15,38,.96);
@@ -181,7 +186,7 @@
     .find-field label {
         display: block;
 
-        margin-bottom: 8px;
+        margin-bottom: 6px;
 
         color: #8C879A;
 
@@ -197,14 +202,14 @@
     .find-field input,
     .find-field select {
         width: 100%;
-        height: 50px;
+        height: 46px;
 
-        padding: 0 15px;
+        padding: 0 14px;
 
         border:
             1px solid rgba(255,255,255,.09);
 
-        border-radius: 12px;
+        border-radius: 10px;
 
         outline: none;
 
@@ -222,13 +227,13 @@
 
 
     .find-search-button {
-        height: 50px;
+        height: 46px;
 
-        padding: 0 28px;
+        padding: 0 24px;
 
         border: 0;
 
-        border-radius: 12px;
+        border-radius: 10px;
 
         color: #FFFFFF;
 
@@ -256,7 +261,7 @@
     ========================================================= */
 
     .find-content {
-        padding: 105px 0 85px;
+        padding: 58px 0 52px;
     }
 
 
@@ -274,7 +279,7 @@
 
         gap: 30px;
 
-        margin-bottom: 32px;
+        margin-bottom: 24px;
     }
 
 
@@ -299,7 +304,7 @@
 
         color: white;
 
-        font-size: 37px;
+        font-size: 32px;
         font-weight: 950;
 
         letter-spacing: -1.5px;
@@ -364,7 +369,7 @@
     .teacher-photo {
         position: relative;
 
-        height: 260px;
+        height: 210px;
 
         overflow: hidden;
 
@@ -408,7 +413,7 @@
 
 
     .teacher-body {
-        padding: 19px;
+        padding: 16px;
     }
 
 
@@ -424,7 +429,7 @@
     .teacher-name {
         color: #FFFFFF;
 
-        font-size: 17px;
+        font-size: 15px;
         font-weight: 900;
     }
 
@@ -442,7 +447,7 @@
 
         color: #777184;
 
-        font-size: 11px;
+        font-size: 10px;
     }
 
 
@@ -478,9 +483,9 @@
         align-items: center;
         justify-content: space-between;
 
-        margin-top: 18px;
+        margin-top: 14px;
 
-        padding-top: 15px;
+        padding-top: 12px;
 
         border-top:
             1px solid rgba(255,255,255,.06);
@@ -518,9 +523,9 @@
     ========================================================= */
 
     .find-bottom-cta {
-        margin-top: 80px;
+        margin-top: 42px;
 
-        padding: 55px;
+        padding: 32px 36px;
 
         display: flex;
 
@@ -553,7 +558,7 @@
 
         color: #FFFFFF;
 
-        font-size: 30px;
+        font-size: 26px;
         font-weight: 950;
     }
 
@@ -568,9 +573,9 @@
 
 
     .find-bottom-cta a {
-        min-height: 48px;
+        min-height: 44px;
 
-        padding: 0 23px;
+        padding: 0 20px;
 
         display: inline-flex;
 
@@ -620,7 +625,7 @@
         }
 
         .find-hero {
-            min-height: 580px;
+            min-height: 470px;
 
             background-size: auto 70%;
             background-position: 80% bottom;
@@ -645,7 +650,7 @@
         }
 
         .find-bottom-cta {
-            padding: 30px;
+            padding: 26px;
         }
 
     }
@@ -664,19 +669,33 @@
         <div class="find-hero-copy">
 
             <div class="find-kicker">
-                FIND • LEARN • DANCE
+                {{ app()->getLocale() === 'fr'
+                    ? 'TROUVEZ • APPRENEZ • DANSEZ'
+                    : 'FIND • LEARN • DANCE'
+                }}
             </div>
 
             <h1>
-                Find the Teacher
-                <span>Made for You.</span>
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Trouvez le professeur de danse'
+                    : 'Find the Dance Teacher'
+                }}
+
+                <span>
+                    {{ app()->getLocale() === 'fr'
+                        ? 'qui vous correspond.'
+                        : 'That’s Right for You.'
+                    }}
+                </span>
+
             </h1>
 
             <p>
-                Discover dance teachers who match your style,
-                experience, location and goals.
-                Compare real profiles, ratings and rates before
-                choosing who you want to learn with.
+                {{ app()->getLocale() === 'fr'
+                    ? 'Découvrez des professeurs de danse selon votre style, votre niveau, votre localisation et vos objectifs. Comparez les profils, les évaluations et les tarifs afin de trouver le professeur qui vous convient.'
+                    : 'Discover dance teachers based on your style, experience, location, and goals. Compare profiles, ratings, and rates to find the teacher who best fits your needs.'
+                }}
             </p>
 
         </div>
@@ -689,17 +708,29 @@
 
 <div class="find-search-wrap">
 
-    <form class="find-search-box" method="GET">
+    <form
+        class="find-search-box"
+        method="GET"
+        action="{{ route('public.find-teacher') }}"
+    >
 
         <div class="find-field">
 
-            <label>Location</label>
+            <label>
+                {{ app()->getLocale() === 'fr'
+                    ? 'Localisation'
+                    : 'Location'
+                }}
+            </label>
 
             <input
                 type="text"
-                name="city"
-                value="{{ request('city') }}"
-                placeholder="Montreal, Brossard..."
+                name="location"
+                value="{{ request('location') }}"
+                placeholder="{{ app()->getLocale() === 'fr'
+                    ? 'Montréal, Brossard...'
+                    : 'Montreal, Brossard...'
+                }}"
             >
 
         </div>
@@ -707,12 +738,20 @@
 
         <div class="find-field">
 
-            <label>Dance Style</label>
+            <label>
+                {{ app()->getLocale() === 'fr'
+                    ? 'Style de danse'
+                    : 'Dance Style'
+                }}
+            </label>
 
             <select name="dance_style_id">
 
                 <option value="">
-                    All Dance Styles
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Tous les styles de danse'
+                        : 'All Dance Styles'
+                    }}
                 </option>
 
                 @isset($danceStyles)
@@ -740,20 +779,50 @@
 
         <div class="find-field">
 
-            <label>Lesson Type</label>
+            <label>
+                {{ app()->getLocale() === 'fr'
+                    ? 'Type de cours'
+                    : 'Lesson Type'
+                }}
+            </label>
 
             <select name="lesson_type">
 
                 <option value="">
-                    All Lessons
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Tous les types de cours'
+                        : 'All Lesson Types'
+                    }}
                 </option>
 
-                <option value="in_person">
-                    In-Person
+                <option
+                    value="face_to_face"
+                    @selected(request('lesson_type') === 'face_to_face')
+                >
+                    {{ app()->getLocale() === 'fr'
+                        ? 'En personne'
+                        : 'In Person'
+                    }}
                 </option>
 
-                <option value="online">
-                    Online
+                <option
+                    value="online"
+                    @selected(request('lesson_type') === 'online')
+                >
+                    {{ app()->getLocale() === 'fr'
+                        ? 'En ligne'
+                        : 'Online'
+                    }}
+                </option>
+
+                <option
+                    value="public_place"
+                    @selected(request('lesson_type') === 'public_place')
+                >
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Dans un lieu public'
+                        : 'Public Place'
+                    }}
                 </option>
 
             </select>
@@ -765,7 +834,10 @@
             type="submit"
             class="find-search-button"
         >
-            Find My Teacher
+            {{ app()->getLocale() === 'fr'
+                ? 'Trouver un professeur'
+                : 'Find a Teacher'
+            }}
         </button>
 
     </form>
@@ -784,19 +856,26 @@
             <div>
 
                 <small>
-                    DancePair Teachers
+                    {{ app()->getLocale() === 'fr'
+                        ? 'PROFESSEURS DANCEPAIR'
+                        : 'DANCEPAIR TEACHERS'
+                    }}
                 </small>
 
                 <h2>
-                    Find Your Perfect Match
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Trouvez le professeur idéal'
+                        : 'Find Your Perfect Match'
+                    }}
                 </h2>
 
             </div>
 
             <p>
-                Explore teachers, compare styles and rates,
-                and choose the person who feels right for
-                your dance journey.
+                {{ app()->getLocale() === 'fr'
+                    ? 'Explorez les profils, comparez les styles et les tarifs, puis choisissez le professeur qui correspond le mieux à vos objectifs.'
+                    : 'Explore teacher profiles, compare styles and rates, and choose the teacher who best matches your goals.'
+                }}
             </p>
 
         </div>
@@ -830,7 +909,19 @@
                                     <span class="teacher-badge">
 
                                         {{ $teacher->experience_years }}
-                                        years experience
+
+                                        {{ app()->getLocale() === 'fr'
+                                            ? (
+                                                (int) $teacher->experience_years === 1
+                                                    ? 'an d’expérience'
+                                                    : 'ans d’expérience'
+                                            )
+                                            : (
+                                                (int) $teacher->experience_years === 1
+                                                    ? 'year of experience'
+                                                    : 'years of experience'
+                                            )
+                                        }}
 
                                     </span>
 
@@ -850,12 +941,19 @@
                                     </div>
 
 
-                                    @if(isset($teacher->reviews_avg_rating))
+                                    @php
+                                        $teacherRating =
+                                            $teacher->average_rating
+                                            ?? $teacher->reviews_avg_rating
+                                            ?? null;
+                                    @endphp
+
+                                    @if($teacherRating)
 
                                         <div class="teacher-rating">
 
                                             ★
-                                            {{ number_format($teacher->reviews_avg_rating, 1) }}
+                                            {{ number_format($teacherRating, 1) }}
 
                                         </div>
 
@@ -866,10 +964,24 @@
 
                                 <div class="teacher-location">
 
-                                    {{ $teacher->city }}
+                                    @if($teacher->city)
+
+                                        {{ $teacher->city }}
+
+                                    @else
+
+                                        {{ app()->getLocale() === 'fr'
+                                            ? 'Localisation non indiquée'
+                                            : 'Location not provided'
+                                        }}
+
+                                    @endif
+
 
                                     @if($teacher->province)
+
                                         • {{ $teacher->province }}
+
                                     @endif
 
                                 </div>
@@ -914,15 +1026,27 @@
 
                                         @if($minimumRate)
 
-                                            From
+                                            {{ app()->getLocale() === 'fr'
+                                                ? 'À partir de'
+                                                : 'From'
+                                            }}
+
                                             ${{ number_format($minimumRate, 0) }}
 
-                                            <span>/hour</span>
+                                            <span>
+                                                {{ app()->getLocale() === 'fr'
+                                                    ? '/ heure'
+                                                    : '/ hour'
+                                                }}
+                                            </span>
 
                                         @else
 
                                             <span>
-                                                View rates
+                                                {{ app()->getLocale() === 'fr'
+                                                    ? 'Voir les tarifs'
+                                                    : 'View Rates'
+                                                }}
                                             </span>
 
                                         @endif
@@ -934,7 +1058,11 @@
                                         href="{{ route('student.teachers.show', $teacher) }}"
                                         class="teacher-view"
                                     >
-                                        View Profile →
+                                        {{ app()->getLocale() === 'fr'
+                                            ? 'Voir le profil'
+                                            : 'View Profile'
+                                        }}
+                                        →
                                     </a>
 
                                 </div>
@@ -960,7 +1088,10 @@
                     "
                 >
 
-                    No teachers matched your search.
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Aucun professeur ne correspond à vos critères de recherche.'
+                        : 'No teachers match your current search criteria.'
+                    }}
 
                 </div>
 
@@ -979,7 +1110,10 @@
                 "
             >
 
-                Teacher results will appear here.
+                {{ app()->getLocale() === 'fr'
+                    ? 'Les professeurs disponibles apparaîtront ici.'
+                    : 'Available teachers will appear here.'
+                }}
 
             </div>
 
@@ -992,19 +1126,27 @@
             <div>
 
                 <h3>
-                    Are You a Dance Teacher?
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Vous êtes professeur de danse ?'
+                        : 'Are You a Dance Teacher?'
+                    }}
                 </h3>
 
                 <p>
-                    Create your DancePair profile and let
-                    new students discover you.
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Créez votre profil DancePair, présentez votre expérience et faites-vous découvrir par de nouveaux élèves.'
+                        : 'Create your DancePair profile, showcase your experience, and connect with new students.'
+                    }}
                 </p>
 
             </div>
 
 
             <a href="{{ route('register') }}">
-                Become a Teacher
+                {{ app()->getLocale() === 'fr'
+                    ? 'Devenir professeur'
+                    : 'Become a Teacher'
+                }}
             </a>
 
         </div>

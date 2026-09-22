@@ -20,6 +20,7 @@ class Payment extends Model
         'transaction_id',
         'paid_at',
         'refunded_at',
+        'cancellation_policy_accepted_at',
     ];
 
     protected $casts = [
@@ -29,6 +30,7 @@ class Payment extends Model
         'teacher_amount' => 'decimal:2',
         'paid_at' => 'datetime',
         'refunded_at' => 'datetime',
+        'cancellation_policy_accepted_at' => 'datetime',
     ];
 
 

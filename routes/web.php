@@ -35,6 +35,10 @@ use App\Models\DanceStyle;
 use App\Http\Controllers\BookingMessageController;
 use App\Http\Controllers\AdminPlatformMessageController;
 use App\Http\Controllers\PlatformMessageController;
+use App\Http\Controllers\TeacherStripeConnectController;
+
+use App\Http\Controllers\StripeWebhookController;
+
 /*
 |--------------------------------------------------------------------------
 | PUBLIC
@@ -265,6 +269,26 @@ Route::post(
     [\App\Http\Controllers\ContactController::class, 'send']
 )->name('public.contact.send');
 
+/*
+|--------------------------------------------------------------------------
+| Terms & Conditions
+|--------------------------------------------------------------------------
+*/
+
+Route::view(
+    '/terms',
+    'public.terms'
+)->name('public.terms');
+/*
+|--------------------------------------------------------------------------
+| STRIPE WEBHOOK
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/stripe/webhook',
+    [StripeWebhookController::class, 'handle']
+)->name('stripe.webhook');
 
 /*
 |--------------------------------------------------------------------------
@@ -497,6 +521,22 @@ Route::middleware([
         [TeacherProfileController::class, 'update']
     )->name('teacher.profile.update');
 
+    Route::get(
+        '/teacher/stripe/connect',
+        [TeacherStripeConnectController::class, 'connect']
+    )->name('teacher.stripe.connect');
+
+
+    Route::get(
+        '/teacher/stripe/refresh',
+        [TeacherStripeConnectController::class, 'refresh']
+    )->name('teacher.stripe.refresh');
+
+
+    Route::get(
+        '/teacher/stripe/return',
+        [TeacherStripeConnectController::class, 'return']
+    )->name('teacher.stripe.return');
 
     /*
     |--------------------------------------------------------------------------
@@ -568,6 +608,10 @@ Route::delete(
         [TeacherBookingController::class, 'reject']
     )->name('teacher.bookings.reject');
 
+    Route::post(
+        '/teacher/bookings/{booking}/cancel',
+        [TeacherBookingController::class, 'cancel']
+    )->name('teacher.bookings.cancel');
 
     Route::get(
         '/teacher/bookings/{booking}/student',
@@ -696,7 +740,10 @@ Route::delete(
         [StudentBookingController::class, 'destroy']
     )->name('student.bookings.destroy');
 
-
+    Route::delete(
+        '/student/bookings/{booking}',
+        [StudentBookingController::class, 'destroy']
+    )->name('student.bookings.destroy');
     /*
     |--------------------------------------------------------------------------
     | Student Reviews
@@ -833,6 +880,11 @@ Route::post(
         [AdminPaymentController::class, 'show']
     )->name('admin.payments.show');
 
+    Route::post(
+        '/admin/payments/{payment}/refund',
+        [AdminPaymentController::class, 'refund']
+    )->name('admin.payments.refund');
+
 /*
 |--------------------------------------------------------------------------
 | Admin DancePair Messages
@@ -949,7 +1001,10 @@ Route::get(
         [AdminStudentController::class, 'update']
     )->name('admin.students.update');
 
-
+    Route::post(
+        '/student/bookings/{booking}/cancel',
+        [StudentBookingController::class, 'cancel']
+    )->name('student.bookings.cancel');
     /*
     |--------------------------------------------------------------------------
     | Settings

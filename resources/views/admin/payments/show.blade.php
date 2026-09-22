@@ -1,7 +1,18 @@
 @extends('admin.layout')
 
-@section('title', 'Payment #' . $payment->id)
-@section('page-title', 'Payment Details')
+@section(
+    'title',
+    app()->getLocale() === 'fr'
+        ? 'Paiement #' . $payment->id
+        : 'Payment #' . $payment->id
+)
+
+@section(
+    'page-title',
+    app()->getLocale() === 'fr'
+        ? 'Détails du paiement'
+        : 'Payment Details'
+)
 
 @section('content')
 
@@ -10,6 +21,40 @@
     $booking = $payment->booking;
     $student = $payment->student;
     $teacher = $payment->teacher;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | REFUND STATE
+    |--------------------------------------------------------------------------
+    */
+
+    $isRefunded =
+        !is_null($payment->refunded_at)
+        ||
+        $payment->status === 'refunded';
+
+
+    $isRefundPending =
+        $payment->status === 'refund_pending';
+
+
+    $canAdminRefund =
+        !$isRefunded
+        &&
+        !$isRefundPending
+        &&
+        !is_null($payment->paid_at)
+        &&
+        $payment->payment_provider === 'stripe'
+        &&
+        !empty($payment->transaction_id);
+
+
+    $refundConfirmation =
+        app()->getLocale() === 'fr'
+            ? 'Confirmer le remboursement complet de 100 % ? Le montant sera remboursé à l’élève sur le mode de paiement d’origine. La part transférée au professeur ainsi que les frais DancePair seront également remboursés.'
+            : 'Confirm the 100% full refund? The student will be refunded to the original payment method. The teacher transfer and DancePair application fee will also be refunded.';
 
 @endphp
 
@@ -27,6 +72,37 @@
     gap: 18px;
 
     padding-bottom: 40px;
+}
+
+
+/* =========================================================
+   ALERTS
+========================================================= */
+
+.payment-admin-alert {
+    padding: 12px 15px;
+
+    border-radius: 11px;
+
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.payment-admin-alert.success {
+    border: 1px solid #A7F3D0;
+
+    background: #ECFDF5;
+
+    color: #047857;
+}
+
+.payment-admin-alert.error {
+    border: 1px solid #FECACA;
+
+    background: #FEF2F2;
+
+    color: #B91C1C;
 }
 
 
@@ -101,10 +177,28 @@
     background: #FFFFFF;
 }
 
+.payment-detail-summary.refunded {
+    border-color: #FECACA;
+}
+
+.payment-detail-summary.refund-pending {
+    border-color: #FDE68A;
+}
+
 .payment-summary-main {
     padding: 21px;
 
     background: #F0FDF4;
+}
+
+.payment-detail-summary.refunded
+.payment-summary-main {
+    background: #FEF2F2;
+}
+
+.payment-detail-summary.refund-pending
+.payment-summary-main {
+    background: #FFFBEB;
 }
 
 .payment-summary-main span {
@@ -128,6 +222,12 @@
     background: #FEE2E2;
 
     color: #B91C1C;
+}
+
+.payment-summary-main span.refund-pending {
+    background: #FEF3C7;
+
+    color: #92400E;
 }
 
 .payment-summary-main h3 {
@@ -407,6 +507,215 @@
 
 
 /* =========================================================
+   ADMIN REFUND
+========================================================= */
+
+.admin-refund-panel {
+    margin-top: 18px;
+
+    padding: 16px;
+
+    border: 1px solid #FECACA;
+    border-radius: 12px;
+
+    background: #FFF7F7;
+}
+
+.admin-refund-panel.pending {
+    border-color: #FDE68A;
+
+    background: #FFFBEB;
+}
+
+.admin-refund-panel.refunded {
+    border-color: #BBF7D0;
+
+    background: #F0FDF4;
+}
+
+.admin-refund-panel.unavailable {
+    border-color: #E2E8F0;
+
+    background: #F8FAFC;
+}
+
+.admin-refund-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.admin-refund-heading h5 {
+    margin: 0;
+
+    font-size: 12px;
+    font-weight: 850;
+
+    color: #0F172A;
+}
+
+.admin-refund-heading span {
+    padding: 4px 8px;
+
+    border-radius: 999px;
+
+    background: #FEE2E2;
+
+    color: #B91C1C;
+
+    font-size: 7px;
+    font-weight: 850;
+
+    text-transform: uppercase;
+}
+
+.admin-refund-panel.pending
+.admin-refund-heading span {
+    background: #FEF3C7;
+
+    color: #92400E;
+}
+
+.admin-refund-panel.refunded
+.admin-refund-heading span {
+    background: #DCFCE7;
+
+    color: #047857;
+}
+
+.admin-refund-panel.unavailable
+.admin-refund-heading span {
+    background: #E2E8F0;
+
+    color: #475569;
+}
+
+.admin-refund-description {
+    margin: 7px 0 13px;
+
+    max-width: 760px;
+
+    color: #64748B;
+
+    font-size: 9px;
+    line-height: 1.55;
+}
+
+.admin-refund-breakdown {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0,1fr));
+
+    gap: 8px;
+
+    margin-bottom: 13px;
+}
+
+.admin-refund-breakdown-item {
+    padding: 10px 11px;
+
+    border: 1px solid rgba(248,113,113,.20);
+    border-radius: 9px;
+
+    background: rgba(255,255,255,.75);
+}
+
+.admin-refund-breakdown-item span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #94A3B8;
+
+    font-size: 7px;
+    font-weight: 850;
+
+    text-transform: uppercase;
+}
+
+.admin-refund-breakdown-item strong {
+    color: #0F172A;
+
+    font-size: 11px;
+    font-weight: 850;
+}
+
+.admin-refund-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+.admin-refund-button {
+    min-height: 39px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 15px;
+
+    border: 1px solid #DC2626;
+    border-radius: 9px;
+
+    background: #DC2626;
+
+    color: #FFFFFF;
+
+    font-size: 9.5px;
+    font-weight: 850;
+
+    cursor: pointer;
+
+    transition:
+        background .15s ease,
+        border-color .15s ease;
+}
+
+.admin-refund-button:hover {
+    border-color: #B91C1C;
+
+    background: #B91C1C;
+}
+
+.admin-refund-warning {
+    color: #991B1B;
+
+    font-size: 8px;
+    font-weight: 700;
+}
+
+.admin-refund-status-text {
+    margin: 0;
+
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.admin-refund-panel.pending
+.admin-refund-status-text {
+    color: #92400E;
+}
+
+.admin-refund-panel.refunded
+.admin-refund-status-text {
+    color: #047857;
+}
+
+.admin-refund-panel.unavailable
+.admin-refund-status-text {
+    color: #64748B;
+}
+
+
+/* =========================================================
    BOOKING BUTTON
 ========================================================= */
 
@@ -451,6 +760,7 @@
     }
 }
 
+
 @media(max-width: 750px) {
 
     .payment-detail-header {
@@ -468,12 +778,22 @@
 
     .payment-detail-summary,
     .payment-info-grid,
-    .payment-finance-grid {
+    .payment-finance-grid,
+    .admin-refund-breakdown {
         grid-template-columns: 1fr;
     }
 
     .payment-summary-main {
         grid-column: auto;
+    }
+
+    .admin-refund-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-refund-button {
+        width: 100%;
     }
 }
 
@@ -483,18 +803,58 @@
 <div class="payment-detail-page">
 
 
-{{-- HEADER --}}
+{{-- =========================================================
+   MESSAGES
+========================================================= --}}
+
+@if(session('success'))
+
+    <div class="payment-admin-alert success">
+
+        {{ session('success') }}
+
+    </div>
+
+@endif
+
+
+@if(session('error'))
+
+    <div class="payment-admin-alert error">
+
+        {{ session('error') }}
+
+    </div>
+
+@endif
+
+
+
+{{-- =========================================================
+   HEADER
+========================================================= --}}
 
 <div class="payment-detail-header">
 
     <div>
 
         <h2>
-            Payment #{{ $payment->id }}
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Paiement #' . $payment->id
+                : 'Payment #' . $payment->id
+            }}
+
         </h2>
 
+
         <p>
-            Complete transaction, booking and client information.
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Informations complètes sur la transaction, la réservation et le client.'
+                : 'Complete transaction, booking and client information.'
+            }}
+
         </p>
 
     </div>
@@ -504,37 +864,109 @@
         href="{{ route('admin.payments') }}"
         class="payment-back-btn"
     >
-        ← Back to Payments
+
+        {{ app()->getLocale() === 'fr'
+            ? '← Retour aux paiements'
+            : '← Back to Payments'
+        }}
+
     </a>
 
 </div>
 
 
 
-{{-- SUMMARY --}}
+{{-- =========================================================
+   SUMMARY
+========================================================= --}}
 
-<div class="payment-detail-summary">
+<div
+    class="
+        payment-detail-summary
+
+        {{ $isRefunded
+            ? 'refunded'
+            : (
+                $isRefundPending
+                    ? 'refund-pending'
+                    : ''
+            )
+        }}
+    "
+>
 
     <div class="payment-summary-main">
 
 
-        <span class="{{ $payment->refunded_at ? 'refunded' : '' }}">
+        <span
+            class="
+                {{ $isRefunded
+                    ? 'refunded'
+                    : (
+                        $isRefundPending
+                            ? 'refund-pending'
+                            : ''
+                    )
+                }}
+            "
+        >
 
-            {{ $payment->refunded_at
-                ? 'Refunded'
-                : ucfirst($payment->status ?? 'Paid')
-            }}
+            @if($isRefunded)
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Remboursé'
+                    : 'Refunded'
+                }}
+
+            @elseif($isRefundPending)
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Remboursement en cours'
+                    : 'Refund processing'
+                }}
+
+            @else
+
+                {{ ucfirst(
+                    $payment->status
+                    ??
+                    (
+                        app()->getLocale() === 'fr'
+                            ? 'Payé'
+                            : 'Paid'
+                    )
+                ) }}
+
+            @endif
 
         </span>
 
 
         <h3>
-            {{ ucfirst($payment->payment_provider ?? 'Payment') }}
+
+            {{ ucfirst(
+                $payment->payment_provider
+                ??
+                (
+                    app()->getLocale() === 'fr'
+                        ? 'Paiement'
+                        : 'Payment'
+                )
+            ) }}
+
         </h3>
 
 
         <p>
-            {{ $payment->transaction_id ?? 'No transaction ID' }}
+
+            {{ $payment->transaction_id
+                ?? (
+                    app()->getLocale() === 'fr'
+                        ? 'Aucun identifiant de transaction'
+                        : 'No transaction ID'
+                )
+            }}
+
         </p>
 
     </div>
@@ -544,14 +976,22 @@
     <div class="payment-summary-item amount">
 
         <span>
-            Gross
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Montant brut'
+                : 'Gross'
+            }}
+
         </span>
 
+
         <strong>
+
             ${{ number_format(
                 (float) $payment->amount,
                 2
             ) }}
+
         </strong>
 
     </div>
@@ -564,11 +1004,14 @@
             DancePair
         </span>
 
+
         <strong class="platform-money">
+
             ${{ number_format(
                 (float) $payment->platform_fee,
                 2
             ) }}
+
         </strong>
 
     </div>
@@ -578,14 +1021,22 @@
     <div class="payment-summary-item">
 
         <span>
-            Teacher
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Professeur'
+                : 'Teacher'
+            }}
+
         </span>
 
+
         <strong class="teacher-money">
+
             ${{ number_format(
                 (float) $payment->teacher_amount,
                 2
             ) }}
+
         </strong>
 
     </div>
@@ -595,11 +1046,23 @@
     <div class="payment-summary-item">
 
         <span>
-            Currency
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Devise'
+                : 'Currency'
+            }}
+
         </span>
 
+
         <strong>
-            {{ strtoupper($payment->currency ?? 'CAD') }}
+
+            {{ strtoupper(
+                $payment->currency
+                ??
+                'CAD'
+            ) }}
+
         </strong>
 
     </div>
@@ -611,18 +1074,31 @@
 <div class="payment-detail-grid">
 
 
-{{-- STUDENT --}}
+{{-- =========================================================
+   STUDENT
+========================================================= --}}
 
 <div class="payment-detail-card student">
 
     <div class="payment-card-header">
 
         <h4>
-            Student
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Élève'
+                : 'Student'
+            }}
+
         </h4>
 
+
         <p>
-            Client who made the payment
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Client ayant effectué le paiement'
+                : 'Client who made the payment'
+            }}
+
         </p>
 
     </div>
@@ -634,7 +1110,9 @@
 
             {{ strtoupper(
                 substr(
-                    $student?->user?->name ?? 'S',
+                    $student?->user?->name
+                    ??
+                    'S',
                     0,
                     1
                 )
@@ -646,11 +1124,22 @@
         <div>
 
             <strong>
-                {{ $student?->user?->name ?? '—' }}
+
+                {{ $student?->user?->name
+                    ??
+                    '—'
+                }}
+
             </strong>
 
+
             <small>
-                {{ $student?->user?->email ?? '—' }}
+
+                {{ $student?->user?->email
+                    ??
+                    '—'
+                }}
+
             </small>
 
         </div>
@@ -663,11 +1152,19 @@
         <div class="payment-info-item">
 
             <span>
-                Student ID
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'ID élève'
+                    : 'Student ID'
+                }}
+
             </span>
 
+
             <strong>
+
                 #{{ $payment->student_id }}
+
             </strong>
 
         </div>
@@ -676,11 +1173,22 @@
         <div class="payment-info-item">
 
             <span>
-                City
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Ville'
+                    : 'City'
+                }}
+
             </span>
 
+
             <strong>
-                {{ $student?->city ?? '—' }}
+
+                {{ $student?->city
+                    ??
+                    '—'
+                }}
+
             </strong>
 
         </div>
@@ -692,8 +1200,14 @@
                 Province
             </span>
 
+
             <strong>
-                {{ $student?->province ?? '—' }}
+
+                {{ $student?->province
+                    ??
+                    '—'
+                }}
+
             </strong>
 
         </div>
@@ -702,11 +1216,22 @@
         <div class="payment-info-item">
 
             <span>
-                Country
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Pays'
+                    : 'Country'
+                }}
+
             </span>
 
+
             <strong>
-                {{ $student?->country ?? '—' }}
+
+                {{ $student?->country
+                    ??
+                    '—'
+                }}
+
             </strong>
 
         </div>
@@ -717,18 +1242,31 @@
 
 
 
-{{-- TEACHER --}}
+{{-- =========================================================
+   TEACHER
+========================================================= --}}
 
 <div class="payment-detail-card teacher">
 
     <div class="payment-card-header">
 
         <h4>
-            Teacher
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Professeur'
+                : 'Teacher'
+            }}
+
         </h4>
 
+
         <p>
-            Teacher receiving this lesson payment
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Professeur recevant le paiement de ce cours'
+                : 'Teacher receiving this lesson payment'
+            }}
+
         </p>
 
     </div>
@@ -740,7 +1278,9 @@
 
             {{ strtoupper(
                 substr(
-                    $teacher?->user?->name ?? 'T',
+                    $teacher?->user?->name
+                    ??
+                    'T',
                     0,
                     1
                 )
@@ -752,11 +1292,22 @@
         <div>
 
             <strong>
-                {{ $teacher?->user?->name ?? '—' }}
+
+                {{ $teacher?->user?->name
+                    ??
+                    '—'
+                }}
+
             </strong>
 
+
             <small>
-                {{ $teacher?->user?->email ?? '—' }}
+
+                {{ $teacher?->user?->email
+                    ??
+                    '—'
+                }}
+
             </small>
 
         </div>
@@ -769,11 +1320,19 @@
         <div class="payment-info-item">
 
             <span>
-                Teacher ID
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'ID professeur'
+                    : 'Teacher ID'
+                }}
+
             </span>
 
+
             <strong>
+
                 #{{ $payment->teacher_id }}
+
             </strong>
 
         </div>
@@ -782,11 +1341,22 @@
         <div class="payment-info-item">
 
             <span>
-                City
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Ville'
+                    : 'City'
+                }}
+
             </span>
 
+
             <strong>
-                {{ $teacher?->city ?? '—' }}
+
+                {{ $teacher?->city
+                    ??
+                    '—'
+                }}
+
             </strong>
 
         </div>
@@ -798,8 +1368,14 @@
                 Province
             </span>
 
+
             <strong>
-                {{ $teacher?->province ?? '—' }}
+
+                {{ $teacher?->province
+                    ??
+                    '—'
+                }}
+
             </strong>
 
         </div>
@@ -808,11 +1384,22 @@
         <div class="payment-info-item">
 
             <span>
-                Country
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Pays'
+                    : 'Country'
+                }}
+
             </span>
 
+
             <strong>
-                {{ $teacher?->country ?? '—' }}
+
+                {{ $teacher?->country
+                    ??
+                    '—'
+                }}
+
             </strong>
 
         </div>
@@ -823,7 +1410,9 @@
 
 
 
-{{-- TRANSACTION --}}
+{{-- =========================================================
+   TRANSACTION
+========================================================= --}}
 
 <div class="payment-detail-card transaction">
 
@@ -833,8 +1422,14 @@
             Transaction
         </h4>
 
+
         <p>
-            Payment provider and transaction data
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Fournisseur de paiement et données de transaction'
+                : 'Payment provider and transaction data'
+            }}
+
         </p>
 
     </div>
@@ -845,11 +1440,19 @@
         <div class="payment-info-item">
 
             <span>
-                Payment ID
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'ID paiement'
+                    : 'Payment ID'
+                }}
+
             </span>
 
+
             <strong>
+
                 #{{ $payment->id }}
+
             </strong>
 
         </div>
@@ -858,11 +1461,23 @@
         <div class="payment-info-item">
 
             <span>
-                Provider
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Fournisseur'
+                    : 'Provider'
+                }}
+
             </span>
+
 
             <strong>
-                {{ ucfirst($payment->payment_provider ?? '—') }}
+
+                {{ ucfirst(
+                    $payment->payment_provider
+                    ??
+                    '—'
+                ) }}
+
             </strong>
 
         </div>
@@ -871,11 +1486,22 @@
         <div class="payment-info-item">
 
             <span>
-                Transaction ID
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'ID transaction'
+                    : 'Transaction ID'
+                }}
+
             </span>
+
 
             <strong>
-                {{ $payment->transaction_id ?? '—' }}
+
+                {{ $payment->transaction_id
+                    ??
+                    '—'
+                }}
+
             </strong>
 
         </div>
@@ -884,11 +1510,41 @@
         <div class="payment-info-item">
 
             <span>
-                Status
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Statut'
+                    : 'Status'
+                }}
+
             </span>
+
 
             <strong>
-                {{ ucfirst($payment->status ?? '—') }}
+
+                @if($isRefunded)
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Remboursé'
+                        : 'Refunded'
+                    }}
+
+                @elseif($isRefundPending)
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Remboursement en cours'
+                        : 'Refund processing'
+                    }}
+
+                @else
+
+                    {{ ucfirst(
+                        $payment->status
+                        ??
+                        '—'
+                    ) }}
+
+                @endif
+
             </strong>
 
         </div>
@@ -897,8 +1553,14 @@
         <div class="payment-info-item">
 
             <span>
-                Paid At
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Payé le'
+                    : 'Paid At'
+                }}
+
             </span>
+
 
             <strong>
 
@@ -916,8 +1578,14 @@
         <div class="payment-info-item">
 
             <span>
-                Refunded At
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Remboursé le'
+                    : 'Refunded At'
+                }}
+
             </span>
+
 
             <strong>
 
@@ -925,7 +1593,14 @@
                     $payment->refunded_at
                 )->format(
                     'M d, Y · g:i A'
-                ) ?? 'Not refunded' }}
+                )
+                ??
+                (
+                    app()->getLocale() === 'fr'
+                        ? 'Non remboursé'
+                        : 'Not refunded'
+                )
+                }}
 
             </strong>
 
@@ -935,8 +1610,14 @@
         <div class="payment-info-item">
 
             <span>
-                Created
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Créé le'
+                    : 'Created'
+                }}
+
             </span>
+
 
             <strong>
 
@@ -953,19 +1634,32 @@
     </div>
 
 
+
+    {{-- =====================================================
+       FINANCIAL SPLIT
+    ====================================================== --}}
+
     <div class="payment-finance-grid">
 
         <div class="payment-finance-box">
 
             <span>
-                Gross
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Montant brut'
+                    : 'Gross'
+                }}
+
             </span>
 
+
             <strong>
+
                 ${{ number_format(
                     (float) $payment->amount,
                     2
                 ) }}
+
             </strong>
 
         </div>
@@ -974,14 +1668,22 @@
         <div class="payment-finance-box">
 
             <span>
-                DancePair Revenue
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Revenu DancePair'
+                    : 'DancePair Revenue'
+                }}
+
             </span>
 
+
             <strong class="platform-money">
+
                 ${{ number_format(
                     (float) $payment->platform_fee,
                     2
                 ) }}
+
             </strong>
 
         </div>
@@ -990,36 +1692,421 @@
         <div class="payment-finance-box">
 
             <span>
-                Teacher Earnings
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Revenu professeur'
+                    : 'Teacher Earnings'
+                }}
+
             </span>
 
+
             <strong class="teacher-money">
+
                 ${{ number_format(
                     (float) $payment->teacher_amount,
                     2
                 ) }}
+
             </strong>
 
         </div>
 
     </div>
 
+
+
+    {{-- =====================================================
+       ADMIN REFUND
+    ====================================================== --}}
+
+    @if($isRefunded)
+
+        <div class="admin-refund-panel refunded">
+
+            <div class="admin-refund-heading">
+
+                <h5>
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Remboursement complet'
+                        : 'Full Refund'
+                    }}
+
+                </h5>
+
+
+                <span>
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Remboursé'
+                        : 'Refunded'
+                    }}
+
+                </span>
+
+            </div>
+
+
+            <p class="admin-refund-description">
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Ce paiement a déjà été remboursé. Aucun autre remboursement automatique n’est disponible pour cette transaction.'
+                    : 'This payment has already been refunded. No additional automatic refund is available for this transaction.'
+                }}
+
+            </p>
+
+
+            <p class="admin-refund-status-text">
+
+                ✓
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Remboursement enregistré'
+                    : 'Refund recorded'
+                }}
+
+                @if($payment->refunded_at)
+
+                    —
+
+                    {{ $payment->refunded_at->format(
+                        'M d, Y · g:i A'
+                    ) }}
+
+                @endif
+
+            </p>
+
+        </div>
+
+
+    @elseif($isRefundPending)
+
+        <div class="admin-refund-panel pending">
+
+            <div class="admin-refund-heading">
+
+                <h5>
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Remboursement en cours'
+                        : 'Refund Processing'
+                    }}
+
+                </h5>
+
+
+                <span>
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'En cours'
+                        : 'Pending'
+                    }}
+
+                </span>
+
+            </div>
+
+
+            <p class="admin-refund-description">
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Stripe traite actuellement le remboursement complet de cette transaction. Ne soumettez pas un second remboursement.'
+                    : 'Stripe is currently processing the full refund for this transaction. Do not submit a second refund.'
+                }}
+
+            </p>
+
+
+            <p class="admin-refund-status-text">
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'En attente de la confirmation finale de Stripe.'
+                    : 'Waiting for final confirmation from Stripe.'
+                }}
+
+            </p>
+
+        </div>
+
+
+    @elseif($canAdminRefund)
+
+        <div class="admin-refund-panel">
+
+            <div class="admin-refund-heading">
+
+                <h5>
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Remboursement administrateur'
+                        : 'Admin Refund'
+                    }}
+
+                </h5>
+
+
+                <span>
+
+                    {{ app()->getLocale() === 'fr'
+                        ? '100 %'
+                        : '100% Full Refund'
+                    }}
+
+                </span>
+
+            </div>
+
+
+            <p class="admin-refund-description">
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Cette action rembourse 100 % du montant payé par l’élève vers le mode de paiement d’origine. La part du professeur sera récupérée et les frais DancePair seront également remboursés.'
+                    : 'This action refunds 100% of the amount paid by the student to the original payment method. The teacher transfer will be reversed and the DancePair application fee will also be refunded.'
+                }}
+
+            </p>
+
+
+            <div class="admin-refund-breakdown">
+
+                <div class="admin-refund-breakdown-item">
+
+                    <span>
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Élève'
+                            : 'Student Refund'
+                        }}
+
+                    </span>
+
+
+                    <strong>
+
+                        ${{ number_format(
+                            (float) $payment->amount,
+                            2
+                        ) }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-refund-breakdown-item">
+
+                    <span>
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Part professeur'
+                            : 'Teacher Transfer'
+                        }}
+
+                    </span>
+
+
+                    <strong>
+
+                        ${{ number_format(
+                            (float) $payment->teacher_amount,
+                            2
+                        ) }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-refund-breakdown-item">
+
+                    <span>
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Frais DancePair'
+                            : 'DancePair Fee'
+                        }}
+
+                    </span>
+
+
+                    <strong>
+
+                        ${{ number_format(
+                            (float) $payment->platform_fee,
+                            2
+                        ) }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-refund-actions">
+
+                <form
+                    method="POST"
+                    action="{{ route(
+                        'admin.payments.refund',
+                        $payment
+                    ) }}"
+                    onsubmit="return confirm(@js($refundConfirmation));"
+                >
+
+                    @csrf
+
+
+                    <button
+                        type="submit"
+                        class="admin-refund-button"
+                    >
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Rembourser 100 %'
+                            : 'Issue 100% Refund'
+                        }}
+
+                    </button>
+
+                </form>
+
+
+                <span class="admin-refund-warning">
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Vérifiez la transaction avant de confirmer.'
+                        : 'Verify the transaction before confirming.'
+                    }}
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+    @elseif(
+        !is_null($payment->paid_at)
+        &&
+        $payment->payment_provider !== 'stripe'
+    )
+
+        <div class="admin-refund-panel unavailable">
+
+            <div class="admin-refund-heading">
+
+                <h5>
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Remboursement automatique indisponible'
+                        : 'Automatic Refund Unavailable'
+                    }}
+
+                </h5>
+
+
+                <span>
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Non Stripe'
+                        : 'Non-Stripe'
+                    }}
+
+                </span>
+
+            </div>
+
+
+            <p class="admin-refund-status-text">
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Ce paiement n’a pas été traité par Stripe et ne peut donc pas être remboursé automatiquement depuis cette page.'
+                    : 'This payment was not processed by Stripe, so it cannot be refunded automatically from this page.'
+                }}
+
+            </p>
+
+        </div>
+
+
+    @elseif(
+        !is_null($payment->paid_at)
+        &&
+        empty($payment->transaction_id)
+    )
+
+        <div class="admin-refund-panel unavailable">
+
+            <div class="admin-refund-heading">
+
+                <h5>
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Remboursement indisponible'
+                        : 'Refund Unavailable'
+                    }}
+
+                </h5>
+
+
+                <span>
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Transaction manquante'
+                        : 'Missing Transaction'
+                    }}
+
+                </span>
+
+            </div>
+
+
+            <p class="admin-refund-status-text">
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Aucun identifiant de transaction Stripe n’est associé à ce paiement.'
+                    : 'No Stripe transaction ID is associated with this payment.'
+                }}
+
+            </p>
+
+        </div>
+
+    @endif
+
 </div>
 
 
 
-{{-- BOOKING --}}
+{{-- =========================================================
+   BOOKING
+========================================================= --}}
 
 <div class="payment-detail-card booking">
 
     <div class="payment-card-header">
 
         <h4>
-            Related Booking
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Réservation associée'
+                : 'Related Booking'
+            }}
+
         </h4>
 
+
         <p>
-            Lesson connected to this transaction
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Cours associé à cette transaction'
+                : 'Lesson connected to this transaction'
+            }}
+
         </p>
 
     </div>
@@ -1032,11 +2119,19 @@
             <div class="payment-info-item">
 
                 <span>
-                    Booking ID
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'ID réservation'
+                        : 'Booking ID'
+                    }}
+
                 </span>
 
+
                 <strong>
+
                     #{{ $booking->id }}
+
                 </strong>
 
             </div>
@@ -1045,11 +2140,22 @@
             <div class="payment-info-item">
 
                 <span>
-                    Dance Style
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Style de danse'
+                        : 'Dance Style'
+                    }}
+
                 </span>
+
 
                 <strong>
-                    {{ $booking->danceStyle?->name ?? '—' }}
+
+                    {{ $booking->danceStyle?->name
+                        ??
+                        '—'
+                    }}
+
                 </strong>
 
             </div>
@@ -1058,17 +2164,29 @@
             <div class="payment-info-item">
 
                 <span>
-                    Lesson Date
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Date du cours'
+                        : 'Lesson Date'
+                    }}
+
                 </span>
+
 
                 <strong>
 
                     {{ $booking->lesson_date
                         ? \Carbon\Carbon::parse(
                             $booking->lesson_date
-                        )->format(
-                            'M d, Y'
                         )
+                            ->locale(
+                                app()->getLocale()
+                            )
+                            ->translatedFormat(
+                                app()->getLocale() === 'fr'
+                                    ? 'd M Y'
+                                    : 'M d, Y'
+                            )
                         : '—'
                     }}
 
@@ -1080,11 +2198,55 @@
             <div class="payment-info-item">
 
                 <span>
-                    Booking Status
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Statut réservation'
+                        : 'Booking Status'
+                    }}
+
                 </span>
 
+
                 <strong>
-                    {{ ucfirst($booking->status ?? '—') }}
+
+                    @if($booking->status === 'cancelled')
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Annulé'
+                            : 'Cancelled'
+                        }}
+
+                    @elseif($booking->status === 'confirmed')
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Confirmé'
+                            : 'Confirmed'
+                        }}
+
+                    @elseif($booking->status === 'pending')
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'En attente'
+                            : 'Pending'
+                        }}
+
+                    @elseif($booking->status === 'completed')
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Terminé'
+                            : 'Completed'
+                        }}
+
+                    @else
+
+                        {{ ucfirst(
+                            $booking->status
+                            ??
+                            '—'
+                        ) }}
+
+                    @endif
+
                 </strong>
 
             </div>
@@ -1093,14 +2255,26 @@
             <div class="payment-info-item">
 
                 <span>
-                    Lesson Price
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Prix du cours'
+                        : 'Lesson Price'
+                    }}
+
                 </span>
 
+
                 <strong>
+
                     ${{ number_format(
-                        (float) ($booking->price ?? 0),
+                        (float) (
+                            $booking->price
+                            ??
+                            0
+                        ),
                         2
                     ) }}
+
                 </strong>
 
             </div>
@@ -1115,13 +2289,21 @@
             ) }}"
             class="payment-booking-link"
         >
-            View Full Booking →
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Voir la réservation complète →'
+                : 'View Full Booking →'
+            }}
+
         </a>
 
 
     @else
 
-        No booking is connected to this payment.
+        {{ app()->getLocale() === 'fr'
+            ? 'Aucune réservation n’est associée à ce paiement.'
+            : 'No booking is connected to this payment.'
+        }}
 
     @endif
 

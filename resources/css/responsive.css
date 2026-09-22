@@ -1,0 +1,4930 @@
+/* =========================================================
+   DANCEPAIR
+   GLOBAL RESPONSIVE FOUNDATION
+
+   Desktop styles remain controlled by:
+   - theme.css
+   - admin.css
+   - student.css
+   - teacher.css
+   - components.css
+
+   This file adds responsive behaviour only.
+========================================================= */
+
+
+/* =========================================================
+   GLOBAL SAFETY
+========================================================= */
+
+html {
+    max-width: 100%;
+}
+
+body {
+    max-width: 100%;
+}
+
+body.mobile-menu-is-open {
+    overflow: hidden;
+}
+
+img,
+svg,
+video,
+canvas,
+iframe {
+    max-width: 100%;
+}
+
+img {
+    height: auto;
+}
+
+
+/* =========================================================
+   DASHBOARD MAIN CONTENT SAFETY
+========================================================= */
+
+.admin-panel .main-content,
+.student-panel .main-content,
+.teacher-panel .main-content {
+    min-width: 0;
+}
+
+.admin-panel main,
+.student-panel main,
+.teacher-panel main {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.admin-panel .card,
+.student-panel .card,
+.teacher-panel .card,
+.admin-panel .profile-card,
+.student-panel .profile-card,
+.teacher-panel .profile-card,
+.admin-panel .stat-card,
+.student-panel .stat-card,
+.teacher-panel .stat-card,
+.admin-page-card {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   GLOBAL DASHBOARD MOBILE MENU BUTTON
+========================================================= */
+
+.mobile-sidebar-toggle {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #E2E8F0;
+    border-radius: 11px;
+
+    background: #FFFFFF;
+    color: #0F172A;
+
+    box-shadow:
+        0 3px 12px rgba(15,23,42,.06);
+
+    font-size: 22px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+.mobile-sidebar-toggle:hover {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+
+    box-shadow:
+        0 5px 16px rgba(15,23,42,.08);
+}
+
+.mobile-sidebar-toggle:active {
+    transform: scale(.96);
+}
+
+
+/* =========================================================
+   DASHBOARD MOBILE SIDEBAR CLOSE BUTTON
+========================================================= */
+
+.mobile-sidebar-close {
+    width: 40px;
+    height: 40px;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+
+    top: 14px;
+    right: 14px;
+
+    z-index: 5;
+
+    padding: 0;
+
+    border:
+        1px solid rgba(255,255,255,.26);
+
+    border-radius: 11px;
+
+    background:
+        rgba(255,255,255,.10);
+
+    color: #FFFFFF;
+
+    font-size: 25px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+}
+
+.mobile-sidebar-close:hover {
+    background:
+        rgba(255,255,255,.18);
+}
+
+.mobile-sidebar-close:active {
+    transform: scale(.96);
+}
+
+
+/* =========================================================
+   DASHBOARD MOBILE OVERLAY
+========================================================= */
+
+.mobile-sidebar-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1998;
+
+    background:
+        rgba(15,23,42,.58);
+
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+        opacity .25s ease,
+        visibility .25s ease;
+}
+
+.mobile-sidebar-overlay.mobile-sidebar-overlay-open {
+    opacity: 1;
+    visibility: visible;
+
+    pointer-events: auto;
+}
+
+
+/* =========================================================
+   DASHBOARD TOPBAR FOUNDATION
+========================================================= */
+
+.dashboard-topbar-left {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+.dashboard-topbar-title {
+    min-width: 0;
+
+    margin-right: auto;
+}
+
+.dashboard-topbar-title h4 {
+    max-width: 100%;
+}
+
+.dashboard-topbar-title small {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   TABLE SAFETY
+========================================================= */
+
+.table-responsive,
+.admin-table-responsive,
+.student-table-responsive,
+.teacher-table-responsive {
+    width: 100%;
+    max-width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.admin-panel table,
+.student-panel table,
+.teacher-panel table {
+    max-width: 100%;
+}
+
+.admin-panel .table-responsive table,
+.student-panel .table-responsive table,
+.teacher-panel .table-responsive table {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   LONG TEXT SAFETY
+========================================================= */
+
+.admin-panel td,
+.admin-panel th,
+.student-panel td,
+.student-panel th,
+.teacher-panel td,
+.teacher-panel th {
+    overflow-wrap: anywhere;
+}
+
+.admin-panel a,
+.student-panel a,
+.teacher-panel a {
+    overflow-wrap: break-word;
+}
+
+
+/* =========================================================
+   FORM SAFETY
+========================================================= */
+
+.admin-panel input,
+.admin-panel select,
+.admin-panel textarea,
+.admin-panel button,
+.student-panel input,
+.student-panel select,
+.student-panel textarea,
+.student-panel button,
+.teacher-panel input,
+.teacher-panel select,
+.teacher-panel textarea,
+.teacher-panel button {
+    max-width: 100%;
+}
+
+.admin-panel textarea,
+.student-panel textarea,
+.teacher-panel textarea {
+    resize: vertical;
+}
+
+
+/* =========================================================
+   MODAL SAFETY
+========================================================= */
+
+.modal-dialog {
+    max-width:
+        calc(100% - 24px);
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.modal-content {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   ADMIN PAGE FOUNDATION
+========================================================= */
+
+.admin-page-card {
+    max-width: 100%;
+}
+
+.admin-page-header,
+.admin-toolbar {
+    min-width: 0;
+}
+
+.admin-search-wrap {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   DASHBOARD TABLET + MOBILE DRAWER
+   Up to 991.98px
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .admin-panel > .container-fluid,
+    .student-panel > .container-fluid,
+    .teacher-panel > .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .admin-panel > .container-fluid > .row,
+    .student-panel > .container-fluid > .row,
+    .teacher-panel > .container-fluid > .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .admin-panel .sidebar[data-mobile-sidebar],
+    .student-panel .sidebar[data-mobile-sidebar],
+    .teacher-panel .sidebar[data-mobile-sidebar] {
+        width:
+            min(
+                84vw,
+                350px
+            );
+
+        max-width: 350px;
+
+        height: 100dvh;
+        min-height: 100dvh;
+
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        z-index: 1999;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        overscroll-behavior: contain;
+
+        padding-top:
+            72px !important;
+
+        transform:
+            translateX(-105%);
+
+        visibility: hidden;
+
+        box-shadow:
+            18px 0 50px
+            rgba(15,23,42,.22);
+
+        transition:
+            transform .28s ease,
+            visibility .28s ease;
+    }
+
+    .admin-panel
+    .sidebar[data-mobile-sidebar]
+    .mobile-sidebar-close,
+
+    .student-panel
+    .sidebar[data-mobile-sidebar]
+    .mobile-sidebar-close,
+
+    .teacher-panel
+    .sidebar[data-mobile-sidebar]
+    .mobile-sidebar-close {
+        display: flex;
+    }
+
+    .admin-panel
+    .sidebar[data-mobile-sidebar]
+    .dw-logo,
+
+    .student-panel
+    .sidebar[data-mobile-sidebar]
+    .dw-logo,
+
+    .teacher-panel
+    .sidebar[data-mobile-sidebar]
+    .dw-logo {
+        margin-top: 0;
+    }
+
+    .admin-panel
+    .sidebar[data-mobile-sidebar]
+    .dw-logo-image,
+
+    .student-panel
+    .sidebar[data-mobile-sidebar]
+    .dw-logo-image,
+
+    .teacher-panel
+    .sidebar[data-mobile-sidebar]
+    .dw-logo-image {
+        max-width: 135px;
+    }
+
+    .admin-panel
+    .sidebar[data-mobile-sidebar].mobile-sidebar-open,
+
+    .student-panel
+    .sidebar[data-mobile-sidebar].mobile-sidebar-open,
+
+    .teacher-panel
+    .sidebar[data-mobile-sidebar].mobile-sidebar-open {
+        transform:
+            translateX(0);
+
+        visibility: visible;
+    }
+
+    .mobile-sidebar-toggle {
+        display: flex;
+    }
+
+    .admin-panel .main-content,
+    .student-panel .main-content,
+    .teacher-panel .main-content {
+        width: 100%;
+        max-width: 100%;
+
+        flex:
+            0 0 100%;
+
+        margin: 0;
+
+        min-height: 100dvh;
+    }
+
+    .admin-panel .topbar,
+    .student-panel .topbar,
+    .teacher-panel .topbar {
+        width: 100%;
+
+        gap: 12px;
+    }
+
+    .admin-panel main,
+    .student-panel main,
+    .teacher-panel main {
+        padding:
+            22px !important;
+    }
+
+    .admin-page-card {
+        padding: 22px;
+    }
+
+    .admin-page-header,
+    .admin-toolbar {
+        gap: 16px;
+    }
+
+    .teacher-request-row {
+        grid-template-columns:
+            1fr
+            1fr;
+
+        gap: 12px;
+    }
+
+    .teacher-request-actions {
+        width: 100%;
+
+        grid-column:
+            1 / -1;
+
+        justify-content:
+            flex-start;
+    }
+
+    .admin-panel .row,
+    .student-panel .row,
+    .teacher-panel .row {
+        --bs-gutter-x:
+            1.25rem;
+    }
+}
+
+
+/* =========================================================
+   MOBILE DASHBOARDS
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .admin-panel .topbar,
+    .student-panel .topbar,
+    .teacher-panel .topbar {
+        min-height: 70px;
+
+        padding:
+            11px 14px !important;
+
+        gap: 9px;
+    }
+
+    .dashboard-topbar-left {
+        gap: 10px;
+    }
+
+    .dashboard-topbar-title h4 {
+        overflow: hidden;
+
+        font-size: 17px;
+        line-height: 1.2;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+    }
+
+    .dashboard-topbar-title small {
+        display: block;
+
+        max-width: 48vw;
+
+        overflow: hidden;
+
+        margin-top: 2px;
+
+        font-size: 10px;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+    }
+
+    .admin-panel .admin-avatar,
+    .admin-panel .avatar,
+    .student-panel .avatar,
+    .teacher-panel .avatar {
+        width: 40px;
+        height: 40px;
+
+        flex:
+            0 0 40px;
+
+        font-size: 15px;
+    }
+
+    .student-panel .topbar > div:last-child,
+    .teacher-panel .topbar > div:last-child {
+        gap:
+            8px !important;
+
+        flex-shrink: 0;
+    }
+
+    .teacher-language-switch {
+        font-size:
+            10px !important;
+    }
+
+    .admin-panel main,
+    .student-panel main,
+    .teacher-panel main {
+        padding:
+            16px !important;
+    }
+
+    .admin-page-card {
+        padding:
+            18px;
+
+        border-radius:
+            17px;
+    }
+
+    .admin-page-header {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        margin-bottom:
+            18px;
+    }
+
+    .admin-toolbar {
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+
+        margin-bottom:
+            18px;
+    }
+
+    .admin-search-wrap {
+        width:
+            100%;
+
+        max-width:
+            none;
+    }
+
+    .admin-panel .form-control,
+    .admin-panel .form-select,
+    .student-panel .form-control,
+    .student-panel .form-select,
+    .teacher-panel .form-control,
+    .teacher-panel .form-select {
+        min-height:
+            44px;
+
+        font-size:
+            16px;
+    }
+
+    .admin-panel textarea.form-control,
+    .student-panel textarea.form-control,
+    .teacher-panel textarea.form-control {
+        min-height:
+            110px;
+    }
+
+    .admin-panel .btn,
+    .student-panel .btn,
+    .teacher-panel .btn {
+        min-height:
+            42px;
+    }
+
+    .student-booking-row {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap:
+            12px;
+    }
+
+    .teacher-request-row {
+        grid-template-columns:
+            1fr;
+
+        padding:
+            14px 2px;
+    }
+
+    .teacher-request-actions {
+        width:
+            100%;
+
+        grid-column:
+            auto;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap:
+            8px;
+    }
+
+    .teacher-request-actions .btn {
+        width:
+            100%;
+
+        min-width:
+            0;
+    }
+
+    .admin-panel .table,
+    .student-panel .table,
+    .teacher-panel .table {
+        font-size:
+            13px;
+    }
+
+    .admin-panel table th,
+    .admin-panel table td,
+    .student-panel table th,
+    .student-panel table td,
+    .teacher-panel table th,
+    .teacher-panel table td {
+        padding:
+            10px;
+    }
+
+    .admin-panel .card,
+    .student-panel .card,
+    .teacher-panel .card,
+
+    .admin-panel .profile-card,
+    .student-panel .profile-card,
+    .teacher-panel .profile-card,
+
+    .admin-panel .stat-card,
+    .student-panel .stat-card,
+    .teacher-panel .stat-card {
+        border-radius:
+            16px;
+    }
+
+    .admin-panel .alert,
+    .student-panel .alert,
+    .teacher-panel .alert {
+        padding:
+            12px;
+
+        font-size:
+            13px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE DASHBOARDS
+========================================================= */
+
+@media (max-width: 430px) {
+
+    .admin-panel
+    .sidebar[data-mobile-sidebar],
+
+    .student-panel
+    .sidebar[data-mobile-sidebar],
+
+    .teacher-panel
+    .sidebar[data-mobile-sidebar] {
+        width:
+            min(
+                90vw,
+                330px
+            );
+    }
+
+    .admin-panel .topbar,
+    .student-panel .topbar,
+    .teacher-panel .topbar {
+        padding-left:
+            11px !important;
+
+        padding-right:
+            11px !important;
+    }
+
+    .mobile-sidebar-toggle {
+        width:
+            40px;
+
+        height:
+            40px;
+
+        flex-basis:
+            40px;
+    }
+
+    .dashboard-topbar-title h4 {
+        font-size:
+            16px;
+    }
+
+    .dashboard-topbar-title small {
+        max-width:
+            42vw;
+
+        font-size:
+            9px;
+    }
+
+    .admin-panel main,
+    .student-panel main,
+    .teacher-panel main {
+        padding:
+            12px !important;
+    }
+
+    .admin-page-card {
+        padding:
+            15px;
+
+        border-radius:
+            15px;
+    }
+
+    .teacher-request-actions {
+        grid-template-columns:
+            1fr;
+    }
+
+    .teacher-request-actions .btn {
+        min-height:
+            42px;
+    }
+
+    .student-panel .topbar > div:last-child,
+    .teacher-panel .topbar > div:last-child {
+        gap:
+            6px !important;
+    }
+
+    .student-panel .topbar .avatar,
+    .teacher-panel .topbar .avatar {
+        width:
+            36px;
+
+        height:
+            36px;
+
+        flex-basis:
+            36px;
+
+        font-size:
+            14px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE DASHBOARDS
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .admin-panel main,
+    .student-panel main,
+    .teacher-panel main {
+        padding:
+            10px !important;
+    }
+
+    .dashboard-topbar-title small {
+        display:
+            none;
+    }
+
+    .admin-panel .topbar,
+    .student-panel .topbar,
+    .teacher-panel .topbar {
+        padding:
+            10px !important;
+    }
+
+    .student-panel .topbar > div:last-child,
+    .teacher-panel .topbar > div:last-child {
+        gap:
+            5px !important;
+    }
+}
+
+
+/* =========================================================
+   PUBLIC MOBILE MENU
+========================================================= */
+
+.public-mobile-toggle {
+    width:
+        44px;
+
+    height:
+        44px;
+
+    display:
+        none;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex:
+        0 0 44px;
+
+    margin-left:
+        auto;
+
+    padding:
+        0;
+
+    border:
+        1px solid
+        rgba(255,255,255,.16);
+
+    border-radius:
+        12px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    color:
+        #FFFFFF;
+
+    font-size:
+        23px;
+
+    line-height:
+        1;
+
+    cursor:
+        pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.public-mobile-toggle:hover {
+    background:
+        rgba(255,255,255,.12);
+
+    border-color:
+        rgba(255,255,255,.25);
+}
+
+.public-mobile-toggle:active {
+    transform:
+        scale(.96);
+}
+
+
+/* =========================================================
+   PUBLIC OVERLAY
+========================================================= */
+
+.public-mobile-overlay {
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        2998;
+
+    background:
+        rgba(3,2,12,.72);
+
+    backdrop-filter:
+        blur(4px);
+
+    -webkit-backdrop-filter:
+        blur(4px);
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    pointer-events:
+        none;
+
+    transition:
+        opacity .25s ease,
+        visibility .25s ease;
+}
+
+.public-mobile-overlay.public-mobile-overlay-open {
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    pointer-events:
+        auto;
+}
+
+
+/* =========================================================
+   PUBLIC DRAWER
+========================================================= */
+
+.public-mobile-menu {
+    width:
+        min(
+            88vw,
+            360px
+        );
+
+    height:
+        100dvh;
+
+    position:
+        fixed;
+
+    top:
+        0;
+
+    right:
+        0;
+
+    z-index:
+        2999;
+
+    overflow-x:
+        hidden;
+
+    overflow-y:
+        auto;
+
+    overscroll-behavior:
+        contain;
+
+    padding:
+        22px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #090718 0%,
+            #050412 100%
+        );
+
+    border-left:
+        1px solid
+        rgba(255,255,255,.08);
+
+    box-shadow:
+        -18px 0 55px
+        rgba(0,0,0,.40);
+
+    transform:
+        translateX(105%);
+
+    visibility:
+        hidden;
+
+    transition:
+        transform .28s ease,
+        visibility .28s ease;
+}
+
+.public-mobile-menu.public-mobile-menu-open {
+    transform:
+        translateX(0);
+
+    visibility:
+        visible;
+}
+
+
+/* =========================================================
+   PUBLIC DRAWER HEADER
+========================================================= */
+
+.public-mobile-menu-header {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        16px;
+
+    padding-bottom:
+        20px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+}
+
+.public-mobile-brand {
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    color:
+        #FFFFFF;
+
+    text-decoration:
+        none;
+
+    font-size:
+        21px;
+
+    font-weight:
+        900;
+}
+
+.public-mobile-brand img {
+    width:
+        48px;
+
+    height:
+        48px;
+
+    flex:
+        0 0 48px;
+
+    object-fit:
+        contain;
+}
+
+.public-mobile-brand > span {
+    white-space:
+        nowrap;
+}
+
+.public-mobile-brand > span > span {
+    color:
+        #F72585;
+}
+
+.public-mobile-close {
+    width:
+        42px;
+
+    height:
+        42px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex:
+        0 0 42px;
+
+    padding:
+        0;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    border-radius:
+        11px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    color:
+        #FFFFFF;
+
+    font-size:
+        26px;
+
+    line-height:
+        1;
+
+    cursor:
+        pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+}
+
+.public-mobile-close:hover {
+    background:
+        rgba(255,255,255,.13);
+}
+
+.public-mobile-close:active {
+    transform:
+        scale(.96);
+}
+
+
+/* =========================================================
+   PUBLIC DRAWER LINKS
+========================================================= */
+
+.public-mobile-links {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    padding:
+        20px 0;
+}
+
+.public-mobile-links a {
+    width:
+        100%;
+
+    min-height:
+        50px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    padding:
+        0 14px;
+
+    margin-bottom:
+        5px;
+
+    border-radius:
+        11px;
+
+    color:
+        #D8D4E0;
+
+    text-decoration:
+        none;
+
+    font-size:
+        14px;
+
+    font-weight:
+        700;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+}
+
+.public-mobile-links a:hover,
+.public-mobile-links a.active {
+    background:
+        rgba(247,37,133,.11);
+
+    color:
+        #FF4A9E;
+}
+
+
+/* =========================================================
+   PUBLIC DRAWER LANGUAGE
+========================================================= */
+
+.public-mobile-language {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        18px 14px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.08);
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
+    color:
+        #716C7C;
+
+    font-size:
+        13px;
+
+    font-weight:
+        800;
+}
+
+.public-mobile-language a {
+    color:
+        #A6A0B0;
+
+    text-decoration:
+        none;
+}
+
+.public-mobile-language a:hover {
+    color:
+        #FFFFFF;
+}
+
+.public-mobile-language a.active {
+    color:
+        #F72585;
+}
+
+
+/* =========================================================
+   PUBLIC DRAWER ACCOUNT
+========================================================= */
+
+.public-mobile-account {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        10px;
+
+    padding-top:
+        20px;
+}
+
+.public-mobile-user {
+    margin-bottom:
+        4px;
+
+    color:
+        #FFFFFF;
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+
+    overflow-wrap:
+        anywhere;
+}
+
+.public-mobile-account form {
+    width:
+        100%;
+
+    margin:
+        0;
+}
+
+.public-mobile-primary,
+.public-mobile-secondary {
+    width:
+        100%;
+
+    min-height:
+        46px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        0 16px;
+
+    border-radius:
+        11px;
+
+    text-align:
+        center;
+
+    text-decoration:
+        none;
+
+    font-size:
+        13px;
+
+    font-weight:
+        800;
+}
+
+.public-mobile-primary {
+    border:
+        0;
+
+    color:
+        #FFFFFF;
+
+    background:
+        linear-gradient(
+            90deg,
+            #F72585,
+            #8338EC
+        );
+
+    box-shadow:
+        0 8px 25px
+        rgba(247,37,133,.16);
+}
+
+.public-mobile-secondary {
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    color:
+        #FFFFFF;
+
+    background:
+        transparent;
+}
+
+button.public-mobile-secondary {
+    cursor:
+        pointer;
+}
+
+
+/* =========================================================
+   PUBLIC TABLET + MOBILE
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .public-mobile-toggle {
+        display:
+            flex;
+    }
+
+    .public-nav-links,
+    .public-nav-actions {
+        display:
+            none !important;
+    }
+
+    .public-navbar {
+        height:
+            auto;
+
+        min-height:
+            74px;
+
+        padding:
+            6px 0;
+    }
+
+    .public-navbar-inner {
+        width:
+            calc(100% - 28px);
+
+        height:
+            auto;
+
+        min-height:
+            62px;
+
+        flex-wrap:
+            nowrap;
+
+        justify-content:
+            space-between;
+
+        gap:
+            12px;
+    }
+
+    .public-brand {
+        min-width:
+            0;
+    }
+
+    .public-brand-logo,
+    .public-brand-logo img {
+        width:
+            54px;
+
+        height:
+            54px;
+
+        flex-basis:
+            54px;
+    }
+
+    .public-brand-name {
+        display:
+            block;
+
+        font-size:
+            21px;
+    }
+
+    .public-main {
+        min-width:
+            0;
+
+        overflow-x:
+            hidden;
+    }
+
+    .public-container {
+        width:
+            calc(100% - 40px);
+    }
+
+    .public-page-hero {
+        padding:
+            65px 0 52px;
+    }
+
+    .public-page-hero h1 {
+        max-width:
+            100%;
+
+        font-size:
+            clamp(
+                42px,
+                8vw,
+                64px
+            );
+    }
+
+    .public-page-hero p {
+        max-width:
+            100%;
+    }
+
+    .public-footer-inner {
+        width:
+            calc(100% - 40px);
+    }
+}
+
+
+/* =========================================================
+   PUBLIC MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .public-navbar-inner,
+    .public-container,
+    .public-footer-inner {
+        width:
+            calc(100% - 28px);
+    }
+
+    .public-navbar-inner {
+        gap:
+            10px;
+    }
+
+    .public-brand-logo,
+    .public-brand-logo img {
+        width:
+            50px;
+
+        height:
+            50px;
+
+        flex-basis:
+            50px;
+    }
+
+    .public-brand-name {
+        display:
+            block;
+
+        font-size:
+            20px;
+    }
+
+    .public-page-hero {
+        padding:
+            50px 0
+            42px;
+    }
+
+    .public-page-hero h1 {
+        font-size:
+            clamp(
+                38px,
+                11vw,
+                54px
+            );
+
+        line-height:
+            1;
+
+        letter-spacing:
+            -2px;
+    }
+
+    .public-page-hero p {
+        margin-top:
+            18px;
+
+        font-size:
+            15px;
+
+        line-height:
+            1.65;
+    }
+
+    .public-section {
+        padding:
+            52px 0;
+    }
+
+    .public-section-title {
+        margin-bottom:
+            26px;
+    }
+
+    .public-section-title h2 {
+        font-size:
+            29px;
+    }
+
+    .public-section-title p {
+        font-size:
+            14px;
+    }
+
+    .public-footer-inner {
+        display:
+            flex;
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap:
+            20px;
+    }
+
+    .public-footer-links {
+        justify-content:
+            flex-start;
+
+        gap:
+            15px;
+    }
+
+    .public-footer-copy {
+        text-align:
+            left;
+    }
+}
+
+
+/* =========================================================
+   PUBLIC SMALL MOBILE
+========================================================= */
+
+@media (max-width: 430px) {
+
+    .public-navbar {
+        min-height:
+            66px;
+    }
+
+    .public-navbar-inner {
+        min-height:
+            56px;
+    }
+
+    .public-brand-logo,
+    .public-brand-logo img {
+        width:
+            46px;
+
+        height:
+            46px;
+
+        flex-basis:
+            46px;
+    }
+
+    .public-brand-name {
+        font-size:
+            18px;
+    }
+
+    .public-mobile-toggle {
+        width:
+            42px;
+
+        height:
+            42px;
+
+        flex-basis:
+            42px;
+    }
+
+    .public-mobile-menu {
+        width:
+            min(
+                92vw,
+                350px
+            );
+
+        padding:
+            18px;
+    }
+
+    .public-page-hero {
+        padding:
+            44px 0
+            36px;
+    }
+
+    .public-page-hero h1 {
+        font-size:
+            clamp(
+                34px,
+                11vw,
+                48px
+            );
+
+        letter-spacing:
+            -1.5px;
+    }
+
+    .public-page-hero p {
+        font-size:
+            14px;
+    }
+
+    .public-section {
+        padding:
+            45px 0;
+    }
+
+    .public-section-title h2 {
+        font-size:
+            27px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PUBLIC MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .public-brand-name {
+        font-size:
+            17px;
+    }
+
+    .public-mobile-menu {
+        width:
+            94vw;
+
+        padding:
+            16px;
+    }
+
+    .public-mobile-brand {
+        font-size:
+            19px;
+    }
+
+    .public-mobile-brand img {
+        width:
+            44px;
+
+        height:
+            44px;
+
+        flex-basis:
+            44px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .mobile-sidebar-toggle,
+    .mobile-sidebar-close,
+    .mobile-sidebar-overlay,
+    .admin-panel .sidebar[data-mobile-sidebar],
+    .student-panel .sidebar[data-mobile-sidebar],
+    .teacher-panel .sidebar[data-mobile-sidebar],
+    .public-mobile-toggle,
+    .public-mobile-close,
+    .public-mobile-overlay,
+    .public-mobile-menu {
+        transition:
+            none !important;
+    }
+}
+
+
+/* =========================================================
+   DANCEPAIR
+   ADMIN INTERNAL PAGES
+   FINAL RESPONSIVE LAYER
+========================================================= */
+
+
+/* =========================================================
+   GLOBAL ADMIN PAGE SAFETY
+========================================================= */
+
+.admin-panel main > * {
+    max-width: 100%;
+}
+
+.admin-panel form {
+    max-width: 100%;
+}
+
+.admin-panel input,
+.admin-panel select,
+.admin-panel textarea {
+    width: 100%;
+}
+
+.admin-panel table {
+    width: 100%;
+}
+
+.admin-panel .admin-teachers-table,
+.admin-panel .admin-students-table {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   ADMIN TABLES
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .admin-panel .table-responsive,
+    .admin-panel .admin-table-responsive {
+        width: 100%;
+        max-width: 100%;
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .admin-panel table {
+        min-width: 720px;
+    }
+
+    .admin-panel .admin-teachers-table,
+    .admin-panel .admin-students-table {
+        min-width: 760px;
+    }
+}
+
+
+/* =========================================================
+   ADMIN BOOKINGS
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .admin-bookings-page {
+        width: 100%;
+        max-width: 100%;
+
+        gap: 18px;
+    }
+
+    .booking-overview,
+    .booking-management {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .booking-kpi-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+
+    .booking-filter-row,
+    .booking-filters {
+        width: 100%;
+
+        flex-wrap: wrap;
+    }
+
+    .booking-filter-row > *,
+    .booking-filters > * {
+        min-width: 0;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .admin-bookings-page {
+        gap: 14px;
+    }
+
+    .booking-overview,
+    .booking-management {
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+
+    .booking-overview-header,
+    .booking-management-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .booking-overview-title h3,
+    .booking-management-header h3 {
+        font-size: 19px;
+    }
+
+    .booking-overview-title p,
+    .booking-management-header p {
+        line-height: 1.5;
+    }
+
+    .booking-kpi-grid {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+    .booking-kpi-card {
+        min-height: 105px;
+
+        padding: 14px;
+    }
+
+    .booking-status-strip {
+        gap: 6px;
+    }
+
+    .booking-status-chip {
+        padding: 6px 9px;
+    }
+
+    .booking-filter-actions {
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .booking-filter-actions .btn,
+    .booking-filter-actions button,
+    .booking-filter-actions a {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   ADMIN PAYMENTS
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .admin-payments-page {
+        width: 100%;
+        max-width: 100%;
+
+        gap: 18px;
+    }
+
+    .payment-overview,
+    .payment-results {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .payment-stats-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+
+    .payment-filter-row,
+    .payment-filters {
+        width: 100%;
+
+        flex-wrap: wrap;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .admin-payments-page {
+        gap: 14px;
+    }
+
+    .payment-overview,
+    .payment-results {
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+
+    .payment-overview-header,
+    .payment-results-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .payment-overview-header h3,
+    .payment-results-header h3 {
+        font-size: 19px;
+    }
+
+    .payment-stats-grid {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+    .payment-stat-card {
+        min-height: 104px;
+
+        padding: 14px;
+    }
+
+    .payment-status-strip {
+        gap: 6px;
+    }
+
+    .payment-filter-actions {
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .payment-filter-actions .btn,
+    .payment-filter-actions button,
+    .payment-filter-actions a {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   ADMIN PAYMENT DETAILS
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .payment-detail-page {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .payment-detail-summary {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .payment-summary-main {
+        grid-column: 1 / -1;
+    }
+
+    .payment-summary-item {
+        border-left: 0;
+
+        border-top:
+            1px solid #D8F2E3;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .payment-detail-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .payment-detail-header h2 {
+        font-size: 20px;
+    }
+
+    .payment-back-btn {
+        width: 100%;
+    }
+
+    .payment-detail-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-summary-main {
+        grid-column: auto;
+
+        padding: 16px;
+    }
+
+    .payment-summary-main h3 {
+        font-size: 19px;
+    }
+
+    .payment-summary-item {
+        padding: 14px;
+    }
+}
+
+
+/* =========================================================
+   ADMIN DANCEPAIR MESSAGES
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .dpm-page {
+        width: 100%;
+        max-width: 100%;
+
+        gap: 14px;
+    }
+
+    .dpm-card {
+        border-radius: 14px;
+    }
+
+    .dpm-card-header {
+        padding: 14px;
+    }
+
+    .dpm-card-header h3 {
+        font-size: 16px;
+    }
+
+    .dpm-form {
+        padding: 14px;
+    }
+
+    .dpm-grid {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+    .dpm-field.full {
+        grid-column: auto;
+    }
+
+    .dpm-message-row {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+
+        padding: 13px;
+    }
+
+    .dpm-actions {
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .dpm-actions button,
+    .dpm-actions a {
+        width: 100%;
+    }
+
+    .dpm-importance-options {
+        flex-wrap: wrap;
+    }
+}
+
+
+/* =========================================================
+   ADMIN CONVERSATION / CHAT
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .admin-chat-page {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .admin-chat-info {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+
+        padding: 13px;
+    }
+
+    .admin-chat-box {
+        border-radius: 14px;
+    }
+
+    .admin-chat-history {
+        max-height: 65vh;
+
+        padding: 12px;
+    }
+
+    .admin-message-bubble {
+        max-width: 88%;
+
+        padding: 10px 11px;
+
+        overflow-wrap: anywhere;
+    }
+}
+
+
+@media (max-width: 430px) {
+
+    .admin-chat-info {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-message-bubble {
+        max-width: 94%;
+    }
+}
+
+
+/* =========================================================
+   ADMIN SETTINGS
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .settings-section {
+        padding: 15px;
+
+        border-radius: 14px;
+    }
+
+    .settings-section + .settings-section {
+        margin-top: 16px;
+    }
+
+    .settings-section-title {
+        font-size: 17px;
+    }
+
+    .settings-section-subtitle {
+        line-height: 1.5;
+    }
+
+    .commission-preview {
+        padding: 13px;
+    }
+
+    .commission-preview-row {
+        gap: 10px;
+
+        align-items: flex-start;
+    }
+
+    .current-commission-card {
+        padding: 15px;
+    }
+
+    .current-commission-value {
+        font-size: 27px;
+    }
+}
+
+
+/* =========================================================
+   ADMIN DATA PAGES
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .admin-panel .admin-page-header {
+        flex-wrap: wrap;
+    }
+
+    .admin-panel .admin-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .admin-panel .admin-toolbar > * {
+        min-width: 0;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .admin-panel .admin-page-header {
+        align-items: stretch;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .admin-panel .admin-toolbar {
+        align-items: stretch;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .admin-panel .admin-toolbar input,
+    .admin-panel .admin-toolbar select,
+    .admin-panel .admin-toolbar button,
+    .admin-panel .admin-toolbar a {
+        width: 100%;
+    }
+
+    .admin-panel .pagination {
+        flex-wrap: wrap;
+
+        gap: 4px;
+    }
+}
+
+
+/* =========================================================
+   DANCEPAIR
+   STUDENT INTERNAL PAGES
+   FINAL RESPONSIVE LAYER
+========================================================= */
+
+
+/* =========================================================
+   STUDENT GLOBAL PAGE SAFETY
+========================================================= */
+
+.student-panel main > * {
+    max-width: 100%;
+}
+
+.student-panel form {
+    max-width: 100%;
+}
+
+.student-panel input,
+.student-panel select,
+.student-panel textarea {
+    width: 100%;
+}
+
+.student-panel video,
+.student-panel iframe {
+    width: 100%;
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   STUDENT DASHBOARD
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .student-panel .student-dashboard {
+        width: 100%;
+        max-width: 100%;
+
+        gap: 18px;
+    }
+
+    .student-panel .dashboard-overview {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+
+    .student-panel .dashboard-stat {
+        min-width: 0;
+        min-height: 140px;
+
+        padding: 18px;
+    }
+
+    .student-panel .dashboard-notifications,
+    .student-panel .dashboard-section,
+    .student-panel .dashboard-panel {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .student-panel .dashboard-list-item {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .student-panel .student-dashboard {
+        gap: 14px;
+    }
+
+    .student-panel .dashboard-overview {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+    .student-panel .dashboard-stat {
+        min-height: 122px;
+
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+
+    .student-panel .dashboard-stat-icon {
+        width: 40px;
+        height: 40px;
+
+        font-size: 19px;
+    }
+
+    .student-panel .dashboard-stat-number {
+        margin-top: 13px;
+
+        font-size: 28px;
+    }
+
+    .student-panel .dashboard-stat-footer {
+        margin-top: 10px;
+    }
+
+    .student-panel .dashboard-notifications,
+    .student-panel .dashboard-section,
+    .student-panel .dashboard-panel {
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+
+    .student-panel .dashboard-section-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 8px;
+
+        margin-bottom: 14px;
+    }
+
+    .student-panel .dashboard-section-title {
+        font-size: 18px;
+    }
+
+    .student-panel .dashboard-list-item {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+}
+
+
+/* =========================================================
+   FIND TEACHERS
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .student-panel .teacher-search-page {
+        width: 100%;
+        max-width: 100%;
+
+        gap: 16px;
+    }
+
+    .student-panel .teacher-search-panel {
+        width: 100%;
+        max-width: 100%;
+
+        padding: 18px;
+    }
+
+    .student-panel .teacher-results-grid {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+    .student-panel .teacher-result-card {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .student-panel .teacher-results-header {
+        flex-wrap: wrap;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .student-panel .teacher-search-page {
+        gap: 14px;
+    }
+
+    .student-panel .teacher-search-panel {
+        padding: 15px;
+
+        border-radius: 15px;
+    }
+
+    .student-panel .teacher-search-header {
+        margin-bottom: 13px;
+    }
+
+    .student-panel .teacher-search-header h3,
+    .student-panel .teacher-results-title h3 {
+        font-size: 18px;
+    }
+
+    .student-panel .teacher-search-actions {
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        margin-top: 13px;
+    }
+
+    .student-panel .teacher-search-btn,
+    .student-panel .teacher-reset-btn {
+        width: 100%;
+        min-width: 0;
+
+        min-height: 44px;
+    }
+
+    .student-panel .teacher-results-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+    .student-panel .teacher-result-card {
+        grid-template-columns: 1fr !important;
+
+        gap: 12px;
+
+        padding: 14px;
+    }
+
+    .student-panel .teacher-result-card > * {
+        min-width: 0;
+    }
+}
+
+
+/* =========================================================
+   STUDENT -> TEACHER PROFILE
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .student-panel .student-teacher-profile {
+        width: 100%;
+        max-width: 100%;
+
+        grid-template-columns:
+            110px
+            minmax(0, 1fr) !important;
+
+        gap: 18px;
+    }
+
+    .student-panel .student-teacher-video {
+        grid-column: 1 / -1;
+    }
+
+    .student-panel .availability-header {
+        gap: 10px;
+
+        flex-wrap: wrap;
+    }
+
+    .student-panel .availability-row {
+        min-width: 0;
+        max-width: 100%;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .student-panel .student-teacher-profile {
+        grid-template-columns: 1fr !important;
+
+        gap: 15px;
+    }
+
+    .student-panel .student-teacher-photo,
+    .student-panel .student-teacher-photo-placeholder {
+        width: 96px;
+        height: 96px;
+    }
+
+    .student-panel .student-teacher-name {
+        font-size: 21px;
+    }
+
+    .student-panel .student-teacher-location,
+    .student-panel .student-teacher-bio {
+        font-size: 13px;
+    }
+
+    .student-panel .teacher-style-prices {
+        gap: 6px;
+    }
+
+    .student-panel .teacher-style-price {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+    .student-panel .student-teacher-video {
+        grid-column: auto;
+    }
+
+    .student-panel .student-teacher-video video {
+        max-height: none;
+    }
+
+    .student-panel .availability-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .student-panel .availability-row {
+        grid-template-columns: 1fr !important;
+
+        gap: 8px;
+    }
+
+    .student-panel .availability-row > div {
+        grid-column: auto !important;
+    }
+
+    .student-panel .availability-row button,
+    .student-panel .availability-row .btn,
+    .student-panel .availability-row a {
+        width: 100%;
+    }
+
+    .student-panel .availability-details {
+        padding:
+            8px
+            0
+            14px;
+    }
+}
+
+
+/* =========================================================
+   STUDENT BOOKINGS / CALENDAR
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .student-panel .student-calendar {
+        width: 100%;
+        max-width: 100%;
+
+        overflow-x: auto;
+
+        grid-template-columns:
+            repeat(7, minmax(115px, 1fr)) !important;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .student-panel .student-calendar-header {
+        min-width: 115px;
+    }
+
+    .student-panel .student-calendar-day {
+        min-width: 115px;
+        min-height: 115px;
+    }
+
+    .student-panel .student-request {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .student-panel .student-request-row {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 10px;
+    }
+
+    .student-panel .student-request-actions,
+    .student-panel .student-request-status-area {
+        width: auto;
+        max-width: 100%;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .student-panel .student-calendar {
+        border-radius: 12px;
+    }
+
+    .student-panel .student-calendar-header {
+        padding: 10px 5px;
+
+        font-size: 11px;
+    }
+
+    .student-panel .student-calendar-day {
+        min-height: 105px;
+
+        padding: 7px;
+    }
+
+    .student-panel .student-day-number {
+        width: 25px;
+        height: 25px;
+
+        margin-bottom: 4px;
+
+        font-size: 11px;
+    }
+
+    .student-panel .student-calendar-booking {
+        padding: 5px 6px;
+
+        font-size: 9px;
+    }
+
+    .student-panel .student-request {
+        border-radius: 13px;
+    }
+
+    .student-panel .student-request-row {
+        grid-template-columns: 1fr !important;
+
+        gap: 8px;
+
+        padding: 12px;
+    }
+
+    .student-panel .student-request-row > * {
+        min-width: 0;
+    }
+
+    .student-panel .student-request-actions {
+        width: 100%;
+
+        flex-wrap: wrap;
+    }
+
+    .student-panel .student-request-actions .btn,
+    .student-panel .student-request-actions button,
+    .student-panel .student-request-actions a {
+        flex: 1 1 130px;
+
+        min-height: 42px;
+    }
+
+    .student-panel .student-request-edit,
+    .student-panel .student-review-area {
+        padding: 12px;
+    }
+
+    .student-panel .student-review-stars {
+        flex-wrap: wrap;
+    }
+}
+
+
+/* =========================================================
+   STUDENT PAYMENTS LIST
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .student-panel .student-payments-card {
+        width: 100%;
+        max-width: 100%;
+
+        padding: 20px;
+    }
+
+    .student-panel .student-payments-header {
+        gap: 14px;
+
+        flex-wrap: wrap;
+    }
+
+    .student-panel .student-payment-row {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr)) !important;
+
+        gap: 10px;
+    }
+
+    .student-panel .student-payment-row > div {
+        min-width: 0;
+    }
+
+    .student-panel .payment-value {
+        overflow-wrap: anywhere;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .student-panel .student-payments-card {
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+
+    .student-panel .student-payments-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        margin-bottom: 16px;
+    }
+
+    .student-panel .student-payments-header h3 {
+        font-size: 20px;
+    }
+
+    .student-panel .student-payment-row {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        padding: 13px;
+
+        border-radius: 12px;
+    }
+
+    .student-panel .payment-receipt-btn {
+        min-height: 40px;
+
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .student-panel .student-payment-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .student-panel .payment-receipt-btn {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   STUDENT PAYMENT / CHECKOUT
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .student-panel .payment-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .student-panel .payment-card {
+        padding: 16px;
+
+        border-radius: 16px;
+    }
+
+    .student-panel .payment-header {
+        margin-bottom: 17px;
+    }
+
+    .student-panel .payment-header h3 {
+        font-size: 20px;
+    }
+
+    .student-panel .payment-details {
+        padding: 14px;
+
+        margin-bottom: 16px;
+
+        border-radius: 13px;
+    }
+
+    .student-panel .payment-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 4px;
+
+        padding: 9px 0;
+    }
+
+    .student-panel .payment-value {
+        width: 100%;
+
+        text-align: left;
+
+        overflow-wrap: anywhere;
+    }
+
+    .student-panel .payment-total {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 7px;
+
+        padding: 14px;
+
+        margin-bottom: 18px;
+    }
+
+    .student-panel .payment-total-amount {
+        font-size: 24px;
+    }
+
+    .student-panel .payment-method-options {
+        grid-template-columns: 1fr !important;
+
+        gap: 9px;
+    }
+
+    .student-panel .payment-method-box {
+        height: auto !important;
+        min-height: 82px;
+    }
+
+    .student-panel .payment-actions {
+        flex-direction: column-reverse;
+
+        gap: 9px;
+    }
+
+    .student-panel .payment-back-btn,
+    .student-panel .payment-pay-btn {
+        width: 100%;
+
+        min-height: 44px;
+    }
+}
+
+
+/* =========================================================
+   STUDENT REVIEWS
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .student-panel .student-reviews-card {
+        width: 100%;
+        max-width: 100%;
+
+        padding: 20px;
+    }
+
+    .student-panel .student-review-item {
+        grid-template-columns:
+            45px
+            minmax(0, 1fr)
+            120px !important;
+
+        gap: 12px;
+    }
+
+    .student-panel .review-comment-column {
+        grid-column: 2 / -1;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .student-panel .student-reviews-card {
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+
+    .student-panel .student-reviews-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 12px;
+
+        margin-bottom: 18px;
+    }
+
+    .student-panel .student-reviews-title h3 {
+        font-size: 20px;
+    }
+
+    .student-panel .student-rating-summary {
+        width: 100%;
+
+        justify-content: flex-start;
+    }
+
+    .student-panel .student-review-item {
+        grid-template-columns:
+            44px
+            minmax(0, 1fr) !important;
+
+        gap: 10px;
+
+        padding: 13px;
+    }
+
+    .student-panel .review-dance-column,
+    .student-panel .review-rating-column,
+    .student-panel .review-comment-column {
+        grid-column: 2 !important;
+    }
+
+    .student-panel .review-comment-column {
+        overflow-wrap: anywhere;
+    }
+}
+
+
+@media (max-width: 430px) {
+
+    .student-panel .student-rating-summary {
+        align-items: flex-start;
+    }
+
+    .student-panel .student-review-item {
+        grid-template-columns: 1fr !important;
+    }
+
+    .student-panel .review-teacher-avatar {
+        grid-column: 1;
+    }
+
+    .student-panel .review-dance-column,
+    .student-panel .review-rating-column,
+    .student-panel .review-comment-column {
+        grid-column: 1 !important;
+    }
+}
+
+
+/* =========================================================
+   STUDENT PROFILE
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .student-panel .profile-card {
+        padding: 15px !important;
+
+        border-radius: 16px;
+    }
+
+    .student-panel .profile-card .d-flex.align-items-center.gap-4 {
+        align-items: flex-start !important;
+
+        flex-direction: column;
+
+        gap: 14px !important;
+    }
+
+    .student-panel .profile-card .flex-grow-1 {
+        width: 100%;
+    }
+
+    .student-panel .student-photo-picker {
+        width: 100%;
+
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+    .student-panel .student-photo-button {
+        width: 100%;
+    }
+
+    .student-panel .student-photo-file-name {
+        width: 100%;
+    }
+
+    .student-panel .profile-card .row {
+        --bs-gutter-y: 1rem;
+    }
+
+    .student-panel .profile-card .btn,
+    .student-panel .profile-card button[type="submit"] {
+        min-height: 44px;
+    }
+}
+
+
+/* =========================================================
+   STUDENT GENERIC EMPTY STATES / ACTION GROUPS
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .student-panel .empty-state,
+    .student-panel .student-empty,
+    .student-panel .empty-bookings,
+    .student-panel .empty-reviews {
+        padding: 20px 14px;
+
+        text-align: center;
+    }
+
+    .student-panel .action-row,
+    .student-panel .actions-row,
+    .student-panel .button-row {
+        width: 100%;
+
+        flex-wrap: wrap;
+
+        gap: 8px;
+    }
+
+    .student-panel .action-row > *,
+    .student-panel .actions-row > *,
+    .student-panel .button-row > * {
+        min-width: 0;
+    }
+}
+
+
+/* =========================================================
+   STUDENT VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .student-panel .dashboard-stat,
+    .student-panel .dashboard-notifications,
+    .student-panel .student-payments-card,
+    .student-panel .student-reviews-card,
+    .student-panel .teacher-search-panel,
+    .student-panel .payment-card,
+    .student-panel .profile-card {
+        border-radius: 13px;
+    }
+
+    .student-panel .student-calendar {
+        grid-template-columns:
+            repeat(7, minmax(108px, 1fr)) !important;
+    }
+
+    .student-panel .student-calendar-header,
+    .student-panel .student-calendar-day {
+        min-width: 108px;
+    }
+}
+
+
+/* =========================================================
+   DANCEPAIR
+   TEACHER INTERNAL PAGES
+   FINAL RESPONSIVE LAYER
+========================================================= */
+
+
+/* =========================================================
+   TEACHER GLOBAL PAGE SAFETY
+========================================================= */
+
+.teacher-panel main > * {
+    max-width: 100%;
+}
+
+.teacher-panel form {
+    max-width: 100%;
+}
+
+.teacher-panel video,
+.teacher-panel iframe {
+    width: 100%;
+    max-width: 100%;
+}
+
+.teacher-panel .container {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   TEACHER DASHBOARD
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .teacher-panel .teacher-dashboard {
+        width: 100%;
+        max-width: 100%;
+
+        gap: 18px;
+    }
+
+    .teacher-panel .teacher-overview {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 12px;
+    }
+
+    .teacher-panel .teacher-stat {
+        min-width: 0;
+    }
+
+    .teacher-panel .teacher-dashboard-row {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 12px;
+    }
+
+    .teacher-panel .teacher-notifications,
+    .teacher-panel .teacher-dashboard-section,
+    .teacher-panel .teacher-dashboard-panel {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .teacher-panel .teacher-dashboard {
+        gap: 14px;
+    }
+
+    .teacher-panel .teacher-overview {
+        grid-template-columns: 1fr !important;
+
+        gap: 10px;
+    }
+
+    .teacher-panel .teacher-stat {
+        min-height: 122px;
+
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+
+    .teacher-panel .teacher-dashboard-row {
+        grid-template-columns: 1fr !important;
+
+        gap: 10px;
+    }
+
+    .teacher-panel .teacher-notifications,
+    .teacher-panel .teacher-dashboard-section,
+    .teacher-panel .teacher-dashboard-panel {
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+}
+
+
+/* =========================================================
+   TEACHER PROFILE
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .teacher-panel .container.py-4 {
+        width: 100%;
+        max-width: 100%;
+
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .teacher-panel .profile-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .teacher-panel .teaching-options-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .teacher-panel .input-group {
+        max-width: 100%;
+    }
+
+    .teacher-panel .input-group > .form-control,
+    .teacher-panel .input-group > .form-select {
+        min-width: 0;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .teacher-panel .container.py-4 {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .teacher-panel .profile-card {
+        padding: 15px !important;
+
+        border-radius: 16px;
+    }
+
+    .teacher-panel .profile-card h4 {
+        font-size: 18px;
+    }
+
+    .teacher-panel .profile-card img[style*="width:120px"] {
+        max-width: 100%;
+    }
+
+    .teacher-panel .profile-card video {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto;
+    }
+
+    .teacher-panel .teaching-options-grid {
+        grid-template-columns: 1fr !important;
+
+        gap: 10px;
+    }
+
+    .teacher-panel .teaching-option-label {
+        min-height: 82px;
+
+        padding: 13px;
+    }
+
+    .teacher-panel .input-group {
+        flex-wrap: wrap;
+    }
+
+    .teacher-panel .input-group > .form-control,
+    .teacher-panel .input-group > .form-select {
+        flex: 1 1 150px;
+    }
+
+    .teacher-panel .input-group-text {
+        white-space: normal;
+    }
+
+    .teacher-panel .profile-card .d-flex.justify-content-end {
+        align-items: stretch !important;
+
+        flex-direction: column;
+    }
+
+    .teacher-panel .profile-card .d-flex.justify-content-end .btn,
+    .teacher-panel .profile-card > a.btn,
+    .teacher-panel .profile-card form + a.btn {
+        width: 100%;
+    }
+
+    .teacher-panel .profile-card a[href*="/teacher/stripe/connect"] {
+        width: 100%;
+
+        min-height: 44px;
+
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+
+/* =========================================================
+   TEACHER AVAILABILITY
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .teacher-panel
+    .profile-card:has(
+        > div[style*="grid-template-columns:repeat(7"]
+    ) {
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .teacher-panel
+    .profile-card
+    > div[style*="grid-template-columns:repeat(7"] {
+        min-width: 840px;
+    }
+
+    .teacher-panel .profile-card > table.table {
+        display: block;
+
+        width: 100%;
+        max-width: 100%;
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .teacher-panel .profile-card > table.table thead,
+    .teacher-panel .profile-card > table.table tbody {
+        min-width: 650px;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .teacher-panel
+    .profile-card
+    > .d-flex.justify-content-between.align-items-center.mb-4 {
+        align-items: stretch !important;
+
+        flex-wrap: wrap;
+
+        gap: 9px;
+    }
+
+    .teacher-panel
+    .profile-card
+    > .d-flex.justify-content-between.align-items-center.mb-4
+    h3 {
+        width: 100%;
+
+        order: -1;
+
+        font-size: 18px;
+
+        text-align: center;
+    }
+
+    .teacher-panel
+    .profile-card
+    > .d-flex.justify-content-between.align-items-center.mb-4
+    .btn {
+        flex: 1 1 140px;
+
+        min-height: 42px;
+    }
+
+    .teacher-panel
+    .profile-card
+    > div[style*="grid-template-columns:repeat(7"] {
+        min-width: 760px;
+    }
+
+    .teacher-panel .profile-card > table.table {
+        font-size: 12px;
+    }
+
+    .teacher-panel .profile-card > table.table .btn {
+        white-space: nowrap;
+    }
+}
+
+
+/* =========================================================
+   TEACHER BOOKINGS
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .teacher-panel .teacher-request-list {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .teacher-panel .teacher-request-row {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .teacher-panel .teacher-request-row > * {
+        min-width: 0;
+    }
+
+    .teacher-panel .teacher-request-actions form {
+        max-width: 100%;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .teacher-panel .teacher-request-row {
+        grid-template-columns: 1fr !important;
+
+        gap: 9px;
+
+        padding: 13px;
+    }
+
+    .teacher-panel .teacher-request-actions {
+        width: 100% !important;
+
+        display: grid !important;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 8px;
+    }
+
+    .teacher-panel .teacher-request-actions form {
+        width: 100%;
+
+        margin: 0;
+    }
+
+    .teacher-panel .teacher-request-actions .btn,
+    .teacher-panel .teacher-request-actions button,
+    .teacher-panel .teacher-request-actions a {
+        width: 100%;
+
+        min-width: 0;
+
+        min-height: 42px;
+
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+    }
+
+    .teacher-panel .teacher-review-area,
+    .teacher-panel .teacher-request-edit {
+        padding: 12px;
+    }
+}
+
+
+@media (max-width: 430px) {
+
+    .teacher-panel .teacher-request-actions {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* =========================================================
+   TEACHER REVIEWS
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .teacher-panel .teacher-reviews-card {
+        width: 100%;
+        max-width: 100%;
+
+        padding: 20px;
+    }
+
+    .teacher-panel .teacher-review-item {
+        grid-template-columns:
+            45px
+            minmax(0, 1fr)
+            120px !important;
+
+        gap: 12px;
+    }
+
+    .teacher-panel .review-comment {
+        grid-column: 2 / -1;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .teacher-panel .teacher-reviews-card {
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+
+    .teacher-panel .teacher-reviews-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 12px;
+
+        margin-bottom: 18px;
+    }
+
+    .teacher-panel .teacher-reviews-title h3 {
+        font-size: 20px;
+    }
+
+    .teacher-panel .teacher-rating-summary {
+        width: 100%;
+    }
+
+    .teacher-panel .teacher-review-item {
+        grid-template-columns:
+            44px
+            minmax(0, 1fr) !important;
+
+        gap: 10px;
+
+        padding: 13px;
+    }
+
+    .teacher-panel .review-dance-column,
+    .teacher-panel .review-rating-column,
+    .teacher-panel .review-comment {
+        grid-column: 2 !important;
+    }
+
+    .teacher-panel .review-comment {
+        overflow-wrap: anywhere;
+    }
+}
+
+
+@media (max-width: 430px) {
+
+    .teacher-panel .teacher-review-item {
+        grid-template-columns: 1fr !important;
+    }
+
+    .teacher-panel .review-student-avatar {
+        grid-column: 1;
+    }
+
+    .teacher-panel .review-dance-column,
+    .teacher-panel .review-rating-column,
+    .teacher-panel .review-comment {
+        grid-column: 1 !important;
+    }
+}
+
+
+/* =========================================================
+   TEACHER EARNINGS
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .teacher-panel .earnings-page {
+        width: 100%;
+        max-width: 100%;
+
+        gap: 18px;
+    }
+
+    .teacher-panel .earnings-summary {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 12px;
+    }
+
+    .teacher-panel .earnings-card {
+        min-width: 0;
+    }
+
+    .teacher-panel .earnings-history {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .teacher-panel .earnings-table-header {
+        display: none !important;
+    }
+
+    .teacher-panel .earnings-row {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 10px;
+
+        border:
+            1px solid #EEEAF8;
+
+        border-radius:
+            14px;
+
+        margin-bottom:
+            10px;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .teacher-panel .earnings-page {
+        gap: 14px;
+    }
+
+    .teacher-panel .earnings-summary {
+        grid-template-columns: 1fr !important;
+
+        gap: 10px;
+    }
+
+    .teacher-panel .earnings-card {
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+
+    .teacher-panel .earnings-card-value {
+        font-size: 24px;
+    }
+
+    .teacher-panel .earnings-history {
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+
+    .teacher-panel .earnings-history-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 8px;
+
+        margin-bottom: 14px;
+    }
+
+    .teacher-panel .earnings-history-title {
+        font-size: 19px;
+    }
+
+    .teacher-panel .earnings-row {
+        grid-template-columns: 1fr !important;
+
+        padding: 13px;
+    }
+
+    .teacher-panel .earnings-empty {
+        padding:
+            30px
+            14px;
+    }
+}
+
+
+/* =========================================================
+   TEACHER GENERIC PROFILE / STUDENT PROFILE / ACTION SAFETY
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .teacher-panel .profile-card .row {
+        --bs-gutter-y:
+            1rem;
+    }
+
+    .teacher-panel .profile-card .btn,
+    .teacher-panel .profile-card button {
+        min-height:
+            42px;
+    }
+
+    .teacher-panel .profile-card .d-flex.gap-4,
+    .teacher-panel .profile-card .d-flex.gap-3 {
+        flex-wrap:
+            wrap;
+    }
+}
+
+
+/* =========================================================
+   DANCEPAIR
+   PUBLIC INTERNAL PAGES
+   FINAL RESPONSIVE LAYER
+========================================================= */
+
+
+/* =========================================================
+   PUBLIC GLOBAL SAFETY
+========================================================= */
+
+.public-main > * {
+    max-width: 100%;
+}
+
+.public-main form {
+    max-width: 100%;
+}
+
+.public-main input,
+.public-main select,
+.public-main textarea,
+.public-main button {
+    max-width: 100%;
+}
+
+.public-main img,
+.public-main video,
+.public-main iframe {
+    max-width: 100%;
+}
+
+.public-main table {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   FIND A TEACHER
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .find-hero-inner,
+    .find-search-wrap,
+    .find-container {
+        max-width: 100%;
+    }
+
+    .find-search-box {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 14px;
+    }
+
+    .teacher-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 14px;
+    }
+
+    .teacher-card,
+    .find-teacher-card {
+        min-width: 0;
+        max-width: 100%;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .find-hero {
+        min-height: auto !important;
+
+        padding:
+            50px
+            0
+            58px;
+
+        background-size:
+            auto 55% !important;
+
+        background-position:
+            92% bottom !important;
+    }
+
+    .find-hero-inner,
+    .find-search-wrap,
+    .find-container {
+        width:
+            calc(100% - 28px) !important;
+    }
+
+    .find-hero h1 {
+        font-size:
+            clamp(
+                38px,
+                12vw,
+                54px
+            ) !important;
+
+        letter-spacing:
+            -2px !important;
+    }
+
+    .find-hero-copy > p {
+        margin-top:
+            18px;
+
+        font-size:
+            15px;
+    }
+
+    .find-search-wrap {
+        margin:
+            0 auto !important;
+
+        padding-top:
+            18px;
+    }
+
+    .find-search-box {
+        grid-template-columns:
+            1fr !important;
+
+        padding:
+            16px;
+
+        border-radius:
+            16px;
+    }
+
+    .find-search-box input,
+    .find-search-box select,
+    .find-search-box button {
+        min-height:
+            46px;
+    }
+
+    .teacher-grid {
+        grid-template-columns:
+            1fr !important;
+    }
+}
+
+
+/* =========================================================
+   BECOME A TEACHER
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .teach-container {
+        max-width: 100%;
+    }
+
+    .teach-grid,
+    .teach-steps {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 14px;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .teach-container {
+        width:
+            calc(100% - 28px) !important;
+    }
+
+    .teach-hero {
+        min-height:
+            auto !important;
+
+        padding:
+            50px
+            0
+            55px;
+
+        background-size:
+            auto 55% !important;
+
+        background-position:
+            92% bottom !important;
+    }
+
+    .teach-copy h1 {
+        font-size:
+            clamp(
+                38px,
+                12vw,
+                54px
+            ) !important;
+
+        letter-spacing:
+            -2px !important;
+    }
+
+    .teach-copy p {
+        margin-top:
+            18px;
+
+        font-size:
+            15px;
+    }
+
+    .teach-hero-actions {
+        width:
+            100%;
+
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+
+        gap:
+            9px;
+    }
+
+    .teach-primary,
+    .teach-secondary {
+        width:
+            100%;
+
+        min-height:
+            46px;
+    }
+
+    .teach-grid,
+    .teach-steps {
+        grid-template-columns:
+            1fr !important;
+    }
+}
+
+
+/* =========================================================
+   DANCE STYLES
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .styles-container {
+        max-width:
+            100%;
+    }
+
+    .styles-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap:
+            14px;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .styles-container {
+        width:
+            calc(100% - 28px) !important;
+    }
+
+    .styles-hero {
+        min-height:
+            auto !important;
+
+        padding:
+            50px
+            0
+            55px;
+
+        background-size:
+            auto 55% !important;
+
+        background-position:
+            92% bottom !important;
+    }
+
+    .styles-copy h1 {
+        font-size:
+            clamp(
+                38px,
+                12vw,
+                54px
+            ) !important;
+
+        letter-spacing:
+            -2px !important;
+    }
+
+    .styles-copy p {
+        margin-top:
+            18px;
+
+        font-size:
+            15px;
+    }
+
+    .styles-section {
+        padding:
+            50px
+            0 !important;
+    }
+
+    .styles-section-head {
+        align-items:
+            flex-start !important;
+
+        flex-direction:
+            column;
+
+        gap:
+            12px !important;
+
+        margin-bottom:
+            25px !important;
+    }
+
+    .styles-grid {
+        grid-template-columns:
+            1fr !important;
+    }
+}
+
+
+/* =========================================================
+   PARTNERSHIPS / HOW IT WORKS
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .partnerships-container {
+        max-width:
+            100%;
+    }
+
+    .partnerships-grid,
+    .partnership-types-list {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap:
+            12px;
+    }
+}
+
+
+@media (max-width: 720px) {
+
+    .partnerships-container {
+        width:
+            calc(100% - 28px) !important;
+    }
+
+    .partnerships-hero {
+        padding:
+            36px
+            0
+            44px !important;
+    }
+
+    .partnerships-hero h1 {
+        font-size:
+            clamp(
+                36px,
+                11vw,
+                52px
+            );
+
+        letter-spacing:
+            -2px !important;
+    }
+
+    .partnerships-grid,
+    .partnership-types-list {
+        grid-template-columns:
+            1fr !important;
+    }
+
+    .partnerships-cta {
+        padding-bottom:
+            50px !important;
+    }
+
+    .partnerships-cta-box {
+        align-items:
+            stretch !important;
+
+        flex-direction:
+            column !important;
+
+        gap:
+            18px !important;
+
+        padding:
+            22px
+            18px !important;
+    }
+
+    .partnerships-primary-btn {
+        width:
+            100%;
+    }
+}
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+@media (max-width: 720px) {
+
+    .contact-page {
+        padding:
+            30px
+            0
+            50px !important;
+    }
+
+    .contact-container {
+        width:
+            calc(100% - 28px) !important;
+
+        max-width:
+            100%;
+    }
+
+    .contact-form-card {
+        padding:
+            20px
+            16px !important;
+
+        border-radius:
+            18px !important;
+    }
+
+    .contact-form-card h1 {
+        font-size:
+            25px !important;
+    }
+
+    .contact-form {
+        margin-top:
+            25px !important;
+    }
+
+    .contact-form-grid {
+        grid-template-columns:
+            1fr !important;
+
+        gap:
+            14px !important;
+    }
+
+    .contact-field-full {
+        grid-column:
+            auto !important;
+    }
+
+    .contact-field input,
+    .contact-field select {
+        height:
+            52px !important;
+
+        padding:
+            0
+            14px !important;
+
+        font-size:
+            16px !important;
+    }
+
+    .contact-field textarea {
+        min-height:
+            150px !important;
+
+        padding:
+            14px !important;
+
+        font-size:
+            16px !important;
+    }
+
+    .contact-form-footer {
+        align-items:
+            stretch !important;
+
+        flex-direction:
+            column !important;
+
+        gap:
+            12px !important;
+    }
+
+    .contact-form-footer button,
+    .contact-form-footer .btn,
+    .contact-form-footer a {
+        width:
+            100%;
+    }
+}
+
+
+/* =========================================================
+   PUBLIC TERMS / ABOUT / GENERIC CONTENT
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .public-main table {
+        display:
+            block;
+
+        width:
+            100%;
+
+        overflow-x:
+            auto;
+
+        -webkit-overflow-scrolling:
+            touch;
+    }
+
+    .public-main .card,
+    .public-main .content-card,
+    .public-main .legal-card,
+    .public-main .terms-card,
+    .public-main .about-card {
+        max-width:
+            100%;
+    }
+
+    .public-main .legal-content,
+    .public-main .terms-content,
+    .public-main .about-content {
+        overflow-wrap:
+            anywhere;
+    }
+}
+
+
+/* =========================================================
+   HOME FINAL MOBILE SAFETY
+========================================================= */
+
+@media (max-width: 720px) {
+
+    .home-hero {
+        min-height:
+            560px !important;
+
+        background-position:
+            63% center !important;
+    }
+
+    .home-hero-inner {
+        min-height:
+            560px !important;
+
+        align-items:
+            flex-start !important;
+    }
+
+    .home-hero-copy {
+        width:
+            100% !important;
+
+        padding-top:
+            65px !important;
+
+        padding-bottom:
+            70px !important;
+
+        transform:
+            none !important;
+    }
+
+    .home-hero-actions {
+        max-width:
+            100%;
+    }
+}
+
+
+@media (max-width: 430px) {
+
+    .home-hero {
+        min-height:
+            520px !important;
+    }
+
+    .home-hero-inner {
+        min-height:
+            520px !important;
+    }
+
+    .home-hero-copy {
+        padding-top:
+            48px !important;
+
+        padding-bottom:
+            55px !important;
+
+        transform:
+            none !important;
+    }
+
+    .home-hero-eyebrow {
+        margin-bottom:
+            18px !important;
+    }
+
+    .home-hero-description {
+        margin-top:
+            22px !important;
+    }
+}
+
+
+/* =========================================================
+   DANCEPAIR
+   APP / SHARED COMPONENTS
+========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing:
+        border-box;
+}
+
+audio,
+video,
+iframe,
+embed,
+object {
+    max-width:
+        100%;
+}
+
+
+/* =========================================================
+   MOBILE FORM USABILITY
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+        max-width:
+            100%;
+
+        font-size:
+            16px;
+    }
+
+    button,
+    a.btn,
+    input[type="submit"] {
+        touch-action:
+            manipulation;
+    }
+}
+
+
+/* =========================================================
+   BOOTSTRAP MODALS
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .modal {
+        padding-left:
+            0 !important;
+
+        padding-right:
+            0 !important;
+    }
+
+    .modal-dialog {
+        width:
+            calc(100% - 24px);
+
+        max-width:
+            none;
+
+        margin:
+            12px auto;
+    }
+
+    .modal-content {
+        max-height:
+            calc(100dvh - 24px);
+
+        overflow-y:
+            auto;
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding-left:
+            15px;
+
+        padding-right:
+            15px;
+    }
+
+    .modal-footer {
+        flex-wrap:
+            wrap;
+    }
+}
+
+
+/* =========================================================
+   PLATFORM MESSAGE WIDGET
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    #dpMessageLauncher {
+        max-width:
+            calc(100vw - 24px);
+    }
+
+    .dp-inbox-panel {
+        width:
+            calc(100vw - 24px) !important;
+
+        max-width:
+            none !important;
+
+        right:
+            12px !important;
+
+        left:
+            auto !important;
+
+        bottom:
+            82px !important;
+
+        max-height:
+            calc(100dvh - 110px) !important;
+    }
+
+    .dp-inbox-header {
+        padding-left:
+            14px !important;
+
+        padding-right:
+            14px !important;
+    }
+
+    .dp-inbox-list {
+        max-height:
+            calc(100dvh - 190px) !important;
+
+        overflow-y:
+            auto !important;
+    }
+
+    .dp-inbox-message {
+        width:
+            100%;
+
+        max-width:
+            100%;
+    }
+
+    .dp-message-overlay {
+        padding:
+            12px !important;
+    }
+
+    .dp-client-message {
+        width:
+            100% !important;
+
+        max-width:
+            520px !important;
+
+        max-height:
+            calc(100dvh - 24px) !important;
+
+        margin:
+            0 !important;
+
+        overflow:
+            hidden;
+    }
+
+    .dp-client-header {
+        padding-left:
+            16px !important;
+
+        padding-right:
+            16px !important;
+    }
+
+    .dp-client-content {
+        max-height:
+            calc(100dvh - 190px);
+
+        overflow-y:
+            auto;
+
+        padding:
+            18px !important;
+    }
+
+    .dp-client-title,
+    .dp-client-text {
+        overflow-wrap:
+            anywhere;
+    }
+
+    .dp-client-footer {
+        padding-left:
+            16px !important;
+
+        padding-right:
+            16px !important;
+    }
+
+    .dp-client-close {
+        min-height:
+            42px;
+    }
+}
+
+
+@media (max-width: 430px) {
+
+    .dp-inbox-panel {
+        width:
+            calc(100vw - 16px) !important;
+
+        right:
+            8px !important;
+
+        bottom:
+            72px !important;
+    }
+
+    .dp-message-overlay {
+        padding:
+            8px !important;
+    }
+
+    .dp-client-message {
+        max-height:
+            calc(100dvh - 16px) !important;
+    }
+
+    .dp-client-content {
+        padding:
+            15px !important;
+    }
+}
+
+
+/* =========================================================
+   GENERIC AUTH / LOGIN / REGISTER / PASSWORD / VERIFY
+========================================================= */
+
+/* =========================================================
+   GENERIC AUTH / LOGIN / REGISTER / PASSWORD / VERIFY
+   MOBILE / TABLET ONLY
+
+   IMPORTANT:
+   Desktop sizing is intentionally NOT overridden here.
+   Desktop remains controlled by the existing login/auth styles
+   in the main DancePair CSS files.
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .auth-page,
+    .login-page,
+    .register-page,
+    .forgot-password-page,
+    .reset-password-page,
+    .verify-email-page {
+        width: 100%;
+        max-width: 100%;
+
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .auth-wrapper,
+    .login-wrapper,
+    .register-wrapper,
+    .forgot-password-wrapper,
+    .reset-password-wrapper,
+    .verify-email-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .auth-card,
+    .login-card,
+    .register-card,
+    .forgot-password-card,
+    .reset-password-card,
+    .verify-email-card {
+        width: 100%;
+
+        padding:
+            20px !important;
+
+        border-radius:
+            18px !important;
+    }
+
+    .auth-card form,
+    .login-card form,
+    .register-card form,
+    .forgot-password-card form,
+    .reset-password-card form,
+    .verify-email-card form {
+        width:
+            100%;
+    }
+
+    .auth-card .btn,
+    .login-card .btn,
+    .register-card .btn,
+    .forgot-password-card .btn,
+    .reset-password-card .btn,
+    .verify-email-card .btn,
+    .auth-card button[type="submit"],
+    .login-card button[type="submit"],
+    .register-card button[type="submit"],
+    .forgot-password-card button[type="submit"],
+    .reset-password-card button[type="submit"],
+    .verify-email-card button[type="submit"] {
+        width:
+            100%;
+
+        min-height:
+            44px;
+    }
+}
+
+
+@media (max-width: 430px) {
+
+    .auth-page,
+    .login-page,
+    .register-page,
+    .forgot-password-page,
+    .reset-password-page,
+    .verify-email-page {
+        padding-left:
+            10px;
+
+        padding-right:
+            10px;
+    }
+
+    .auth-card,
+    .login-card,
+    .register-card,
+    .forgot-password-card,
+    .reset-password-card,
+    .verify-email-card {
+        padding:
+            16px !important;
+
+        border-radius:
+            16px !important;
+    }
+}
+
+/* =========================================================
+   GENERIC PAGINATION
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .pagination {
+        flex-wrap:
+            wrap;
+
+        gap:
+            4px;
+    }
+
+    .page-link {
+        min-width:
+            38px;
+
+        min-height:
+            38px;
+
+        display:
+            inline-flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+    }
+}
+
+
+/* =========================================================
+   ALERT / VALIDATION SAFETY
+========================================================= */
+
+.alert,
+.invalid-feedback,
+.valid-feedback {
+    overflow-wrap:
+        anywhere;
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .teacher-panel main,
+    .student-panel main,
+    .admin-panel main {
+        overflow-x:
+            hidden;
+    }
+
+    .public-main {
+        overflow-x:
+            hidden;
+    }
+
+    .btn,
+    button {
+        max-width:
+            100%;
+    }
+}

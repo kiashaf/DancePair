@@ -7,10 +7,14 @@ use App\Models\BookingMessage;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\TeacherAvailability;
+
 use App\Notifications\BookingMessageNotification;
-use App\Notifications\NewBookingRequestNotification;
+
+use App\Services\BookingActivityNotifier;
 use App\Services\MessageContentFilter;
+
 use Carbon\Carbon;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +30,8 @@ class StudentBookingRequestController extends Controller
     public function store(
         Request $request,
         TeacherAvailability $availability,
-        MessageContentFilter $contentFilter
+        MessageContentFilter $contentFilter,
+        BookingActivityNotifier $activityNotifier
     ) {
         /*
         |--------------------------------------------------------------------------
@@ -61,6 +66,7 @@ class StudentBookingRequestController extends Controller
             (int) $teacher->user_id ===
             (int) $student->user_id
         ) {
+
             return back()->with(
                 'error',
                 __('student.cannot_request_own_lesson')
@@ -70,17 +76,53 @@ class StudentBookingRequestController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | VALIDATE OPTIONAL MESSAGE
+        | VALIDATE REQUEST
         |--------------------------------------------------------------------------
         */
 
-        $validated = $request->validate([
-            'message' => [
-                'nullable',
-                'string',
-                'max:3000',
+        $validated = $request->validate(
+            [
+                'teaching_type' => [
+                    'required',
+                    'string',
+                    'in:online,face_to_face,public_place',
+                ],
+
+                'message' => [
+                    'nullable',
+                    'string',
+                    'max:3000',
+                ],
             ],
-        ]);
+            [
+                'teaching_type.required' =>
+                    app()->getLocale() === 'fr'
+                        ? 'Veuillez sélectionner un type de cours.'
+                        : 'Please select a teaching type.',
+
+                'teaching_type.in' =>
+                    app()->getLocale() === 'fr'
+                        ? 'Le type de cours sélectionné est invalide.'
+                        : 'The selected teaching type is invalid.',
+            ]
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | TEACHING TYPE
+        |--------------------------------------------------------------------------
+        */
+
+        $teachingType =
+            $validated['teaching_type'];
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | OPTIONAL MESSAGE
+        |--------------------------------------------------------------------------
+        */
 
         $messageText = trim(
             $validated['message'] ?? ''
@@ -104,6 +146,7 @@ class StudentBookingRequestController extends Controller
                 $messageText
             )
         ) {
+
             return back()
                 ->withInput()
                 ->withErrors([
@@ -146,6 +189,7 @@ class StudentBookingRequestController extends Controller
 
 
         if ($alreadyRequested) {
+
             return back()->with(
                 'error',
                 __('student.already_requested_class')
@@ -170,7 +214,9 @@ class StudentBookingRequestController extends Controller
                 'dance_style_id',
                 $availability->dance_style_id
             )
-            ->value('hourly_rate');
+            ->value(
+                'hourly_rate'
+            );
 
 
         /*
@@ -180,13 +226,16 @@ class StudentBookingRequestController extends Controller
         */
 
         if ($hourlyRate === null) {
+
             return back()->with(
                 'error',
                 __('student.no_hourly_rate_for_style')
             );
         }
 
-        $hourlyRate = (float) $hourlyRate;
+
+        $hourlyRate =
+            (float) $hourlyRate;
 
 
         /*
@@ -199,9 +248,11 @@ class StudentBookingRequestController extends Controller
             $availability->start_time
         );
 
+
         $endTime = Carbon::parse(
             $availability->end_time
         );
+
 
         $duration = $startTime->diffInMinutes(
             $endTime
@@ -215,6 +266,7 @@ class StudentBookingRequestController extends Controller
         */
 
         if ($duration <= 0) {
+
             return back()->with(
                 'error',
                 __('student.invalid_lesson_duration')
@@ -246,6 +298,7 @@ class StudentBookingRequestController extends Controller
                 $availability,
                 $duration,
                 $price,
+                $teachingType,
                 $messageText
             ) {
 
@@ -265,6 +318,9 @@ class StudentBookingRequestController extends Controller
 
                     'dance_style_id' =>
                         $availability->dance_style_id,
+
+                    'teaching_type' =>
+                        $teachingType,
 
                     'lesson_date' =>
                         $availability->available_date,
@@ -328,9 +384,13 @@ class StudentBookingRequestController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | TEACHER USER
+        | STUDENT + TEACHER USERS
         |--------------------------------------------------------------------------
         */
+
+        $studentUser =
+            $booking->student?->user;
+
 
         $teacherUser =
             $booking->teacher?->user;
@@ -338,29 +398,40 @@ class StudentBookingRequestController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | SEND NEW BOOKING NOTIFICATION
+        | BOOKING ACTIVITY NOTIFICATION
         |--------------------------------------------------------------------------
         |
-        | Existing DancePair behaviour stays intact.
+        | Both users receive:
+        |
+        | - Database notification inside DancePair
+        | - Email from DancePair Support
+        |
+        | Student:
+        | Confirmation that the request was submitted.
+        |
+        | Teacher:
+        | Notification that a new lesson request was received.
         |
         */
 
-        if ($teacherUser) {
-
-            $teacherUser->notify(
-                new NewBookingRequestNotification(
-                    $booking
-                )
-            );
-        }
+        $activityNotifier->notifyBoth(
+            booking: $booking,
+            action: 'request_created',
+            actorRole: 'student',
+            actorName: $studentUser?->name
+                ?? Auth::user()?->name
+        );
 
 
         /*
         |--------------------------------------------------------------------------
-        | SEND MESSAGE NOTIFICATION + EMAIL
+        | SEND OPTIONAL MESSAGE NOTIFICATION + EMAIL
         |--------------------------------------------------------------------------
         |
-        | Only when the student actually included a message.
+        | This existing feature stays intact.
+        |
+        | If the student included a message with the booking request,
+        | the teacher also receives the message notification.
         |
         */
 
@@ -370,24 +441,47 @@ class StudentBookingRequestController extends Controller
             $messageText !== ''
         ) {
 
-            $bookingMessage =
-                BookingMessage::where(
+            $bookingMessage = BookingMessage::where(
                     'booking_id',
                     $booking->id
                 )
-                ->latest('id')
+                ->latest(
+                    'id'
+                )
                 ->first();
 
 
             if ($bookingMessage) {
 
-                $teacherUser->notify(
-                    new BookingMessageNotification(
-                        $booking,
-                        $bookingMessage,
-                        Auth::user()->name
-                    )
-                );
+                try {
+
+                    $teacherUser->notify(
+                        new BookingMessageNotification(
+                            $booking,
+                            $bookingMessage,
+                            $studentUser?->name
+                                ?? Auth::user()?->name
+                                ?? 'Student'
+                        )
+                    );
+
+                } catch (\Throwable $exception) {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | DO NOT BREAK BOOKING CREATION
+                    |--------------------------------------------------------------------------
+                    |
+                    | The booking has already been created successfully.
+                    | If the optional message notification fails,
+                    | we report it but do not delete the booking.
+                    |
+                    */
+
+                    report(
+                        $exception
+                    );
+                }
             }
         }
 

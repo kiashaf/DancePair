@@ -21,6 +21,9 @@ class Teacher extends Model
         'profile_photo',
         'cover_photo',
         'intro_video',
+        'stripe_account_id',
+        'stripe_onboarding_complete',
+        'stripe_payouts_enabled',
         
     ];
 

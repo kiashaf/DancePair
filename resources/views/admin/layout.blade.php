@@ -101,7 +101,21 @@
            SIDEBAR
         ================================================== --}}
 
-        <div class="col-md-3 col-lg-2 sidebar p-4">
+        <div
+            class="col-md-3 col-lg-2 sidebar p-4"
+            data-mobile-sidebar
+        >
+
+
+            {{-- MOBILE CLOSE BUTTON --}}
+            <button
+                type="button"
+                class="mobile-sidebar-close"
+                data-mobile-sidebar-close
+                aria-label="Close menu"
+            >
+                ×
+            </button>
 
 
             <x-ui.logo />
@@ -144,46 +158,54 @@
 
 
                 <a
-    href="{{ route('admin.bookings') }}"
-    class="{{ request()->routeIs('admin.bookings*')
-        ? 'active'
-        : ''
-    }}"
->
-    Bookings
-</a>
-<a
-    href="{{ route('admin.conversations') }}"
-    class="{{ request()->routeIs('admin.conversations*')
-        ? 'active'
-        : ''
-    }}"
->
-    {{ app()->getLocale() === 'fr'
-        ? 'Conversations clients'
-        : 'Client Conversations'
-    }}
-</a>
+                    href="{{ route('admin.bookings') }}"
+                    class="{{ request()->routeIs('admin.bookings*')
+                        ? 'active'
+                        : ''
+                    }}"
+                >
+                    Bookings
+                </a>
 
 
-<a href="{{ route('admin.reviews') }}"
-   class="{{ request()->routeIs('admin.reviews*') ? 'active' : '' }}">
-    Reviews
-</a>
+                <a
+                    href="{{ route('admin.conversations') }}"
+                    class="{{ request()->routeIs('admin.conversations*')
+                        ? 'active'
+                        : ''
+                    }}"
+                >
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Conversations clients'
+                        : 'Client Conversations'
+                    }}
+                </a>
 
-<a
-    href="{{ route('admin.payments') }}"
-    class="{{ request()->routeIs('admin.payments*') ? 'active' : '' }}"
->
-    Payments
-</a>
-<a
-    href="{{ route('admin.platform-messages') }}"
-    class="dw-sidebar-link
-        {{ request()->routeIs('admin.platform-messages*') ? 'active' : '' }}"
->
-    Messages
-</a>
+
+                <a
+                    href="{{ route('admin.reviews') }}"
+                    class="{{ request()->routeIs('admin.reviews*') ? 'active' : '' }}"
+                >
+                    Reviews
+                </a>
+
+
+                <a
+                    href="{{ route('admin.payments') }}"
+                    class="{{ request()->routeIs('admin.payments*') ? 'active' : '' }}"
+                >
+                    Payments
+                </a>
+
+
+                <a
+                    href="{{ route('admin.platform-messages') }}"
+                    class="dw-sidebar-link
+                        {{ request()->routeIs('admin.platform-messages*') ? 'active' : '' }}"
+                >
+                    Messages
+                </a>
+
 
                 <a
                     href="{{ route('admin.settings') }}"
@@ -196,18 +218,21 @@
                 </a>
 
             </div>
+
+
             <a
-    href="{{ route('admin.page-views') }}"
-    class="{{ request()->routeIs('admin.page-views*')
-        ? 'active'
-        : ''
-    }}"
->
-    {{ app()->getLocale() === 'fr'
-        ? 'Visites du site'
-        : 'Page Views'
-    }}
-</a>
+                href="{{ route('admin.page-views') }}"
+                class="{{ request()->routeIs('admin.page-views*')
+                    ? 'active'
+                    : ''
+                }}"
+            >
+                {{ app()->getLocale() === 'fr'
+                    ? 'Visites du site'
+                    : 'Page Views'
+                }}
+            </a>
+
 
             <hr class="sidebar-separator">
 
@@ -237,6 +262,16 @@
         </div>
 
 
+        {{-- =================================================
+           MOBILE SIDEBAR OVERLAY
+        ================================================== --}}
+
+        <div
+            class="mobile-sidebar-overlay"
+            data-mobile-sidebar-overlay
+        ></div>
+
+
 
         {{-- =================================================
            MAIN
@@ -263,20 +298,38 @@
                 "
             >
 
-                <div>
 
-                    <h4 class="mb-0">
-                        @yield('page-title')
-                    </h4>
+                <div class="dashboard-topbar-left">
 
-                    <small class="text-muted">
 
-                        DancePair Administration
+                    {{-- MOBILE MENU BUTTON --}}
+                    <button
+                        type="button"
+                        class="mobile-sidebar-toggle"
+                        data-mobile-sidebar-open
+                        aria-label="Open menu"
+                        aria-expanded="false"
+                    >
+                        ☰
+                    </button>
 
-                        • Welcome back,
-                        {{ auth()->user()->name }}
 
-                    </small>
+                    <div class="dashboard-topbar-title">
+
+                        <h4 class="mb-0">
+                            @yield('page-title')
+                        </h4>
+
+                        <small class="text-muted">
+
+                            DancePair Administration
+
+                            • Welcome back,
+                            {{ auth()->user()->name }}
+
+                        </small>
+
+                    </div>
 
                 </div>
 

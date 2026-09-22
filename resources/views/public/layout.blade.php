@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
 
@@ -315,6 +315,40 @@
 
         .public-nav-actions form {
             margin: 0;
+        }
+
+
+        .public-language-switch {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+
+            color: #777184;
+
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+
+
+        .public-language-switch a {
+            color: #9B95A8;
+
+            text-decoration: none;
+
+            transition:
+                color .2s ease;
+        }
+
+
+        .public-language-switch a:hover {
+            color: #FFFFFF;
+        }
+
+
+        .public-language-switch a.active {
+            color: #F72585;
         }
 
 
@@ -857,6 +891,25 @@
 
 
 
+        {{-- =========================================================
+           MOBILE MENU BUTTON
+        ========================================================= --}}
+
+        <button
+            type="button"
+            class="public-mobile-toggle"
+            data-public-mobile-open
+            aria-expanded="false"
+            aria-label="{{ app()->getLocale() === 'fr'
+                ? 'Ouvrir le menu'
+                : 'Open menu'
+            }}"
+        >
+            ☰
+        </button>
+
+
+
         {{-- NAVIGATION --}}
         <div class="public-nav-links">
 
@@ -864,7 +917,7 @@
                 href="{{ route('home') }}"
                 class="{{ request()->routeIs('home') ? 'active' : '' }}"
             >
-                Home
+                {{ __('common.home') }}
             </a>
 
 
@@ -872,7 +925,7 @@
                 href="{{ route('public.find-teacher') }}"
                 class="{{ request()->routeIs('public.find-teacher') ? 'active' : '' }}"
             >
-                Find a Teacher
+                {{ __('common.find_teacher') }}
             </a>
 
 
@@ -880,7 +933,7 @@
                 href="{{ route('public.become-teacher') }}"
                 class="{{ request()->routeIs('public.become-teacher') ? 'active' : '' }}"
             >
-                Become a Teacher
+                {{ __('common.become_teacher') }}
             </a>
 
 
@@ -888,7 +941,7 @@
                 href="{{ route('public.dance-styles') }}"
                 class="{{ request()->routeIs('public.dance-styles') ? 'active' : '' }}"
             >
-                Dance Styles
+                {{ __('common.dance_styles') }}
             </a>
 
 
@@ -896,7 +949,7 @@
                 href="{{ route('public.how-it-works') }}"
                 class="{{ request()->routeIs('public.how-it-works') ? 'active' : '' }}"
             >
-              Partnerships
+                {{ __('common.partnerships') }}
             </a>
 
 
@@ -908,11 +961,12 @@
             </a>
 
  -->
+
             <a
                 href="{{ route('public.contact') }}"
                 class="{{ request()->routeIs('public.contact') ? 'active' : '' }}"
             >
-                Contact Us
+                {{ __('common.contact') }}
             </a>
 
         </div>
@@ -922,6 +976,29 @@
         {{-- ACCOUNT --}}
         <div class="public-nav-actions">
 
+
+            {{-- LANGUAGE SWITCH --}}
+            <div class="public-language-switch">
+
+                <a
+                    href="{{ route('language.switch', 'en') }}"
+                    class="{{ app()->getLocale() === 'en' ? 'active' : '' }}"
+                >
+                    EN
+                </a>
+
+                <span>/</span>
+
+                <a
+                    href="{{ route('language.switch', 'fr') }}"
+                    class="{{ app()->getLocale() === 'fr' ? 'active' : '' }}"
+                >
+                    FR
+                </a>
+
+            </div>
+
+
             @auth
 
                 @if(auth()->user()->role === 'teacher')
@@ -930,7 +1007,7 @@
                         href="{{ route('teacher.dashboard') }}"
                         class="public-dashboard-btn"
                     >
-                        Dashboard
+                        {{ __('common.dashboard') }}
                     </a>
 
                 @elseif(auth()->user()->role === 'student')
@@ -939,7 +1016,7 @@
                         href="{{ route('student.dashboard') }}"
                         class="public-dashboard-btn"
                     >
-                        Dashboard
+                        {{ __('common.dashboard') }}
                     </a>
 
                 @elseif(auth()->user()->role === 'admin')
@@ -948,7 +1025,7 @@
                         href="{{ route('admin.dashboard') }}"
                         class="public-dashboard-btn"
                     >
-                        Dashboard
+                        {{ __('common.dashboard') }}
                     </a>
 
                 @endif
@@ -970,7 +1047,7 @@
                         type="submit"
                         class="public-logout-btn"
                     >
-                        Logout
+                        {{ __('common.logout') }}
                     </button>
 
                 </form>
@@ -982,7 +1059,7 @@
                     href="{{ route('login') }}"
                     class="public-login-btn"
                 >
-                    Login
+                    {{ __('common.login') }}
                 </a>
 
 
@@ -990,7 +1067,7 @@
                     href="{{ route('register') }}"
                     class="public-register-btn"
                 >
-                    Join Now
+                    {{ __('common.join_now') }}
                 </a>
 
             @endauth
@@ -1000,6 +1077,237 @@
     </div>
 
 </nav>
+
+
+
+{{-- =========================================================
+   MOBILE MENU OVERLAY
+========================================================= --}}
+
+<div
+    class="public-mobile-overlay"
+    data-public-mobile-overlay
+></div>
+
+
+
+{{-- =========================================================
+   MOBILE MENU
+========================================================= --}}
+
+<aside
+    class="public-mobile-menu"
+    data-public-mobile-menu
+>
+
+    {{-- MOBILE MENU HEADER --}}
+    <div class="public-mobile-menu-header">
+
+
+        <a
+            href="{{ route('home') }}"
+            class="public-mobile-brand"
+        >
+
+            <img
+                src="{{ asset('logo/logo.png') }}"
+                alt="DancePair"
+            >
+
+            <span>
+                Dance<span>Pair</span>
+            </span>
+
+        </a>
+
+
+        <button
+            type="button"
+            class="public-mobile-close"
+            data-public-mobile-close
+            aria-label="{{ app()->getLocale() === 'fr'
+                ? 'Fermer le menu'
+                : 'Close menu'
+            }}"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+
+    {{-- =========================================================
+       MOBILE NAVIGATION LINKS
+    ========================================================= --}}
+
+    <nav class="public-mobile-links">
+
+
+        <a
+            href="{{ route('home') }}"
+            class="{{ request()->routeIs('home') ? 'active' : '' }}"
+        >
+            {{ __('common.home') }}
+        </a>
+
+
+        <a
+            href="{{ route('public.find-teacher') }}"
+            class="{{ request()->routeIs('public.find-teacher') ? 'active' : '' }}"
+        >
+            {{ __('common.find_teacher') }}
+        </a>
+
+
+        <a
+            href="{{ route('public.become-teacher') }}"
+            class="{{ request()->routeIs('public.become-teacher') ? 'active' : '' }}"
+        >
+            {{ __('common.become_teacher') }}
+        </a>
+
+
+        <a
+            href="{{ route('public.dance-styles') }}"
+            class="{{ request()->routeIs('public.dance-styles') ? 'active' : '' }}"
+        >
+            {{ __('common.dance_styles') }}
+        </a>
+
+
+        <a
+            href="{{ route('public.how-it-works') }}"
+            class="{{ request()->routeIs('public.how-it-works') ? 'active' : '' }}"
+        >
+            {{ __('common.partnerships') }}
+        </a>
+
+
+        <a
+            href="{{ route('public.contact') }}"
+            class="{{ request()->routeIs('public.contact') ? 'active' : '' }}"
+        >
+            {{ __('common.contact') }}
+        </a>
+
+    </nav>
+
+
+
+    {{-- =========================================================
+       MOBILE LANGUAGE SWITCH
+    ========================================================= --}}
+
+    <div class="public-mobile-language">
+
+        <a
+            href="{{ route('language.switch', 'en') }}"
+            class="{{ app()->getLocale() === 'en' ? 'active' : '' }}"
+        >
+            EN
+        </a>
+
+        <span>/</span>
+
+        <a
+            href="{{ route('language.switch', 'fr') }}"
+            class="{{ app()->getLocale() === 'fr' ? 'active' : '' }}"
+        >
+            FR
+        </a>
+
+    </div>
+
+
+
+    {{-- =========================================================
+       MOBILE ACCOUNT
+    ========================================================= --}}
+
+    <div class="public-mobile-account">
+
+
+        @auth
+
+
+            <div class="public-mobile-user">
+                {{ auth()->user()->name }}
+            </div>
+
+
+            @if(auth()->user()->role === 'teacher')
+
+                <a
+                    href="{{ route('teacher.dashboard') }}"
+                    class="public-mobile-primary"
+                >
+                    {{ __('common.dashboard') }}
+                </a>
+
+            @elseif(auth()->user()->role === 'student')
+
+                <a
+                    href="{{ route('student.dashboard') }}"
+                    class="public-mobile-primary"
+                >
+                    {{ __('common.dashboard') }}
+                </a>
+
+            @elseif(auth()->user()->role === 'admin')
+
+                <a
+                    href="{{ route('admin.dashboard') }}"
+                    class="public-mobile-primary"
+                >
+                    {{ __('common.dashboard') }}
+                </a>
+
+            @endif
+
+
+            <form
+                method="POST"
+                action="{{ route('logout') }}"
+            >
+
+                @csrf
+
+                <button
+                    type="submit"
+                    class="public-mobile-secondary"
+                >
+                    {{ __('common.logout') }}
+                </button>
+
+            </form>
+
+
+        @else
+
+
+            <a
+                href="{{ route('login') }}"
+                class="public-mobile-secondary"
+            >
+                {{ __('common.login') }}
+            </a>
+
+
+            <a
+                href="{{ route('register') }}"
+                class="public-mobile-primary"
+            >
+                {{ __('common.join_now') }}
+            </a>
+
+
+        @endauth
+
+
+    </div>
+
+</aside>
 
 
 
@@ -1019,65 +1327,7 @@
    FOOTER
 ========================================================= --}}
 
-<footer class="public-footer">
-
-    <div class="public-footer-inner">
-
-
-        <a
-            href="{{ route('home') }}"
-            class="public-footer-brand"
-        >
-
-            <x-ui.logo />
-
-        </a>
-
-
-        <div class="public-footer-links">
-
-            <a href="{{ route('public.find-teacher') }}">
-                Find a Teacher
-            </a>
-
-
-            <a href="{{ route('public.become-teacher') }}">
-                Become a Teacher
-            </a>
-
-
-            <a href="{{ route('public.dance-styles') }}">
-                Dance Styles
-            </a>
-
-
-            <a href="{{ route('public.how-it-works') }}">
-                How It Works
-            </a>
-
-
-            <a href="{{ route('public.about') }}">
-                About Us
-            </a>
-
-
-            <a href="{{ route('public.contact') }}">
-                Contact
-            </a>
-
-        </div>
-
-
-        <div class="public-footer-copy">
-
-            © {{ date('Y') }} DancePair.
-            All rights reserved.
-
-        </div>
-
-    </div>
-
-</footer>
+@include('partials.site-footer')
 
 
 @stack('scripts')

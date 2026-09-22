@@ -17,6 +17,7 @@ use Illuminate\Notifications\Notifiable;
     'password',
     'role',
     'active',
+    'terms_accepted_at',
 ])]
 #[Hidden([
     'password',
@@ -38,6 +39,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
+
+            'terms_accepted_at' => 'datetime',
 
             'password' => 'hashed',
 

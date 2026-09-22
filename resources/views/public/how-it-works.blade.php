@@ -1,6 +1,11 @@
 @extends('public.layout')
 
-@section('title', 'Partnerships | DancePair')
+@section(
+    'title',
+    app()->getLocale() === 'fr'
+        ? 'Partenariats | DancePair'
+        : 'Partnerships | DancePair'
+)
 
 
 @push('styles')
@@ -26,25 +31,57 @@
         overflow: hidden;
 
         padding:
-            55px
+            34px
             0
-            65px;
+            38px;
 
         border-bottom:
             1px solid rgba(255,255,255,.06);
 
         background:
-            radial-gradient(
-                circle at 82% 30%,
-                rgba(121,55,255,.18),
-                transparent 30%
+            linear-gradient(
+                90deg,
+                rgba(7,6,21,.99) 0%,
+                rgba(7,6,21,.96) 35%,
+                rgba(7,6,21,.78) 58%,
+                rgba(7,6,21,.28) 100%
             ),
+            url('{{ asset('images/home/hero-dance.jpg') }}');
+
+        background-size:
+            auto,
+            auto 100%;
+
+        background-position:
+            center,
+            right bottom;
+
+        background-repeat:
+            no-repeat,
+            no-repeat;
+    }
+
+
+    .partnerships-hero::before {
+        content: "";
+
+        position: absolute;
+
+        inset: 0;
+
+        background:
             radial-gradient(
                 circle at 18% 35%,
-                rgba(247,37,133,.09),
+                rgba(247,37,133,.10),
                 transparent 28%
             ),
-            #070615;
+            radial-gradient(
+                circle at 76% 40%,
+                rgba(121,55,255,.14),
+                transparent 30%
+            );
+
+        pointer-events: none;
     }
 
 
@@ -53,11 +90,11 @@
 
         position: absolute;
 
-        width: 420px;
-        height: 420px;
+        width: 320px;
+        height: 320px;
 
-        right: -120px;
-        top: -140px;
+        right: -100px;
+        top: -120px;
 
         border-radius: 50%;
 
@@ -85,7 +122,7 @@
 
 
     .partnerships-hero-content {
-        max-width: 850px;
+        max-width: 780px;
     }
 
 
@@ -94,11 +131,11 @@
 
         align-items: center;
 
-        min-height: 34px;
+        min-height: 28px;
 
-        padding: 0 15px;
+        padding: 0 12px;
 
-        margin-bottom: 20px;
+        margin-bottom: 13px;
 
         border:
             1px solid rgba(255,255,255,.10);
@@ -110,7 +147,7 @@
         background:
             rgba(255,255,255,.06);
 
-        font-size: 11px;
+        font-size: 9px;
         font-weight: 850;
 
         letter-spacing: .11em;
@@ -120,7 +157,7 @@
 
 
     .partnerships-hero h1 {
-        max-width: 850px;
+        max-width: 780px;
 
         margin: 0;
 
@@ -128,20 +165,22 @@
 
         font-size:
             clamp(
-                48px,
-                5vw,
-                74px
+                38px,
+                4.2vw,
+                58px
             );
 
         line-height: 1;
 
         font-weight: 950;
 
-        letter-spacing: -3px;
+        letter-spacing: -2.5px;
     }
 
 
     .partnerships-gradient {
+        display: block;
+
         color: transparent;
 
         background:
@@ -158,33 +197,33 @@
 
 
     .partnerships-hero-description {
-        max-width: 700px;
+        max-width: 620px;
 
-        margin: 22px 0 0;
+        margin: 14px 0 0;
 
         color: #AAA4B8;
 
-        font-size: 16px;
-        line-height: 1.75;
+        font-size: 13px;
+        line-height: 1.55;
     }
 
 
     .partnerships-hero-action {
-        margin-top: 27px;
+        margin-top: 17px;
     }
 
 
     .partnerships-primary-btn {
-        min-height: 48px;
+        min-height: 40px;
 
         display: inline-flex;
 
         align-items: center;
         justify-content: center;
 
-        padding: 0 23px;
+        padding: 0 19px;
 
-        border-radius: 12px;
+        border-radius: 10px;
 
         color: #FFFFFF;
 
@@ -201,7 +240,7 @@
 
         text-decoration: none;
 
-        font-size: 13px;
+        font-size: 11px;
         font-weight: 850;
 
         transition:
@@ -227,23 +266,23 @@
 
     .partnerships-section {
         padding:
-            60px
+            34px
             0
-            70px;
+            36px;
     }
 
 
     .partnerships-section-header {
         max-width: 680px;
 
-        margin-bottom: 32px;
+        margin-bottom: 20px;
     }
 
 
     .partnerships-section-header span {
         color: #F72585;
 
-        font-size: 11px;
+        font-size: 9px;
         font-weight: 850;
 
         letter-spacing: .10em;
@@ -254,13 +293,13 @@
 
     .partnerships-section-header h2 {
         margin:
-            7px
+            6px
             0
             0;
 
         color: #FFFFFF;
 
-        font-size: 34px;
+        font-size: 27px;
         font-weight: 900;
 
         letter-spacing: -1px;
@@ -273,19 +312,19 @@
         grid-template-columns:
             repeat(3, minmax(0, 1fr));
 
-        gap: 16px;
+        gap: 12px;
     }
 
 
     .partnership-card {
-        min-height: 180px;
+        min-height: 142px;
 
-        padding: 25px;
+        padding: 18px;
 
         border:
             1px solid rgba(255,255,255,.075);
 
-        border-radius: 18px;
+        border-radius: 16px;
 
         background:
             linear-gradient(
@@ -309,17 +348,17 @@
 
 
     .partnership-card-icon {
-        width: 44px;
-        height: 44px;
+        width: 34px;
+        height: 34px;
 
         display: flex;
 
         align-items: center;
         justify-content: center;
 
-        margin-bottom: 18px;
+        margin-bottom: 12px;
 
-        border-radius: 13px;
+        border-radius: 10px;
 
         color: #FFFFFF;
 
@@ -330,7 +369,7 @@
                 rgba(121,55,255,.22)
             );
 
-        font-size: 20px;
+        font-size: 15px;
     }
 
 
@@ -339,21 +378,21 @@
 
         color: #FFFFFF;
 
-        font-size: 17px;
+        font-size: 14px;
         font-weight: 850;
     }
 
 
     .partnership-card p {
         margin:
-            9px
+            6px
             0
             0;
 
         color: #928C9E;
 
-        font-size: 13px;
-        line-height: 1.65;
+        font-size: 10px;
+        line-height: 1.5;
     }
 
 
@@ -365,17 +404,17 @@
         padding:
             0
             0
-            70px;
+            34px;
     }
 
 
     .partnership-types-box {
-        padding: 30px;
+        padding: 22px;
 
         border:
             1px solid rgba(255,255,255,.07);
 
-        border-radius: 20px;
+        border-radius: 18px;
 
         background: #0D0B20;
     }
@@ -386,7 +425,7 @@
 
         color: #FFFFFF;
 
-        font-size: 28px;
+        font-size: 22px;
         font-weight: 900;
     }
 
@@ -397,32 +436,32 @@
         grid-template-columns:
             repeat(4, minmax(0, 1fr));
 
-        gap: 12px;
+        gap: 8px;
 
-        margin-top: 24px;
+        margin-top: 16px;
     }
 
 
     .partnership-type {
-        min-height: 54px;
+        min-height: 40px;
 
         display: flex;
 
         align-items: center;
 
-        padding: 0 16px;
+        padding: 0 12px;
 
         border:
             1px solid rgba(255,255,255,.065);
 
-        border-radius: 12px;
+        border-radius: 10px;
 
         color: #D7D2DF;
 
         background:
             rgba(255,255,255,.022);
 
-        font-size: 12px;
+        font-size: 10px;
         font-weight: 750;
     }
 
@@ -430,7 +469,7 @@
     .partnership-type::before {
         content: "✓";
 
-        margin-right: 10px;
+        margin-right: 8px;
 
         color: #F72585;
 
@@ -446,7 +485,7 @@
         padding:
             0
             0
-            75px;
+            34px;
     }
 
 
@@ -456,16 +495,16 @@
         align-items: center;
         justify-content: space-between;
 
-        gap: 30px;
+        gap: 25px;
 
         padding:
-            32px
-            35px;
+            22px
+            24px;
 
         border:
             1px solid rgba(247,37,133,.18);
 
-        border-radius: 20px;
+        border-radius: 17px;
 
         background:
             linear-gradient(
@@ -481,21 +520,21 @@
 
         color: #FFFFFF;
 
-        font-size: 26px;
+        font-size: 21px;
         font-weight: 900;
     }
 
 
     .partnerships-cta-copy p {
         margin:
-            8px
+            5px
             0
             0;
 
         color: #9791A5;
 
-        font-size: 13px;
-        line-height: 1.6;
+        font-size: 10px;
+        line-height: 1.5;
     }
 
 
@@ -529,14 +568,42 @@
 
         .partnerships-hero {
             padding:
-                35px
+                28px
                 0
-                45px;
+                32px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(7,6,21,.98) 0%,
+                    rgba(7,6,21,.90) 55%,
+                    rgba(7,6,21,.48) 100%
+                ),
+                url('{{ asset('images/home/hero-dance.jpg') }}');
+
+            background-size:
+                auto,
+                auto 82%;
+
+            background-position:
+                center,
+                80% bottom;
+
+            background-repeat:
+                no-repeat,
+                no-repeat;
         }
 
 
         .partnerships-hero h1 {
+            font-size: 38px;
+
             letter-spacing: -2px;
+        }
+
+
+        .partnerships-hero-description {
+            font-size: 12px;
         }
 
 
@@ -586,16 +653,29 @@
 
 
                 <div class="partnerships-eyebrow">
-                    Partnerships
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'PARTENARIATS'
+                        : 'PARTNERSHIPS'
+                    }}
+
                 </div>
 
 
                 <h1>
 
-                    Grow Your Brand
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Développez votre marque'
+                        : 'Grow Your Brand'
+                    }}
 
                     <span class="partnerships-gradient">
-                        With DancePair.
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'avec DancePair.'
+                            : 'With DancePair.'
+                        }}
+
                     </span>
 
                 </h1>
@@ -603,9 +683,10 @@
 
                 <p class="partnerships-hero-description">
 
-                    Promote your dance-related business,
-                    event, product or service directly to
-                    the DancePair community.
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Faites connaître votre entreprise, votre événement, votre produit ou votre service lié à la danse directement auprès de la communauté DancePair.'
+                        : 'Promote your dance-related business, event, product, or service directly to the DancePair community.'
+                    }}
 
                 </p>
 
@@ -616,7 +697,12 @@
                         href="{{ route('public.contact') }}"
                         class="partnerships-primary-btn"
                     >
-                        Contact Us
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Nous contacter'
+                            : 'Contact Us'
+                        }}
+
                     </a>
 
                 </div>
@@ -641,11 +727,22 @@
             <div class="partnerships-section-header">
 
                 <span>
-                    Advertising & Collaboration
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'PUBLICITÉ ET COLLABORATION'
+                        : 'ADVERTISING & COLLABORATION'
+                    }}
+
                 </span>
 
+
                 <h2>
-                    Promote Your Business on DancePair
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Faites connaître votre entreprise sur DancePair'
+                        : 'Promote Your Business on DancePair'
+                    }}
+
                 </h2>
 
             </div>
@@ -655,120 +752,186 @@
             <div class="partnerships-grid">
 
 
+                {{-- WEBSITE ADVERTISING --}}
                 <div class="partnership-card">
 
                     <div class="partnership-card-icon">
                         ▣
                     </div>
 
+
                     <h3>
-                        Website Advertising
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Publicité sur le site'
+                            : 'Website Advertising'
+                        }}
+
                     </h3>
 
+
                     <p>
-                        Promote your dance-related business,
-                        product or service through advertising
-                        placements on DancePair.
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Faites la promotion de votre entreprise, de votre produit ou de votre service lié à la danse grâce à des espaces publicitaires sur DancePair.'
+                            : 'Promote your dance-related business, product, or service through advertising placements on DancePair.'
+                        }}
+
                     </p>
 
                 </div>
 
 
 
+                {{-- FEATURED PROMOTION --}}
                 <div class="partnership-card">
 
                     <div class="partnership-card-icon">
                         ★
                     </div>
 
+
                     <h3>
-                        Featured Promotion
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Mise en avant'
+                            : 'Featured Promotion'
+                        }}
+
                     </h3>
 
+
                     <p>
-                        Give your business or service additional
-                        visibility through featured placements
-                        across the platform.
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Augmentez la visibilité de votre entreprise ou de vos services grâce à des emplacements mis en avant sur la plateforme.'
+                            : 'Give your business or service additional visibility through featured placements across the platform.'
+                        }}
+
                     </p>
 
                 </div>
 
 
 
+                {{-- EVENT PROMOTION --}}
                 <div class="partnership-card">
 
                     <div class="partnership-card-icon">
                         ◉
                     </div>
 
+
                     <h3>
-                        Event Promotion
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Promotion d’événements'
+                            : 'Event Promotion'
+                        }}
+
                     </h3>
 
+
                     <p>
-                        Promote dance events, workshops,
-                        competitions, festivals and other
-                        dance-related activities.
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Faites connaître vos événements de danse, ateliers, compétitions, festivals et autres activités liées à la danse.'
+                            : 'Promote dance events, workshops, competitions, festivals, and other dance-related activities.'
+                        }}
+
                     </p>
 
                 </div>
 
 
 
+                {{-- STUDIOS & SCHOOLS --}}
                 <div class="partnership-card">
 
                     <div class="partnership-card-icon">
                         ♫
                     </div>
 
+
                     <h3>
-                        Dance Studios & Schools
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Studios et écoles de danse'
+                            : 'Dance Studios & Schools'
+                        }}
+
                     </h3>
 
+
                     <p>
-                        Introduce your studio, academy or
-                        dance school to people actively
-                        interested in dance.
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Présentez votre studio, votre académie ou votre école de danse à des personnes réellement intéressées par la danse.'
+                            : 'Introduce your studio, academy, or dance school to people actively interested in dance.'
+                        }}
+
                     </p>
 
                 </div>
 
 
 
+                {{-- PRODUCTS & SERVICES --}}
                 <div class="partnership-card">
 
                     <div class="partnership-card-icon">
                         ◆
                     </div>
 
+
                     <h3>
-                        Products & Services
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Produits et services'
+                            : 'Products & Services'
+                        }}
+
                     </h3>
 
+
                     <p>
-                        Promote dancewear, shoes, accessories,
-                        photography, video services and other
-                        businesses connected to dance.
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Faites la promotion de vêtements de danse, chaussures, accessoires, services photo, vidéo et autres produits ou services liés à la danse.'
+                            : 'Promote dancewear, shoes, accessories, photography, video services, and other businesses connected to dance.'
+                        }}
+
                     </p>
 
                 </div>
 
 
 
+                {{-- BUSINESS PARTNERSHIPS --}}
                 <div class="partnership-card">
 
                     <div class="partnership-card-icon">
                         ↗
                     </div>
 
+
                     <h3>
-                        Business Partnerships
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Partenariats commerciaux'
+                            : 'Business Partnerships'
+                        }}
+
                     </h3>
 
+
                     <p>
-                        Work with DancePair on partnership
-                        opportunities that connect your brand
-                        with the dance community.
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Collaborez avec DancePair sur des possibilités de partenariat qui rapprochent votre marque de la communauté de danse.'
+                            : 'Work with DancePair on partnership opportunities that connect your brand with the dance community.'
+                        }}
+
                     </p>
 
                 </div>
@@ -794,7 +957,12 @@
 
 
                 <h2>
-                    Dance-Related Businesses
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Entreprises liées à la danse'
+                        : 'Dance-Related Businesses'
+                    }}
+
                 </h2>
 
 
@@ -802,42 +970,82 @@
 
 
                     <div class="partnership-type">
-                        Dance Studios
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Studios de danse'
+                            : 'Dance Studios'
+                        }}
+
                     </div>
 
 
                     <div class="partnership-type">
-                        Dance Schools
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Écoles de danse'
+                            : 'Dance Schools'
+                        }}
+
                     </div>
 
 
                     <div class="partnership-type">
-                        Dancewear & Shoes
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Vêtements et chaussures de danse'
+                            : 'Dancewear & Shoes'
+                        }}
+
                     </div>
 
 
                     <div class="partnership-type">
-                        Dance Events
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Événements de danse'
+                            : 'Dance Events'
+                        }}
+
                     </div>
 
 
                     <div class="partnership-type">
-                        Competitions
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Compétitions'
+                            : 'Competitions'
+                        }}
+
                     </div>
 
 
                     <div class="partnership-type">
-                        Workshops
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Ateliers'
+                            : 'Workshops'
+                        }}
+
                     </div>
 
 
                     <div class="partnership-type">
-                        Dance Photography
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Photographie de danse'
+                            : 'Dance Photography'
+                        }}
+
                     </div>
 
 
                     <div class="partnership-type">
-                        Dance Video Services
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Services vidéo de danse'
+                            : 'Dance Video Services'
+                        }}
+
                     </div>
 
 
@@ -865,11 +1073,22 @@
                 <div class="partnerships-cta-copy">
 
                     <h2>
-                        Interested in working with DancePair?
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Vous souhaitez collaborer avec DancePair ?'
+                            : 'Interested in Working With DancePair?'
+                        }}
+
                     </h2>
 
+
                     <p>
-                        Contact us about advertising or partnership opportunities.
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Contactez-nous pour discuter de possibilités de publicité ou de partenariat.'
+                            : 'Contact us to discuss advertising or partnership opportunities.'
+                        }}
+
                     </p>
 
                 </div>
@@ -879,7 +1098,12 @@
                     href="{{ route('public.contact') }}"
                     class="partnerships-primary-btn"
                 >
-                    Contact Us
+
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Nous contacter'
+                        : 'Contact Us'
+                    }}
+
                 </a>
 
 

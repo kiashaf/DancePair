@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Models\Setting;
 use App\Models\Student;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Stripe\Stripe;
@@ -206,7 +207,10 @@ class StudentPaymentController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function checkout(Booking $booking)
+    public function checkout(
+        Request $request,
+        Booking $booking
+    )
     {
         $student = Student::where(
             'user_id',
@@ -222,6 +226,32 @@ class StudentPaymentController extends Controller
         abort_unless(
             (int) $booking->student_id === (int) $student->id,
             403
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | CANCELLATION & REFUND POLICY ACCEPTANCE
+        |--------------------------------------------------------------------------
+        */
+
+        $request->validate(
+            [
+                'cancellation_policy' => [
+                    'required',
+                    'accepted',
+                ],
+            ],
+            [
+                'cancellation_policy.required' =>
+                    app()->getLocale() === 'fr'
+                        ? 'Vous devez accepter la politique d’annulation et de remboursement avant de continuer vers le paiement.'
+                        : 'You must accept the Cancellation & Refund Policy before continuing to payment.',
+
+                'cancellation_policy.accepted' =>
+                    app()->getLocale() === 'fr'
+                        ? 'Vous devez accepter la politique d’annulation et de remboursement avant de continuer vers le paiement.'
+                        : 'You must accept the Cancellation & Refund Policy before continuing to payment.',
+            ]
         );
 
         /*
@@ -273,6 +303,83 @@ class StudentPaymentController extends Controller
             'booking_id',
             $booking->id
         )->firstOrFail();
+
+        /*
+        |--------------------------------------------------------------------------
+        | SAVE CANCELLATION POLICY ACCEPTANCE
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$payment->cancellation_policy_accepted_at) {
+
+            $payment->update([
+                'cancellation_policy_accepted_at' => now(),
+            ]);
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | TEACHER STRIPE ACCOUNT
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            !$booking->teacher?->stripe_account_id
+            ||
+            !$booking->teacher?->stripe_payouts_enabled
+        ) {
+            return back()->with(
+                'error',
+                'This teacher is not ready to receive payments yet.'
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | PAYMENT INTENT DATA
+        |--------------------------------------------------------------------------
+        */
+
+        $platformFeeCents = (int) round(
+            ((float) $payment->platform_fee) * 100
+        );
+
+        $paymentIntentData = [
+
+            'transfer_data' => [
+                'destination' =>
+                    $booking->teacher->stripe_account_id,
+            ],
+
+            'metadata' => [
+                'booking_id' =>
+                    (string) $booking->id,
+
+                'payment_id' =>
+                    (string) $payment->id,
+
+                'student_id' =>
+                    (string) $student->id,
+
+                'teacher_id' =>
+                    (string) $booking->teacher_id,
+            ],
+        ];
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DANCEPAIR COMMISSION
+        |--------------------------------------------------------------------------
+        */
+
+        if ($platformFeeCents > 0) {
+
+            $paymentIntentData['application_fee_amount'] =
+                $platformFeeCents;
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -339,6 +446,14 @@ class StudentPaymentController extends Controller
             'managed_payments' => [
                 'enabled' => false,
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | STRIPE CONNECT - DESTINATION CHARGE
+            |--------------------------------------------------------------------------
+            */
+
+            'payment_intent_data' => $paymentIntentData,
 
             /*
             |--------------------------------------------------------------------------
@@ -626,12 +741,13 @@ class StudentPaymentController extends Controller
         $booking->update([
             'paid' => true,
         ]);
+
         $booking->load([
             'student.user',
             'teacher.user',
             'danceStyle',
         ]);
-        
+
         if ($booking->student?->user) {
             $booking->student->user->notify(
                 new StudentPaymentConfirmedNotification(
@@ -640,7 +756,7 @@ class StudentPaymentController extends Controller
                 )
             );
         }
-        
+
         if ($booking->teacher?->user) {
             $booking->teacher->user->notify(
                 new TeacherPaymentReceivedNotification(
@@ -649,6 +765,7 @@ class StudentPaymentController extends Controller
                 )
             );
         }
+
         /*
         |--------------------------------------------------------------------------
         | SUCCESS

@@ -10,6 +10,7 @@ class Booking extends Model
         'student_id',
         'teacher_id',
         'dance_style_id',
+        'teaching_type',
         'lesson_date',
         'lesson_time',
         'duration',
@@ -104,9 +105,16 @@ class Booking extends Model
         return $this->hasOne(Payment::class);
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | MESSAGES
+    |--------------------------------------------------------------------------
+    */
+
     public function messages()
-{
-    return $this->hasMany(BookingMessage::class)
-        ->orderBy('created_at', 'asc');
-}
+    {
+        return $this->hasMany(BookingMessage::class)
+            ->orderBy('created_at', 'asc');
+    }
 }

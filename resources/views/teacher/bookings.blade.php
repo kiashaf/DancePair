@@ -151,6 +151,18 @@
     color: #DC2626;
 }
 
+.teacher-actions-dropdown .action-cancel {
+    color: #DC2626;
+    font-weight: 600;
+}
+
+.teacher-actions-dropdown .teacher-cancel-note {
+    padding: 6px 11px 8px;
+    color: #64748B;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
 
 /* =========================================================
    MESSAGE AREA
@@ -406,6 +418,51 @@
                 );
 
                 $teacherReview = $booking->teacherReview;
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | TEACHER CANCELLATION INFO
+                |--------------------------------------------------------------------------
+                |
+                | Paid lesson:
+                | Student receives a 100% refund.
+                |
+                | Unpaid lesson:
+                | No Stripe refund is required.
+                |
+                */
+
+                $isPaidForCancellation =
+                    (bool) $booking->paid
+                    ||
+                    in_array(
+                        $booking->payment?->status,
+                        [
+                            'paid',
+                            'refund_pending',
+                            'refunded',
+                        ],
+                        true
+                    );
+
+
+                $canTeacherCancel =
+                    $booking->status === 'confirmed';
+
+
+                $teacherCancelConfirmationMessage =
+                    $isPaidForCancellation
+                        ? (
+                            app()->getLocale() === 'fr'
+                                ? 'Voulez-vous vraiment annuler ce cours ? L’élève recevra un remboursement complet de 100 % vers le mode de paiement d’origine.'
+                                : 'Are you sure you want to cancel this lesson? The student will receive a 100% full refund to the original payment method.'
+                        )
+                        : (
+                            app()->getLocale() === 'fr'
+                                ? 'Voulez-vous vraiment annuler ce cours ? Aucun paiement n’a été effectué par l’élève.'
+                                : 'Are you sure you want to cancel this lesson? The student has not made a payment.'
+                        );
             @endphp
 
 
@@ -523,7 +580,10 @@
                     @elseif($booking->status === 'cancelled')
 
                         <span class="teacher-request-status refused">
-                            {{ __('teacher.refused') }}
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Annulé'
+                                : 'Cancelled'
+                            }}
                         </span>
 
                     @elseif($booking->status === 'completed')
@@ -563,33 +623,41 @@
 
 
                     {{-- MESSAGES --}}
-                    {{-- MESSAGES --}}
 
                     @php
-    $receivedMessagesCount = $booking->messages
-        ->where('sender_id', '!=', auth()->id())
-        ->whereNull('read_at')
-        ->count();
-@endphp
+                        $receivedMessagesCount =
+                            $booking->messages
+                                ->where(
+                                    'sender_id',
+                                    '!=',
+                                    auth()->id()
+                                )
+                                ->whereNull(
+                                    'read_at'
+                                )
+                                ->count();
+                    @endphp
 
-<button
-    type="button"
-    class="btn btn-sm btn-outline-primary teacher-message-btn"
-    data-bs-toggle="collapse"
-    data-bs-target="#teacherMessagesBooking{{ $booking->id }}"
-    aria-controls="teacherMessagesBooking{{ $booking->id }}"
-    aria-expanded="false"
->
-    {{ __('teacher.messages') }}
 
-    @if($receivedMessagesCount > 0)
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary teacher-message-btn"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#teacherMessagesBooking{{ $booking->id }}"
+                        aria-controls="teacherMessagesBooking{{ $booking->id }}"
+                        aria-expanded="false"
+                    >
+                        {{ __('teacher.messages') }}
 
-        <span class="teacher-message-count">
-            {{ $receivedMessagesCount }}
-        </span>
+                        @if($receivedMessagesCount > 0)
 
-    @endif
-</button>
+                            <span class="teacher-message-count">
+                                {{ $receivedMessagesCount }}
+                            </span>
+
+                        @endif
+
+                    </button>
 
 
                     {{-- MORE ACTIONS --}}
@@ -687,6 +755,65 @@
 
                             @endif
 
+
+                            {{-- =================================================
+                               CANCEL CONFIRMED LESSON
+                            ================================================= --}}
+
+                            @if($canTeacherCancel)
+
+                                <div class="dropdown-divider"></div>
+
+
+                                <form
+                                    method="POST"
+                                    action="{{ route(
+                                        'teacher.bookings.cancel',
+                                        $booking
+                                    ) }}"
+                                    onsubmit="return confirm(@js($teacherCancelConfirmationMessage));"
+                                >
+
+                                    @csrf
+
+
+                                    <button
+                                        type="submit"
+                                        class="dropdown-item action-cancel"
+                                    >
+                                        <span>✕</span>
+
+                                        {{ app()->getLocale() === 'fr'
+                                            ? 'Annuler le cours'
+                                            : 'Cancel Lesson'
+                                        }}
+                                    </button>
+
+                                </form>
+
+
+                                <div class="teacher-cancel-note">
+
+                                    @if($isPaidForCancellation)
+
+                                        {{ app()->getLocale() === 'fr'
+                                            ? 'L’élève recevra un remboursement de 100 %.'
+                                            : 'The student will receive a 100% refund.'
+                                        }}
+
+                                    @else
+
+                                        {{ app()->getLocale() === 'fr'
+                                            ? 'Aucun paiement n’a été effectué.'
+                                            : 'No payment has been made.'
+                                        }}
+
+                                    @endif
+
+                                </div>
+
+                            @endif
+
                         </div>
 
                     </div>
@@ -764,7 +891,10 @@
 
                                 @elseif($booking->status === 'cancelled')
 
-                                    {{ __('teacher.refused') }}
+                                    {{ app()->getLocale() === 'fr'
+                                        ? 'Annulé'
+                                        : 'Cancelled'
+                                    }}
 
                                 @elseif($booking->status === 'completed')
 
@@ -805,25 +935,25 @@
 
                                             <span>
 
-                                            @if(
-    ($message->sender->role ?? null)
-    ===
-    'admin'
-)
+                                                @if(
+                                                    ($message->sender->role ?? null)
+                                                    ===
+                                                    'admin'
+                                                )
 
-    DancePair Support
+                                                    DancePair Support
 
-@elseif($isMine)
+                                                @elseif($isMine)
 
-    {{ __('teacher.you') }}
+                                                    {{ __('teacher.you') }}
 
-@else
+                                                @else
 
-    {{ $message->sender->name
-        ?? __('teacher.student')
-    }}
+                                                    {{ $message->sender->name
+                                                        ?? __('teacher.student')
+                                                    }}
 
-@endif
+                                                @endif
 
                                             </span>
 
@@ -960,11 +1090,13 @@
                 class="collapse"
                 id="teacherReviewBooking{{ $booking->id }}"
             >
+
                 <div class="student-review-area">
 
                     @php
                         $teacherReview = $booking->teacherReview;
                     @endphp
+
 
                     <form
                         method="POST"
@@ -973,9 +1105,12 @@
                             $booking
                         ) }}"
                     >
+
                         @csrf
 
+
                         <div class="row g-3 align-items-end">
+
 
                             {{-- STARS --}}
                             <div class="col-md-4">
@@ -983,6 +1118,7 @@
                                 <label class="form-label">
                                     {{ __('teacher.rate_this_student') }}
                                 </label>
+
 
                                 <div class="student-review-stars">
 
@@ -1047,11 +1183,17 @@
                                     type="submit"
                                     class="btn btn-warning btn-sm w-100"
                                 >
+
                                     @if($teacherReview)
+
                                         {{ __('teacher.update') }}
+
                                     @else
+
                                         {{ __('teacher.save') }}
+
                                     @endif
+
                                 </button>
 
                             </div>
@@ -1082,6 +1224,7 @@
                     </form>
 
                 </div>
+
             </div>
 
 

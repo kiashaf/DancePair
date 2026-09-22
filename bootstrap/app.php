@@ -24,6 +24,12 @@ return Application::configure(
     ->withMiddleware(
         function (Middleware $middleware): void {
 
+            $middleware->validateCsrfTokens(
+                except: [
+                    'stripe/webhook',
+                ]
+            );
+
             $middleware->web(
                 append: [
 

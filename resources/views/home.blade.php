@@ -1105,7 +1105,7 @@
             }
 
             .home-hero {
-                min-height: 690px;
+                min-height: 500px;
 
                 background-position:
                     63% center;
@@ -1123,7 +1123,7 @@
             }
 
             .home-hero-inner {
-                min-height: 690px;
+                min-height: 500px;
 
                 align-items: flex-end;
             }
@@ -1872,7 +1872,114 @@
         </div>
 
     </div>
+    {{-- =========================================================
+   HOME MOBILE MENU
+========================================================= --}}
 
+<div
+    class="home-mobile-menu"
+    id="homeMobileMenu"
+>
+
+    <div class="home-mobile-menu-links">
+
+        <a href="{{ route('home') }}">
+            {{ __('common.home') }}
+        </a>
+
+        <a href="{{ route('public.find-teacher') }}">
+            {{ __('common.find_teacher') }}
+        </a>
+
+        <a href="{{ route('public.become-teacher') }}">
+            {{ __('common.become_teacher') }}
+        </a>
+
+        <a href="{{ route('public.dance-styles') }}">
+            {{ __('common.dance_styles') }}
+        </a>
+
+        <a href="{{ route('public.how-it-works') }}">
+            {{ __('common.partnerships') }}
+        </a>
+
+        <a href="{{ route('public.contact') }}">
+            {{ __('common.contact') }}
+        </a>
+
+    </div>
+
+
+    <div class="home-mobile-menu-actions">
+
+        @auth
+
+            @if(auth()->user()->role === 'teacher')
+
+                <a
+                    href="{{ route('teacher.dashboard') }}"
+                    class="home-mobile-dashboard"
+                >
+                    {{ __('common.dashboard') }}
+                </a>
+
+            @elseif(auth()->user()->role === 'student')
+
+                <a
+                    href="{{ route('student.dashboard') }}"
+                    class="home-mobile-dashboard"
+                >
+                    {{ __('common.dashboard') }}
+                </a>
+
+            @elseif(auth()->user()->role === 'admin')
+
+                <a
+                    href="{{ route('admin.dashboard') }}"
+                    class="home-mobile-dashboard"
+                >
+                    {{ __('common.dashboard') }}
+                </a>
+
+            @endif
+
+
+            <form
+                method="POST"
+                action="{{ route('logout') }}"
+            >
+                @csrf
+
+                <button
+                    type="submit"
+                    class="home-mobile-logout"
+                >
+                    {{ __('common.logout') }}
+                </button>
+
+            </form>
+
+        @else
+
+            <a
+                href="{{ route('login') }}"
+                class="home-mobile-login"
+            >
+                {{ __('common.login') }}
+            </a>
+
+            <a
+                href="{{ route('register') }}"
+                class="home-mobile-register"
+            >
+                {{ __('common.join_now') }}
+            </a>
+
+        @endauth
+
+    </div>
+
+</div>
 </nav>
 
 
@@ -2317,7 +2424,134 @@
 
 </section>
 
+@include('partials.site-footer')
+<script>
 
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const button =
+            document.getElementById(
+                'homeMobileMenuBtn'
+            );
+
+        const menu =
+            document.getElementById(
+                'homeMobileMenu'
+            );
+
+
+        if (!button || !menu) {
+            return;
+        }
+
+
+        const closeMenu = function () {
+
+            menu.classList.remove(
+                'open'
+            );
+
+            button.setAttribute(
+                'aria-expanded',
+                'false'
+            );
+
+        };
+
+
+        const openMenu = function () {
+
+            menu.classList.add(
+                'open'
+            );
+
+            button.setAttribute(
+                'aria-expanded',
+                'true'
+            );
+
+        };
+
+
+        button.addEventListener(
+            'click',
+            function (event) {
+
+                event.stopPropagation();
+
+                if (
+                    menu.classList.contains(
+                        'open'
+                    )
+                ) {
+
+                    closeMenu();
+
+                } else {
+
+                    openMenu();
+
+                }
+
+            }
+        );
+
+
+        menu.addEventListener(
+            'click',
+            function (event) {
+
+                event.stopPropagation();
+
+            }
+        );
+
+
+        document.addEventListener(
+            'click',
+            function () {
+
+                closeMenu();
+
+            }
+        );
+
+
+        document.addEventListener(
+            'keydown',
+            function (event) {
+
+                if (event.key === 'Escape') {
+
+                    closeMenu();
+
+                }
+
+            }
+        );
+
+
+        window.addEventListener(
+            'resize',
+            function () {
+
+                if (
+                    window.innerWidth > 720
+                ) {
+
+                    closeMenu();
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
 </body>
 
 </html>

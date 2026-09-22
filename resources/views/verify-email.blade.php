@@ -5,6 +5,9 @@
 <head>
 
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('logo/logo.png') }}">
+<link rel="shortcut icon" type="image/png" href="{{ asset('logo/logo.png') }}">
+<link rel="apple-touch-icon" href="{{ asset('logo/logo.png') }}">
 
     <meta
         name="viewport"

@@ -738,15 +738,17 @@ document.addEventListener('DOMContentLoaded', function () {
         'image/webp',
     ];
 
-    const tooLargeMessage =
-        @json(app()->getLocale() === 'fr'
-            ? 'La photo de profil doit faire 5 Mo ou moins. Veuillez choisir une image plus petite.'
-            : 'The profile photo must be 5 MB or smaller. Please choose a smaller image.');
+    const currentLocale = "{{ app()->getLocale() }}";
 
-    const invalidTypeMessage =
-        @json(app()->getLocale() === 'fr'
-            ? 'Veuillez choisir une image JPG, PNG ou WebP.'
-            : 'Please choose a JPG, PNG, or WebP image.');
+const tooLargeMessage =
+    currentLocale === 'fr'
+        ? 'La photo de profil doit faire 5 Mo ou moins. Veuillez choisir une image plus petite.'
+        : 'The profile photo must be 5 MB or smaller. Please choose a smaller image.';
+
+const invalidTypeMessage =
+    currentLocale === 'fr'
+        ? 'Veuillez choisir une image JPG, PNG ou WebP.'
+        : 'Please choose a JPG, PNG, or WebP image.';
 
 
     function hidePhotoError() {

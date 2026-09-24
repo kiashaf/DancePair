@@ -8,7 +8,7 @@ return [
     'welcome_back' => 'Welcome back',
 
     'my_profile' => 'My Profile',
-    'find_teachers' => 'Find Teachers',
+    'find_teachers' => 'Find Instructors',
     'bookings' => 'Bookings',
     'my_bookings' => 'My Bookings',
     'reviews' => 'Reviews',
@@ -65,7 +65,7 @@ return [
 
     // Booking details
     'dance' => 'Dance',
-    'teacher' => 'Teacher',
+    'teacher' => 'Instructor',
     'date' => 'Date',
     'time' => 'Time',
     'status' => 'Status',
@@ -115,7 +115,7 @@ return [
         'Change Lesson Time',
 
     'choose_available_time' =>
-        "Choose one of this teacher's available times.",
+        "Choose one of this instructor's available times.",
 
     'available_times' =>
         'Available Times',
@@ -132,7 +132,7 @@ return [
         'You can change the lesson time while your request is still pending.',
 
     'no_other_availability' =>
-        'This teacher currently has no other available times for this dance style.',
+        'This instructor currently has no other available times for this dance style.',
 
     'my_requests' =>
         'My Requests',
@@ -153,16 +153,16 @@ return [
         'Save',
 
     'edit_until_accepted' =>
-        'You can edit this request until the teacher accepts it.',
+        'You can edit this request until the instructor accepts it.',
 
     'no_booking_requests' =>
         'No booking requests yet',
 
     'find_first_lesson' =>
-        'Find a teacher and request your first dance lesson.',
+        'Find an instructor and request your first dance lesson.',
 
     'find_teacher' =>
-        'Find a Teacher',
+        'Find an Instructor',
 
 
     // Reviews
@@ -170,7 +170,7 @@ return [
         'My Reviews',
 
     'reviews_subtitle' =>
-        'See what teachers are saying about their experience with you.',
+        'See what instructors are saying about their experience with you.',
 
     'review' => 'review',
     'reviews_plural' => 'reviews',
@@ -194,25 +194,25 @@ return [
         'No reviews yet',
 
     'reviews_empty_text' =>
-        'Reviews written by your teachers will appear here.',
+        'Reviews written by your instructors will appear here.',
     // Find Teachers
-    'find_your_dance_teacher' => 'Find Your Dance Teacher',
-    'teacher_search_subtitle' => 'Search by teacher name, dance style or location.',
-    'teacher_name' => 'Teacher Name',
-    'teacher_name_placeholder' => 'Teacher name...',
+    'find_your_dance_teacher' => 'Find Your Dance Instructor',
+    'teacher_search_subtitle' => 'Search by instructor name, dance style or location.',
+    'teacher_name' => 'Instructor Name',
+    'teacher_name_placeholder' => 'Instructor name...',
     'all_dance_styles' => 'All Dance Styles',
-    'city' => 'City',
-    'city_placeholder' => 'Montreal, Brossard...',
+    'city' => 'Location',
+    'city_placeholder' => 'Toronto, Calgary...',
     'clear_search' => 'Clear Search',
-    'search_teachers' => 'Search Teachers',
+    'search_teachers' => 'Search Instructors',
 
     'search_results' => 'Search Results',
-    'teachers_matching_search' => 'Teachers matching your search.',
-    'teacher_singular' => 'teacher',
-    'teachers_plural' => 'teachers',
+    'teachers_matching_search' => 'Instructors matching your search.',
+    'teacher_singular' => 'instructor',
+    'teachers_plural' => 'instructors',
 
     'verified' => 'Verified',
-    'new_teacher' => 'New teacher',
+    'new_teacher' => 'New instructor',
 
     'dance_styles_rates' => 'Dance Styles & Rates',
     'ask' => 'Ask',
@@ -229,8 +229,8 @@ return [
     'rates' => 'Rates',
     'view_profile' => 'View Profile',
 
-    'no_teachers_found' => 'No teachers found',
-    'change_search_filters' => 'Try changing the teacher name, dance style or city.',
+    'no_teachers_found' => 'No instructors found',
+    'change_search_filters' => 'Try changing the instructor name, dance style or city.',
    
        // Booking page extra translations
     'requests_manage_review_subtitle' => 'View, manage and review your lessons.',
@@ -240,9 +240,9 @@ return [
     'paid' => 'Paid',
 
     'review_action' => 'Review',
-    'rate_this_teacher' => 'Rate this Teacher',
+    'rate_this_teacher' => 'Rate this Instructor',
     'stars' => 'stars',
-    'review_teacher_placeholder' => 'Write your review about this teacher...',
+    'review_teacher_placeholder' => 'Write your review about this instructor...',
     'update' => 'Update',
     'current_rating' => 'Your current rating:',
 
@@ -254,9 +254,9 @@ return [
     'paid' => 'Paid',
 
     'review_action' => 'Review',
-    'rate_this_teacher' => 'Rate this Teacher',
+    'rate_this_teacher' => 'Rate this Instructor',
     'stars' => 'stars',
-    'review_teacher_placeholder' => 'Write your review about this teacher...',
+    'review_teacher_placeholder' => 'Write your review about this instructor...',
     'update' => 'Update',
     'current_rating' => 'Your current rating:',
 
@@ -279,7 +279,7 @@ return [
 
     // Student Profile
 'student_profile' => 'Student Profile',
-'profile_subtitle' => 'Tell teachers a little about yourself and your dance experience.',
+'profile_subtitle' => 'Tell instructors a little about yourself and your dance experience.',
 
 'profile_photo' => 'Profile Photo',
 'upload_new_photo' => 'Upload a New Photo',
@@ -313,7 +313,7 @@ return [
 
 'about_me' => 'About Me',
 'bio_placeholder' => 'Tell us a little about yourself, your goals, and what you would like to learn...',
-'bio_help' => 'This information can help your teacher understand your goals before accepting a lesson.',
+'bio_help' => 'This information can help your instructor understand your goals before accepting a lesson.',
 
 'change_password' => 'Change Password',
 'new_password' => 'New Password',
@@ -353,7 +353,7 @@ return [
     'secure_payment_processing' => 'Secure payment processing',
 
         // Teacher Profile
-        'teacher_profile' => 'Teacher Profile',
+        'teacher_profile' => 'Instructor Profile',
         'location_not_set' => 'Location not set',
     
         'year_experience' => 'year experience',
@@ -375,12 +375,12 @@ return [
         'request' => 'Request',
         'unavailable' => 'Unavailable',
     
-        'no_available_classes' => 'This teacher has no available classes right now.',
+        'no_available_classes' => 'This instructor has no available classes right now.',
         'cannot_request_own_lesson' => 'You cannot request a lesson from your own account.',
-        'message_to_teacher_optional' => 'Message to teacher (optional)',
+        'message_to_teacher_optional' => 'Message to instructor (optional)',
 
 'message_to_teacher_placeholder' =>
-    'Tell the teacher anything helpful about your lesson request...',
+    'Tell the instructor anything helpful about your lesson request...',
 
 'contact_info_warning' =>
     'Do not include phone numbers, email addresses, or social media contact information.',
@@ -401,13 +401,13 @@ return [
     'Invalid lesson duration.',
 
 'lesson_request_sent' =>
-    'Your lesson request has been sent to the teacher.',
+    'Your lesson request has been sent to the instructor.',
 
 'message_to_teacher_optional' =>
-    'Message to teacher (optional)',
+    'Message to instructor (optional)',
 
 'message_to_teacher_placeholder' =>
-    'Tell the teacher anything helpful about your lesson request...',
+    'Tell the instructor anything helpful about your lesson request...',
 
 'contact_info_warning' =>
     'Do not include phone numbers, email addresses, or social media contact information.',
@@ -419,7 +419,7 @@ return [
     'No messages yet.',
 
 'reply_to_teacher' =>
-    'Reply to teacher',
+    'Reply to instructor',
 
 'reply_placeholder' =>
     'Write your message...',
@@ -434,10 +434,10 @@ return [
     'Open lesson details',
 
 'message_to_teacher_optional' =>
-    'Message to teacher (optional)',
+    'Message to instructor (optional)',
 
 'message_to_teacher_placeholder' =>
-    'Tell the teacher anything helpful about your lesson request...',
+    'Tell the instructor anything helpful about your lesson request...',
 
 'contact_info_warning' =>
     'Do not include phone numbers, email addresses, or social media contact information.',
@@ -458,7 +458,7 @@ return [
     'The selected lesson type is not offered for this class.',
 
 'select_lesson_type_required' =>
-    'Please select one of the lesson types offered by the teacher.',
+    'Please select one of the lesson types offered by the instructor.',
 
 'cancellation_policy' =>
     'Cancellation policy:',

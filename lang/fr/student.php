@@ -8,7 +8,7 @@ return [
     'welcome_back' => 'Bon retour',
 
     'my_profile' => 'Mon profil',
-    'find_teachers' => 'Trouver un professeur',
+    'find_teachers' => 'Trouver un instructeur',
     'bookings' => 'Réservations',
     'my_bookings' => 'Mes réservations',
     'reviews' => 'Avis',
@@ -62,7 +62,7 @@ return [
 
     // Détails
     'dance' => 'Danse',
-    'teacher' => 'Professeur',
+    'teacher' => 'Instructeur',
     'date' => 'Date',
     'time' => 'Heure',
     'status' => 'Statut',
@@ -112,7 +112,7 @@ return [
         'Modifier l’heure du cours',
 
     'choose_available_time' =>
-        'Choisissez une plage horaire disponible de ce professeur.',
+        'Choisissez une plage horaire disponible de ce instructeur.',
 
     'available_times' =>
         'Plages horaires disponibles',
@@ -129,7 +129,7 @@ return [
         'Vous pouvez modifier l’heure du cours tant que votre demande est en attente.',
 
     'no_other_availability' =>
-        'Ce professeur n’a actuellement aucune autre disponibilité pour ce style de danse.',
+        'Ce instructeur n’a actuellement aucune autre disponibilité pour ce style de danse.',
 
     'my_requests' =>
         'Mes demandes',
@@ -150,16 +150,16 @@ return [
         'Enregistrer',
 
     'edit_until_accepted' =>
-        'Vous pouvez modifier cette demande jusqu’à ce que le professeur l’accepte.',
+        'Vous pouvez modifier cette demande jusqu’à ce que le instructeur l’accepte.',
 
     'no_booking_requests' =>
         'Aucune demande de réservation',
 
     'find_first_lesson' =>
-        'Trouvez un professeur et demandez votre premier cours de danse.',
+        'Trouvez un instructeur et demandez votre premier cours de danse.',
 
     'find_teacher' =>
-        'Trouver un professeur',
+        'Trouver un instructeur',
 
 
     // Avis
@@ -167,7 +167,7 @@ return [
         'Mes avis',
 
     'reviews_subtitle' =>
-        'Découvrez ce que les professeurs disent de leur expérience avec vous.',
+        'Découvrez ce que les instructeurs disent de leur expérience avec vous.',
 
     'review' => 'avis',
     'reviews_plural' => 'avis',
@@ -191,26 +191,26 @@ return [
         'Aucun avis pour le moment',
 
     'reviews_empty_text' =>
-        'Les avis rédigés par vos professeurs apparaîtront ici.',
+        'Les avis rédigés par vos instructeurs apparaîtront ici.',
 
             // Trouver un professeur
-    'find_your_dance_teacher' => 'Trouvez votre professeur de danse',
-    'teacher_search_subtitle' => 'Recherchez par nom de professeur, style de danse ou ville.',
-    'teacher_name' => 'Nom du professeur',
-    'teacher_name_placeholder' => 'Nom du professeur...',
+    'find_your_dance_teacher' => 'Trouvez votre instructeur de danse',
+    'teacher_search_subtitle' => 'Recherchez par nom de instructeur, style de danse ou ville.',
+    'teacher_name' => 'Nom du instructeur',
+    'teacher_name_placeholder' => 'Nom du instructeur...',
     'all_dance_styles' => 'Tous les styles de danse',
-    'city' => 'Ville',
-    'city_placeholder' => 'Montréal, Brossard...',
+    'city' => 'Localisation',
+    'city_placeholder' => 'Toronto, Calgary...',
     'clear_search' => 'Effacer la recherche',
-    'search_teachers' => 'Rechercher des professeurs',
+    'search_teachers' => 'Rechercher des instructeurs',
 
     'search_results' => 'Résultats de recherche',
-    'teachers_matching_search' => 'Professeurs correspondant à votre recherche.',
-    'teacher_singular' => 'professeur',
-    'teachers_plural' => 'professeurs',
+    'teachers_matching_search' => 'Instructeurs correspondant à votre recherche.',
+    'teacher_singular' => 'instructeur',
+    'teachers_plural' => 'instructeurs',
 
     'verified' => 'Vérifié',
-    'new_teacher' => 'Nouveau professeur',
+    'new_teacher' => 'Nouveau instructeur',
 
     'dance_styles_rates' => 'Styles de danse et tarifs',
     'ask' => 'Demander',
@@ -227,8 +227,8 @@ return [
     'rates' => 'Tarifs',
     'view_profile' => 'Voir le profil',
 
-    'no_teachers_found' => 'Aucun professeur trouvé',
-    'change_search_filters' => 'Essayez de modifier le nom du professeur, le style de danse ou la ville.',
+    'no_teachers_found' => 'Aucun instructeur trouvé',
+    'change_search_filters' => 'Essayez de modifier le nom du instructeur, le style de danse ou la ville.',
     // Traductions supplémentaires des réservations
     'requests_manage_review_subtitle' => 'Consultez, gérez et évaluez vos cours.',
     'price' => 'Prix',
@@ -237,9 +237,9 @@ return [
     'paid' => 'Payé',
 
     'review_action' => 'Avis',
-    'rate_this_teacher' => 'Évaluer ce professeur',
+    'rate_this_teacher' => 'Évaluer ce instructeur',
     'stars' => 'étoiles',
-    'review_teacher_placeholder' => 'Écrivez votre avis sur ce professeur...',
+    'review_teacher_placeholder' => 'Écrivez votre avis sur ce instructeur...',
     'update' => 'Mettre à jour',
     'current_rating' => 'Votre note actuelle :',
 
@@ -263,7 +263,7 @@ return [
 
             // Profil étudiant
     'student_profile' => 'Profil étudiant',
-    'profile_subtitle' => 'Parlez un peu de vous et de votre expérience en danse aux professeurs.',
+    'profile_subtitle' => 'Parlez un peu de vous et de votre expérience en danse aux instructeurs.',
 
     'profile_photo' => 'Photo de profil',
     'upload_new_photo' => 'Téléverser une nouvelle photo',
@@ -297,7 +297,7 @@ return [
 
     'about_me' => 'À propos de moi',
     'bio_placeholder' => 'Parlez un peu de vous, de vos objectifs et de ce que vous aimeriez apprendre...',
-    'bio_help' => 'Ces informations peuvent aider votre professeur à comprendre vos objectifs avant d’accepter un cours.',
+    'bio_help' => 'Ces informations peuvent aider votre instructeur à comprendre vos objectifs avant d’accepter un cours.',
 
     'change_password' => 'Modifier le mot de passe',
     'new_password' => 'Nouveau mot de passe',
@@ -336,7 +336,7 @@ return [
     'secure_payment_processing' => 'Traitement sécurisé du paiement',
 
         // Profil du professeur
-        'teacher_profile' => 'Profil du professeur',
+        'teacher_profile' => 'Profil du instructeur',
         'location_not_set' => 'Emplacement non renseigné',
     
         'year_experience' => 'an d’expérience',
@@ -358,10 +358,10 @@ return [
         'request' => 'Demander',
         'unavailable' => 'Indisponible',
     
-        'no_available_classes' => 'Ce professeur n’a actuellement aucun cours disponible.',
+        'no_available_classes' => 'Ce instructeur n’a actuellement aucun cours disponible.',
         'cannot_request_own_lesson' => 'Vous ne pouvez pas demander un cours à partir de votre propre compte.',
 
-        'message_to_teacher_optional' => 'Message au professeur (facultatif)',
+        'message_to_teacher_optional' => 'Message au instructeur (facultatif)',
 
 'message_to_teacher_placeholder' =>
     'Ajoutez toute information utile concernant votre demande de cours...',
@@ -385,10 +385,10 @@ return [
     'La durée du cours est invalide.',
 
 'lesson_request_sent' =>
-    'Votre demande de cours a été envoyée au professeur.',
+    'Votre demande de cours a été envoyée au instructeur.',
 
 'message_to_teacher_optional' =>
-    'Message au professeur (facultatif)',
+    'Message au instructeur (facultatif)',
 
 'message_to_teacher_placeholder' =>
     'Ajoutez toute information utile concernant votre demande de cours...',
@@ -403,7 +403,7 @@ return [
     'Aucun message pour le moment.',
 
 'reply_to_teacher' =>
-    'Répondre au professeur',
+    'Répondre au instructeur',
 
 'reply_placeholder' =>
     'Écrivez votre message...',
@@ -418,7 +418,7 @@ return [
     'Ouvrir les détails du cours',
 
 'message_to_teacher_optional' =>
-    'Message au professeur (facultatif)',
+    'Message au instructeur (facultatif)',
 
 'message_to_teacher_placeholder' =>
     'Ajoutez toute information utile concernant votre demande de cours...',
@@ -443,7 +443,7 @@ return [
     'Le type de cours sélectionné n’est pas offert pour ce cours.',
 
 'select_lesson_type_required' =>
-    'Veuillez sélectionner l’un des types de cours offerts par le professeur.',
+    'Veuillez sélectionner l’un des types de cours offerts par le instructeur.',
 
 'cancellation_policy' =>
     'Politique d’annulation :',

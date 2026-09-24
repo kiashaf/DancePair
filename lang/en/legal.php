@@ -22,7 +22,7 @@ return [
 
         'late_cancellation' => 'Cancellations made after the applicable cancellation deadline are not eligible for an automatic refund.',
 
-        'teacher_cancellation' => 'If the teacher cancels the lesson, the student will receive a 100% refund, regardless of the time of cancellation.',
+        'teacher_cancellation' => 'If the instructor cancels the lesson, the student will receive a 100% refund, regardless of the time of cancellation.',
 
         'admin_override' => 'DancePair may approve a refund outside these rules in exceptional circumstances.',
 

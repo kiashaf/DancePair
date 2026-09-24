@@ -3,8 +3,8 @@
 return [
 
     // Général
-    'panel' => 'Espace professeur',
-    'dashboard' => 'Tableau de bord professeur',
+    'panel' => 'Espace instructeur',
+    'dashboard' => 'Tableau de bord instructeur',
     'welcome_back' => 'Bon retour',
 
     'my_profile' => 'Mon profil',
@@ -76,7 +76,7 @@ return [
 
     // Profil du professeur
     'edit_teacher_profile' =>
-        'Modifier le profil du professeur',
+        'Modifier le profil du instructeur',
 
     'profile_media' => 'Médias du profil',
     'profile_photo' => 'Photo de profil',
@@ -108,7 +108,7 @@ return [
         'Confirmez le nouveau mot de passe',
 
     'teacher_information' =>
-        'Informations du professeur',
+        'Informations du instructeur',
 
     'bio' => 'Biographie',
 

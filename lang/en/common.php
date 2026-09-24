@@ -9,8 +9,8 @@ return [
     // Navigation
     'home' => 'Home',
     'dashboard' => 'Dashboard',
-    'find_teacher' => 'Find a Teacher',
-    'become_teacher' => 'Become a Teacher',
+    'find_teacher' => 'Find an Instructor',
+    'become_teacher' => 'Become an Instructor',
     'dance_styles' => 'Dance Styles',
     'partnerships' => 'Partnerships',
     'contact' => 'Contact',
@@ -52,8 +52,8 @@ return [
     // Roles
     'student' => 'Student',
     'students' => 'Students',
-    'teacher' => 'Teacher',
-    'teachers' => 'Teachers',
+    'teacher' => 'Instructor',
+    'teachers' => 'Instructors',
     'admin' => 'Admin',
 
     // Dance

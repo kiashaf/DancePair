@@ -22,7 +22,7 @@ return [
 
         'late_cancellation' => 'Toute annulation effectuée après le délai applicable n’est pas admissible à un remboursement automatique.',
 
-        'teacher_cancellation' => 'Si le professeur annule le cours, l’élève reçoit un remboursement de 100 %, peu importe le moment de l’annulation.',
+        'teacher_cancellation' => 'Si le instructeur annule le cours, l’élève reçoit un remboursement de 100 %, peu importe le moment de l’annulation.',
 
         'admin_override' => 'DancePair peut exceptionnellement autoriser un remboursement en dehors de ces règles.',
 

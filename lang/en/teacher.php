@@ -3,8 +3,8 @@
 return [
 
     // General
-    'panel' => 'Teacher Panel',
-    'dashboard' => 'Teacher Dashboard',
+    'panel' => 'Instructor Panel',
+    'dashboard' => 'Instructor Dashboard',
     'welcome_back' => 'Welcome back',
 
     'my_profile' => 'My Profile',
@@ -67,7 +67,7 @@ return [
     'no_payments_received' => 'No payments received yet.',
 
     // Teacher Profile
-    'edit_teacher_profile' => 'Edit Teacher Profile',
+    'edit_teacher_profile' => 'Edit Instructor Profile',
 
     'profile_media' => 'Profile Media',
     'profile_photo' => 'Profile Photo',
@@ -85,7 +85,7 @@ return [
     'password_placeholder' => 'Leave blank to keep current password',
     'confirm_password_placeholder' => 'Confirm new password',
 
-    'teacher_information' => 'Teacher Information',
+    'teacher_information' => 'Instructor Information',
     'bio' => 'Bio',
     'years_of_experience' => 'Years of Experience',
     'default_hourly_rate' => 'Default Hourly Rate (CAD)',

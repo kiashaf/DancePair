@@ -829,8 +829,12 @@
             {{-- ================================================= --}}
 
             <div
-                class="collapse"
-                id="teacherMessagesBooking{{ $booking->id }}"
+         class="collapse"
+            id="teacherMessagesBooking{{ $booking->id }}"
+              data-read-url="{{ route(
+             'bookings.messages.read',
+             $booking
+          ) }}"
             >
 
                 <div class="teacher-message-area">
@@ -1247,10 +1251,9 @@ document.addEventListener(
     'DOMContentLoaded',
     function () {
 
-
         /*
         |--------------------------------------------------------------------------
-        | SCROLL CONVERSATION TO LAST MESSAGE
+        | MESSAGE OPEN = READ
         |--------------------------------------------------------------------------
         */
 
@@ -1263,7 +1266,13 @@ document.addEventListener(
 
                     messagePanel.addEventListener(
                         'shown.bs.collapse',
-                        function () {
+                        async function () {
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | SCROLL TO LAST MESSAGE
+                            |--------------------------------------------------------------------------
+                            */
 
                             const history =
                                 messagePanel.querySelector(
@@ -1274,9 +1283,89 @@ document.addEventListener(
 
                                 history.scrollTop =
                                     history.scrollHeight;
-
                             }
 
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | MARK RECEIVED MESSAGES AS READ
+                            |--------------------------------------------------------------------------
+                            */
+
+                            const readUrl =
+                                messagePanel.dataset.readUrl;
+
+                            if (!readUrl) {
+                                return;
+                            }
+
+
+                            try {
+
+                                const response =
+                                    await fetch(
+                                        readUrl,
+                                        {
+                                            method: 'POST',
+
+                                            headers: {
+                                                'X-CSRF-TOKEN':
+                                                    '{{ csrf_token() }}',
+
+                                                'Accept':
+                                                    'application/json',
+
+                                                'X-Requested-With':
+                                                    'XMLHttpRequest',
+                                            },
+                                        }
+                                    );
+
+
+                                if (!response.ok) {
+                                    return;
+                                }
+
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | REMOVE UNREAD BADGE
+                                |--------------------------------------------------------------------------
+                                */
+
+                                const target =
+                                    '#' + messagePanel.id;
+
+
+                                const messageButton =
+                                    document.querySelector(
+                                        '.teacher-message-btn[data-bs-target="' +
+                                        target +
+                                        '"]'
+                                    );
+
+
+                                if (messageButton) {
+
+                                    const badge =
+                                        messageButton.querySelector(
+                                            '.teacher-message-count'
+                                        );
+
+
+                                    if (badge) {
+
+                                        badge.remove();
+                                    }
+                                }
+
+                            } catch (error) {
+
+                                console.error(
+                                    'Unable to mark messages as read.',
+                                    error
+                                );
+                            }
                         }
                     );
 
@@ -1306,10 +1395,12 @@ document.addEventListener(
                                 return;
                             }
 
+
                             const toggle =
                                 dropdownElement.querySelector(
                                     '[data-bs-toggle="dropdown"]'
                                 );
+
 
                             if (
                                 toggle &&
@@ -1317,14 +1408,13 @@ document.addEventListener(
                             ) {
 
                                 const dropdown =
-                                    bootstrap.Dropdown.getOrCreateInstance(
-                                        toggle
-                                    );
+                                    bootstrap.Dropdown
+                                        .getOrCreateInstance(
+                                            toggle
+                                        );
 
                                 dropdown.hide();
-
                             }
-
                         }
                     );
 
@@ -1345,21 +1435,22 @@ document.addEventListener(
                     'teacherMessagesBooking{{ old('booking_id') }}'
                 );
 
+
             if (
                 messagePanel &&
                 typeof bootstrap !== 'undefined'
             ) {
 
                 const collapse =
-                    bootstrap.Collapse.getOrCreateInstance(
-                        messagePanel,
-                        {
-                            toggle: false
-                        }
-                    );
+                    bootstrap.Collapse
+                        .getOrCreateInstance(
+                            messagePanel,
+                            {
+                                toggle: false
+                            }
+                        );
 
                 collapse.show();
-
             }
 
         @endif

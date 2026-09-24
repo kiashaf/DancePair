@@ -1528,9 +1528,10 @@
                 <div class="student-request-actions">
 
                     @php
-                        $receivedMessagesCount = $booking->messages
-                            ->where('sender_id', '!=', auth()->id())
-                            ->count();
+                    $receivedMessagesCount = $booking->messages
+    ->where('sender_id', '!=', auth()->id())
+    ->whereNull('read_at')
+    ->count();
                     @endphp
 
 
@@ -1804,8 +1805,12 @@
             ================================================= --}}
 
             <div
-                class="collapse"
-                id="studentMessagesBooking{{ $booking->id }}"
+            class="collapse"
+            id="studentMessagesBooking{{ $booking->id }}"
+            data-read-url="{{ route(
+                'bookings.messages.read',
+                $booking
+    ) }}"
             >
 
                 <div class="student-message-area">
@@ -2385,7 +2390,6 @@
 </div>
 
 
-
 <script>
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -2396,7 +2400,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             messagePanel.addEventListener(
                 'shown.bs.collapse',
-                function () {
+                async function () {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | SCROLL TO LATEST MESSAGE
+                    |--------------------------------------------------------------------------
+                    */
 
                     const history =
                         messagePanel.querySelector(
@@ -2407,14 +2417,100 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         history.scrollTop =
                             history.scrollHeight;
-
                     }
 
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | MARK RECEIVED MESSAGES AS READ
+                    |--------------------------------------------------------------------------
+                    */
+
+                    const readUrl =
+                        messagePanel.dataset.readUrl;
+
+                    if (!readUrl) {
+                        return;
+                    }
+
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                readUrl,
+                                {
+                                    method: 'POST',
+
+                                    headers: {
+                                        'X-CSRF-TOKEN':
+                                            '{{ csrf_token() }}',
+
+                                        'Accept':
+                                            'application/json',
+
+                                        'X-Requested-With':
+                                            'XMLHttpRequest',
+                                    },
+                                }
+                            );
+
+
+                        if (!response.ok) {
+                            return;
+                        }
+
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | REMOVE UNREAD BADGE IMMEDIATELY
+                        |--------------------------------------------------------------------------
+                        */
+
+                        const target =
+                            '#' + messagePanel.id;
+
+
+                        const messageButton =
+                            document.querySelector(
+                                '.student-message-btn[data-bs-target="' +
+                                target +
+                                '"]'
+                            );
+
+
+                        if (messageButton) {
+
+                            const badge =
+                                messageButton.querySelector(
+                                    '.student-message-count'
+                                );
+
+
+                            if (badge) {
+
+                                badge.remove();
+                            }
+                        }
+
+                    } catch (error) {
+
+                        console.error(
+                            'Unable to mark messages as read.',
+                            error
+                        );
+                    }
                 }
             );
 
         });
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | REOPEN MESSAGE PANEL AFTER VALIDATION ERROR
+    |--------------------------------------------------------------------------
+    */
 
     @if($errors->any() && old('booking_id'))
 
@@ -2438,7 +2534,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 )
                 .show();
-
         }
 
     @endif

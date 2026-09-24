@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 
 class BookingMessageController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | SEND MESSAGE
+    |--------------------------------------------------------------------------
+    */
+
     public function store(
         Request $request,
         Booking $booking,
@@ -33,18 +39,19 @@ class BookingMessageController extends Controller
         |--------------------------------------------------------------------------
         | SECURITY
         |--------------------------------------------------------------------------
-        |
-        | Only the student and teacher belonging to this booking
-        | are allowed to send messages.
-        |
         */
 
-        $studentUserId = $booking->student?->user_id;
-        $teacherUserId = $booking->teacher?->user_id;
+        $studentUserId =
+            $booking->student?->user_id;
+
+        $teacherUserId =
+            $booking->teacher?->user_id;
+
 
         if (
-            $user->id !== $studentUserId &&
-            $user->id !== $teacherUserId
+            (int) $user->id !== (int) $studentUserId
+            &&
+            (int) $user->id !== (int) $teacherUserId
         ) {
             abort(403);
         }
@@ -64,7 +71,11 @@ class BookingMessageController extends Controller
             ],
         ]);
 
-        $messageText = trim($validated['message']);
+
+        $messageText =
+            trim(
+                $validated['message']
+            );
 
 
         /*
@@ -74,10 +85,12 @@ class BookingMessageController extends Controller
         */
 
         if (
-            $contentFilter->containsForbiddenContactInfo(
-                $messageText
-            )
+            $contentFilter
+                ->containsForbiddenContactInfo(
+                    $messageText
+                )
         ) {
+
             return back()
                 ->withInput()
                 ->withErrors([
@@ -93,11 +106,17 @@ class BookingMessageController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $bookingMessage = BookingMessage::create([
-            'booking_id' => $booking->id,
-            'sender_id' => $user->id,
-            'message' => $messageText,
-        ]);
+        $bookingMessage =
+            BookingMessage::create([
+                'booking_id' =>
+                    $booking->id,
+
+                'sender_id' =>
+                    $user->id,
+
+                'message' =>
+                    $messageText,
+            ]);
 
 
         /*
@@ -106,13 +125,23 @@ class BookingMessageController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if ($user->id === $studentUserId) {
+        if (
+            (int) $user->id
+            ===
+            (int) $studentUserId
+        ) {
 
-            $recipient = $booking->teacher?->user;
+            $recipient =
+                $booking
+                    ->teacher
+                    ?->user;
 
         } else {
 
-            $recipient = $booking->student?->user;
+            $recipient =
+                $booking
+                    ->student
+                    ?->user;
         }
 
 
@@ -123,6 +152,7 @@ class BookingMessageController extends Controller
         */
 
         if ($recipient) {
+
             $recipient->notify(
                 new BookingMessageNotification(
                     $booking,
@@ -135,7 +165,7 @@ class BookingMessageController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | REDIRECT BACK TO CONVERSATION
+        | REDIRECT BACK
         |--------------------------------------------------------------------------
         */
 
@@ -143,5 +173,103 @@ class BookingMessageController extends Controller
             'success',
             __('messages.booking_message_sent')
         );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | MARK RECEIVED MESSAGES AS READ
+    |--------------------------------------------------------------------------
+    |
+    | When Student or Teacher opens the conversation:
+    |
+    | - All messages received from the other user become read.
+    | - Messages sent by the current user are NOT changed.
+    | - The unread badge can then become zero.
+    |
+    */
+
+    public function markRead(
+        Request $request,
+        Booking $booking
+    ) {
+        $user =
+            $request->user();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | LOAD BOOKING RELATIONSHIPS
+        |--------------------------------------------------------------------------
+        */
+
+        $booking->loadMissing([
+            'student.user',
+            'teacher.user',
+        ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SECURITY
+        |--------------------------------------------------------------------------
+        */
+
+        $studentUserId =
+            $booking->student?->user_id;
+
+        $teacherUserId =
+            $booking->teacher?->user_id;
+
+
+        if (
+            (int) $user->id !== (int) $studentUserId
+            &&
+            (int) $user->id !== (int) $teacherUserId
+        ) {
+            abort(403);
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | MARK RECEIVED MESSAGES AS READ
+        |--------------------------------------------------------------------------
+        */
+
+        BookingMessage::where(
+                'booking_id',
+                $booking->id
+            )
+            ->where(
+                'sender_id',
+                '!=',
+                $user->id
+            )
+            ->whereNull(
+                'read_at'
+            )
+            ->update([
+                'read_at' =>
+                    now(),
+            ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | RESPONSE
+        |--------------------------------------------------------------------------
+        */
+
+        return response()->json([
+            'success' =>
+                true,
+
+            'booking_id' =>
+                $booking->id,
+
+            'unread_count' =>
+                0,
+        ]);
     }
 }

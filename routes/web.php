@@ -459,6 +459,16 @@ Route::post(
             'verified',
         ])
         ->name('bookings.messages.store');
+
+        Route::post(
+            '/bookings/{booking}/messages/read',
+            [BookingMessageController::class, 'markRead']
+        )
+            ->middleware([
+                'auth',
+                'verified',
+            ])
+            ->name('bookings.messages.read');
 /*
 |--------------------------------------------------------------------------
 | LOGOUT

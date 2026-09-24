@@ -441,4 +441,34 @@ return [
 
 'contact_info_warning' =>
     'Do not include phone numbers, email addresses, or social media contact information.',
+    'lesson_type' => 'Lesson type',
+
+'select_lesson_type' => 'Select a lesson type',
+
+'lesson_type_online' => 'Online',
+
+'lesson_type_face_to_face' => 'Face to Face',
+
+'lesson_type_public_place' => 'Public Place',
+
+'lesson_type_not_configured' =>
+    'This class does not have a lesson type configured yet.',
+
+'invalid_lesson_type' =>
+    'The selected lesson type is not offered for this class.',
+
+'select_lesson_type_required' =>
+    'Please select one of the lesson types offered by the teacher.',
+
+'cancellation_policy' =>
+    'Cancellation policy:',
+
+'cancellation_policy_online' =>
+    'Online: full refund up to 2 hours before the lesson.',
+
+'cancellation_policy_face_to_face' =>
+    'Face to Face: full refund up to 6 hours before the lesson.',
+
+'cancellation_policy_public_place' =>
+    'Public Place: full refund up to 24 hours before the lesson.',
 ];

@@ -98,6 +98,19 @@ class TeacherAvailabilityController extends Controller
                 'exists:dance_styles,id',
             ],
 
+            'teaching_types' => [
+                'required',
+                'array',
+                'min:1',
+            ],
+
+            'teaching_types.*' => [
+                'required',
+                'string',
+                'distinct',
+                'in:online,face_to_face,public_place',
+            ],
+
             'start_time' => [
                 'required',
                 'date_format:H:i',
@@ -155,6 +168,15 @@ class TeacherAvailabilityController extends Controller
         }
 
 
+        $teachingTypes =
+            collect(
+                $validated['teaching_types']
+            )
+                ->unique()
+                ->values()
+                ->all();
+
+
         TeacherAvailability::create([
 
             'teacher_id' =>
@@ -162,6 +184,9 @@ class TeacherAvailabilityController extends Controller
 
             'dance_style_id' =>
                 $validated['dance_style_id'],
+
+            'teaching_types' =>
+                $teachingTypes,
 
             'available_date' =>
                 $validated['available_date'],
@@ -283,6 +308,19 @@ class TeacherAvailabilityController extends Controller
                 'exists:dance_styles,id',
             ],
 
+            'teaching_types' => [
+                'required',
+                'array',
+                'min:1',
+            ],
+
+            'teaching_types.*' => [
+                'required',
+                'string',
+                'distinct',
+                'in:online,face_to_face,public_place',
+            ],
+
             'start_time' => [
                 'required',
                 'date_format:H:i',
@@ -378,6 +416,26 @@ class TeacherAvailabilityController extends Controller
             )->format('H:i');
 
 
+        $oldTeachingTypes =
+            collect(
+                $availability->teaching_types ?? []
+            )
+                ->unique()
+                ->sort()
+                ->values()
+                ->all();
+
+
+        $newTeachingTypes =
+            collect(
+                $validated['teaching_types']
+            )
+                ->unique()
+                ->sort()
+                ->values()
+                ->all();
+
+
         /*
         |--------------------------------------------------------------------------
         | DID SOMETHING CHANGE?
@@ -405,7 +463,13 @@ class TeacherAvailabilityController extends Controller
 
             $oldEnd
                 !==
-                $validated['end_time'];
+                $validated['end_time']
+
+            ||
+
+            $oldTeachingTypes
+                !==
+                $newTeachingTypes;
 
 
         if (!$somethingChanged) {
@@ -477,6 +541,7 @@ class TeacherAvailabilityController extends Controller
             function () use (
                 $availability,
                 $validated,
+                $newTeachingTypes,
                 $slotBookings,
                 $oldDetails,
                 &$notifications
@@ -489,6 +554,9 @@ class TeacherAvailabilityController extends Controller
 
                     'dance_style_id' =>
                         $validated['dance_style_id'],
+
+                    'teaching_types' =>
+                        $newTeachingTypes,
 
                     'start_time' =>
                         $validated['start_time'],

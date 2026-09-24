@@ -306,4 +306,11 @@ return [
 
     'no_changes_made' =>
         'No changes were made.',
+
+
+        'lesson_types' => 'Lesson type(s)',
+'lesson_type_online' => 'Online',
+'lesson_type_face_to_face' => 'Face to Face',
+'lesson_type_public_place' => 'Public Place',
+'lesson_types_help' => 'Select at least one option. Students will only see the lesson types you offer.',
 ];

@@ -10,7 +10,6 @@ use App\Models\TeacherAvailability;
 
 use App\Notifications\BookingMessageNotification;
 
-use App\Services\BookingActivityNotifier;
 use App\Services\MessageContentFilter;
 
 use Carbon\Carbon;
@@ -30,8 +29,7 @@ class StudentBookingRequestController extends Controller
     public function store(
         Request $request,
         TeacherAvailability $availability,
-        MessageContentFilter $contentFilter,
-        BookingActivityNotifier $activityNotifier
+        MessageContentFilter $contentFilter
     ) {
         /*
         |--------------------------------------------------------------------------
@@ -76,46 +74,147 @@ class StudentBookingRequestController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | VALIDATE REQUEST
+        | TEACHING TYPES OFFERED BY THIS AVAILABILITY
         |--------------------------------------------------------------------------
+        |
+        | Teacher decides which lesson type(s) are available for this slot.
+        | Student can never choose a type that was not selected by teacher.
+        |
         */
 
-        $validated = $request->validate(
-            [
-                'teaching_type' => [
-                    'required',
-                    'string',
-                    'in:online,face_to_face,public_place',
-                ],
-
-                'message' => [
-                    'nullable',
-                    'string',
-                    'max:3000',
-                ],
-            ],
-            [
-                'teaching_type.required' =>
-                    app()->getLocale() === 'fr'
-                        ? 'Veuillez sélectionner un type de cours.'
-                        : 'Please select a teaching type.',
-
-                'teaching_type.in' =>
-                    app()->getLocale() === 'fr'
-                        ? 'Le type de cours sélectionné est invalide.'
-                        : 'The selected teaching type is invalid.',
-            ]
-        );
+        $allowedTeachingTypes =
+            collect(
+                $availability->teaching_types ?? []
+            )
+                ->filter(
+                    fn ($type) =>
+                        in_array(
+                            $type,
+                            [
+                                'online',
+                                'face_to_face',
+                                'public_place',
+                            ],
+                            true
+                        )
+                )
+                ->unique()
+                ->values()
+                ->all();
 
 
         /*
         |--------------------------------------------------------------------------
-        | TEACHING TYPE
+        | NO TYPE CONFIGURED
         |--------------------------------------------------------------------------
         */
 
-        $teachingType =
-            $validated['teaching_type'];
+        if (count($allowedTeachingTypes) === 0) {
+
+            return back()
+                ->withInput()
+                ->with(
+                    'error',
+                    __('student.lesson_type_not_configured')
+                );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDATION
+        |--------------------------------------------------------------------------
+        |
+        | ONE TYPE:
+        | Student does not choose anything.
+        | Teacher's type is automatically used.
+        |
+        | MULTIPLE TYPES:
+        | Student may choose only from the types offered by teacher.
+        |
+        */
+
+        $validationRules = [
+
+            'message' => [
+                'nullable',
+                'string',
+                'max:3000',
+            ],
+
+        ];
+
+
+        if (count($allowedTeachingTypes) > 1) {
+
+            $validationRules['teaching_type'] = [
+                'required',
+                'string',
+
+                function (
+                    $attribute,
+                    $value,
+                    $fail
+                ) use (
+                    $allowedTeachingTypes
+                ) {
+
+                    if (
+                        !in_array(
+                            $value,
+                            $allowedTeachingTypes,
+                            true
+                        )
+                    ) {
+
+                        $fail(
+                            __('student.invalid_lesson_type')
+                        );
+                    }
+                },
+            ];
+        }
+
+
+        $validated =
+            $request->validate(
+                $validationRules,
+                [
+                    'teaching_type.required' =>
+                        __('student.select_lesson_type_required'),
+                ]
+            );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FINAL TEACHING TYPE
+        |--------------------------------------------------------------------------
+        */
+
+        if (count($allowedTeachingTypes) === 1) {
+
+            /*
+             * Teacher offered only one type.
+             *
+             * IMPORTANT:
+             * We do NOT trust anything sent by Student.
+             * Backend itself chooses teacher's only available type.
+             */
+
+            $teachingType =
+                $allowedTeachingTypes[0];
+
+        } else {
+
+            /*
+             * Teacher offered two or three types.
+             * Student selected one of teacher's allowed types.
+             */
+
+            $teachingType =
+                $validated['teaching_type'];
+        }
 
 
         /*
@@ -133,10 +232,6 @@ class StudentBookingRequestController extends Controller
         |--------------------------------------------------------------------------
         | BLOCK CONTACT INFORMATION
         |--------------------------------------------------------------------------
-        |
-        | We check BEFORE creating the booking.
-        | This prevents creating a booking if the message is rejected.
-        |
         */
 
         if (
@@ -199,7 +294,7 @@ class StudentBookingRequestController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | GET HOURLY RATE FOR THIS DANCE STYLE
+        | GET HOURLY RATE
         |--------------------------------------------------------------------------
         */
 
@@ -276,7 +371,7 @@ class StudentBookingRequestController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | CALCULATE TOTAL LESSON PRICE
+        | CALCULATE PRICE
         |--------------------------------------------------------------------------
         */
 
@@ -288,7 +383,7 @@ class StudentBookingRequestController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | CREATE BOOKING + FIRST MESSAGE
+        | CREATE BOOKING + OPTIONAL FIRST MESSAGE
         |--------------------------------------------------------------------------
         */
 
@@ -384,7 +479,7 @@ class StudentBookingRequestController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | STUDENT + TEACHER USERS
+        | USERS
         |--------------------------------------------------------------------------
         */
 
@@ -401,38 +496,46 @@ class StudentBookingRequestController extends Controller
         | BOOKING ACTIVITY NOTIFICATION
         |--------------------------------------------------------------------------
         |
-        | Both users receive:
+        | Your old controller required BookingActivityNotifier directly.
         |
-        | - Database notification inside DancePair
-        | - Email from DancePair Support
+        | Because that class currently does not exist, Laravel crashed before
+        | the booking request could even run.
         |
-        | Student:
-        | Confirmation that the request was submitted.
-        |
-        | Teacher:
-        | Notification that a new lesson request was received.
+        | Now:
+        | - If the service exists, use it.
+        | - If it does not exist yet, booking still works.
         |
         */
 
-        $activityNotifier->notifyBoth(
-            booking: $booking,
-            action: 'request_created',
-            actorRole: 'student',
-            actorName: $studentUser?->name
-                ?? Auth::user()?->name
-        );
+        $activityNotifierClass =
+            'App\\Services\\BookingActivityNotifier';
+
+
+        if (class_exists($activityNotifierClass)) {
+
+            try {
+
+                app($activityNotifierClass)->notifyBoth(
+                    booking: $booking,
+                    action: 'request_created',
+                    actorRole: 'student',
+                    actorName: $studentUser?->name
+                        ?? Auth::user()?->name
+                );
+
+            } catch (\Throwable $exception) {
+
+                report(
+                    $exception
+                );
+            }
+        }
 
 
         /*
         |--------------------------------------------------------------------------
-        | SEND OPTIONAL MESSAGE NOTIFICATION + EMAIL
+        | OPTIONAL MESSAGE NOTIFICATION
         |--------------------------------------------------------------------------
-        |
-        | This existing feature stays intact.
-        |
-        | If the student included a message with the booking request,
-        | the teacher also receives the message notification.
-        |
         */
 
         if (
@@ -466,17 +569,6 @@ class StudentBookingRequestController extends Controller
                     );
 
                 } catch (\Throwable $exception) {
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | DO NOT BREAK BOOKING CREATION
-                    |--------------------------------------------------------------------------
-                    |
-                    | The booking has already been created successfully.
-                    | If the optional message notification fails,
-                    | we report it but do not delete the booking.
-                    |
-                    */
 
                     report(
                         $exception

@@ -406,4 +406,10 @@ return [
 
     'no_changes_made' =>
         'Aucune modification n’a été effectuée.',
+
+        'lesson_types' => 'Type(s) de cours',
+'lesson_type_online' => 'En ligne',
+'lesson_type_face_to_face' => 'En personne',
+'lesson_type_public_place' => 'Lieu public',
+'lesson_types_help' => 'Sélectionnez au moins une option. Les étudiants verront uniquement les types de cours que vous offrez.',
 ];

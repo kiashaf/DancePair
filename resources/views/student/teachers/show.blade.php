@@ -966,6 +966,47 @@
                         $slotKey
                     );
 
+
+                /*
+                |--------------------------------------------------------------------------
+                | LESSON TYPES OFFERED BY TEACHER FOR THIS SLOT
+                |--------------------------------------------------------------------------
+                */
+
+                $allowedTeachingTypes =
+                    collect(
+                        $availability->teaching_types ?? []
+                    )
+                        ->filter(
+                            fn ($type) =>
+                                in_array(
+                                    $type,
+                                    [
+                                        'online',
+                                        'face_to_face',
+                                        'public_place',
+                                    ],
+                                    true
+                                )
+                        )
+                        ->unique()
+                        ->values()
+                        ->all();
+
+
+                $lessonTypeLabels = [
+
+                    'online' =>
+                        __('student.lesson_type_online'),
+
+                    'face_to_face' =>
+                        __('student.lesson_type_face_to_face'),
+
+                    'public_place' =>
+                        __('student.lesson_type_public_place'),
+
+                ];
+
             @endphp
 
 
@@ -1068,75 +1109,82 @@
 
 
                     {{-- RATE --}}
-                    {{-- RATE --}}
-<div>
+                    <div>
 
-    <span class="availability-label">
-        {{ __('student.rate') }}
-    </span>
+                        <span class="availability-label">
+                            {{ __('student.rate') }}
+                        </span>
 
-    <div
-        class="availability-price"
-        style="
-            display:flex;
-            align-items:center;
-            gap:8px;
-            flex-wrap:nowrap;
-            white-space:nowrap;
-        "
-    >
+                        <div
+                            class="availability-price"
+                            style="
+                                display:flex;
+                                align-items:center;
+                                gap:8px;
+                                flex-wrap:nowrap;
+                                white-space:nowrap;
+                            "
+                        >
 
-        @if($styleRate !== null)
+                            @if($styleRate !== null)
 
-            <span>
-                ${{ number_format(
-                    $styleRate,
-                    2
-                ) }}
+                                <span>
 
-                / {{ __('student.hr') }}
-            </span>
+                                    ${{ number_format(
+                                        $styleRate,
+                                        2
+                                    ) }}
 
-            <span
-                style="
-                    color:#94A3B8;
-                    font-weight:400;
-                "
-            >
-                •
-            </span>
+                                    / {{ __('student.hr') }}
 
-            <span
-                style="
-                    color:#475569;
-                    font-size:11px;
-                    font-weight:600;
-                "
-            >
-                {{ __('student.total') }}
+                                </span>
 
-                <strong
-                    style="
-                        color:#0284C7;
-                        font-weight:700;
-                    "
-                >
-                    ${{ number_format(
-                        $sessionPrice,
-                        2
-                    ) }}
-                </strong>
-            </span>
 
-        @else
+                                <span
+                                    style="
+                                        color:#94A3B8;
+                                        font-weight:400;
+                                    "
+                                >
+                                    •
+                                </span>
 
-            {{ __('student.not_set') }}
 
-        @endif
+                                <span
+                                    style="
+                                        color:#475569;
+                                        font-size:11px;
+                                        font-weight:600;
+                                    "
+                                >
 
-    </div>
+                                    {{ __('student.total') }}
 
-</div>
+                                    <strong
+                                        style="
+                                            color:#0284C7;
+                                            font-weight:700;
+                                        "
+                                    >
+
+                                        ${{ number_format(
+                                            $sessionPrice,
+                                            2
+                                        ) }}
+
+                                    </strong>
+
+                                </span>
+
+                            @else
+
+                                {{ __('student.not_set') }}
+
+                            @endif
+
+                        </div>
+
+                    </div>
 
 
 
@@ -1149,9 +1197,11 @@
                             data-target="availability-details-{{ $availability->id }}"
                             aria-label="{{ __('student.open_lesson_details') }}"
                         >
+
                             <span class="availability-toggle-arrow">
                                 ▼
                             </span>
+
                         </button>
 
                     </div>
@@ -1384,96 +1434,222 @@
                                     >
 
 
+
                                     {{-- =================================================
                                        TEACHING TYPE
                                     ================================================== --}}
 
-                                    <label
-                                        for="teaching_type_{{ $availability->id }}"
-                                        class="message-form-label"
-                                    >
-                                        {{ app()->getLocale() === 'fr'
-                                            ? 'Type de cours'
-                                            : 'Lesson type'
-                                        }}
-                                    </label>
+                                    @if(count($allowedTeachingTypes) === 1)
 
 
-                                    <select
-                                        id="teaching_type_{{ $availability->id }}"
-                                        name="teaching_type"
-                                        class="booking-type-select"
-                                        required
-                                    >
-                                        <option value="">
-                                            {{ app()->getLocale() === 'fr'
-                                                ? 'Sélectionnez un type de cours'
-                                                : 'Select a lesson type'
-                                            }}
-                                        </option>
+                                        {{--
+                                            ONE TYPE ONLY
 
-                                        <option
-                                            value="online"
-                                            @selected(old('teaching_type') === 'online')
+                                            Student can see it,
+                                            but cannot change it.
+                                        --}}
+
+                                        <label class="message-form-label">
+
+                                            {{ __('student.lesson_type') }}
+
+                                        </label>
+
+
+                                        <div
+                                            class="booking-type-policy"
+                                            style="
+                                                margin-bottom:8px;
+                                                color:#1F2937;
+                                                font-weight:700;
+                                            "
                                         >
-                                            {{ app()->getLocale() === 'fr'
-                                                ? 'En ligne'
-                                                : 'Online'
-                                            }}
-                                        </option>
 
-                                        <option
-                                            value="face_to_face"
-                                            @selected(old('teaching_type') === 'face_to_face')
-                                        >
-                                            {{ app()->getLocale() === 'fr'
-                                                ? 'En personne'
-                                                : 'Face to Face'
+                                            {{
+                                                $lessonTypeLabels[
+                                                    $allowedTeachingTypes[0]
+                                                ]
+                                                ??
+                                                $allowedTeachingTypes[0]
                                             }}
-                                        </option>
 
-                                        <option
-                                            value="public_place"
-                                            @selected(old('teaching_type') === 'public_place')
+                                        </div>
+
+
+                                        <input
+                                            type="hidden"
+                                            name="teaching_type"
+                                            value="{{ $allowedTeachingTypes[0] }}"
                                         >
-                                            {{ app()->getLocale() === 'fr'
-                                                ? 'Lieu public'
-                                                : 'Public Place'
+
+
+
+                                    @elseif(count($allowedTeachingTypes) > 1)
+
+
+                                        {{--
+                                            TWO OR THREE TYPES
+
+                                            Student can choose ONLY
+                                            from teacher's types.
+                                        --}}
+
+                                        <label
+                                            for="teaching_type_{{ $availability->id }}"
+                                            class="message-form-label"
+                                        >
+
+                                            {{ __('student.lesson_type') }}
+
+                                        </label>
+
+
+                                        <select
+                                            id="teaching_type_{{ $availability->id }}"
+                                            name="teaching_type"
+                                            class="booking-type-select"
+                                            required
+                                        >
+
+                                            <option value="">
+
+                                                {{ __('student.select_lesson_type') }}
+
+                                            </option>
+
+
+                                            @foreach($allowedTeachingTypes as $teachingType)
+
+                                                <option
+                                                    value="{{ $teachingType }}"
+                                                    {{
+                                                        old('availability_id') == $availability->id
+                                                        &&
+                                                        old('teaching_type') === $teachingType
+                                                            ? 'selected'
+                                                            : ''
+                                                    }}
+                                                >
+
+                                                    {{
+                                                        $lessonTypeLabels[
+                                                            $teachingType
+                                                        ]
+                                                        ??
+                                                        $teachingType
+                                                    }}
+
+                                                </option>
+
+                                            @endforeach
+
+
+                                        </select>
+
+
+
+                                    @else
+
+
+                                        {{--
+                                            OLD AVAILABILITY WITHOUT TYPE
+                                        --}}
+
+                                        <div class="alert alert-secondary mb-3">
+
+                                            {{
+                                                __('student.lesson_type_not_configured')
                                             }}
-                                        </option>
-                                    </select>
+
+                                        </div>
+
+
+                                    @endif
+
+
 
 
                                     {{-- =================================================
-                                       REFUND POLICY INFO
+                                       CANCELLATION POLICY
                                     ================================================== --}}
 
-                                    <div class="booking-type-policy">
+                                    @if(count($allowedTeachingTypes) > 0)
 
-                                        @if(app()->getLocale() === 'fr')
-
-                                            <strong>
-                                                Politique d’annulation :
-                                            </strong>
-
-                                            En ligne : remboursement complet jusqu’à
-                                            2 heures avant le cours.
-                                            En personne : jusqu’à 6 heures avant.
-                                            Lieu public : jusqu’à 24 heures avant.
-
-                                        @else
+                                        <div class="booking-type-policy">
 
                                             <strong>
-                                                Cancellation policy:
+
+                                                {{
+                                                    __('student.cancellation_policy')
+                                                }}
+
                                             </strong>
 
-                                            Online: full refund up to 2 hours before the lesson.
-                                            Face to Face: up to 6 hours before.
-                                            Public Place: up to 24 hours before.
 
-                                        @endif
 
-                                    </div>
+                                            @if(
+                                                in_array(
+                                                    'online',
+                                                    $allowedTeachingTypes,
+                                                    true
+                                                )
+                                            )
+
+                                                <div>
+
+                                                    {{
+                                                        __('student.cancellation_policy_online')
+                                                    }}
+
+                                                </div>
+
+                                            @endif
+
+
+
+                                            @if(
+                                                in_array(
+                                                    'face_to_face',
+                                                    $allowedTeachingTypes,
+                                                    true
+                                                )
+                                            )
+
+                                                <div>
+
+                                                    {{
+                                                        __('student.cancellation_policy_face_to_face')
+                                                    }}
+
+                                                </div>
+
+                                            @endif
+
+
+
+                                            @if(
+                                                in_array(
+                                                    'public_place',
+                                                    $allowedTeachingTypes,
+                                                    true
+                                                )
+                                            )
+
+                                                <div>
+
+                                                    {{
+                                                        __('student.cancellation_policy_public_place')
+                                                    }}
+
+                                                </div>
+
+                                            @endif
+
+                                        </div>
+
+                                    @endif
+
+
 
 
                                     {{-- =================================================
@@ -1484,7 +1660,11 @@
                                         for="request_message_{{ $availability->id }}"
                                         class="message-form-label"
                                     >
-                                        {{ __('student.message_to_teacher_optional') }}
+
+                                        {{
+                                            __('student.message_to_teacher_optional')
+                                        }}
+
                                     </label>
 
 
@@ -1494,11 +1674,15 @@
                                         class="message-textarea"
                                         maxlength="3000"
                                         placeholder="{{ __('student.message_to_teacher_placeholder') }}"
-                                    >{{ old('message') }}</textarea>
+                                    >{{ old('availability_id') == $availability->id ? old('message') : '' }}</textarea>
 
 
                                     <small class="message-warning">
-                                        {{ __('student.contact_info_warning') }}
+
+                                        {{
+                                            __('student.contact_info_warning')
+                                        }}
+
                                     </small>
 
 
@@ -1507,43 +1691,68 @@
                                         <button
                                             type="submit"
                                             class="btn btn-primary"
+                                            {{ count($allowedTeachingTypes) === 0 ? 'disabled' : '' }}
                                         >
-                                            {{ __('student.request') }}
+
+                                            {{
+                                                __('student.request')
+                                            }}
+
                                         </button>
 
                                     </div>
+
 
                                 </form>
 
 
                             @else
 
+
                                 <div class="alert alert-secondary mb-0">
-                                    {{ __('student.unavailable') }}
+
+                                    {{
+                                        __('student.unavailable')
+                                    }}
+
                                 </div>
+
 
                             @endif
 
+
                         @endif
+
 
                     </div>
 
+
                 </div>
+
 
             </div>
 
 
         @empty
 
+
             <div class="text-muted py-3">
-                {{ __('student.no_available_classes') }}
+
+                {{
+                    __('student.no_available_classes')
+                }}
+
             </div>
+
 
         @endforelse
 
+
     </div>
 
+
 </div>
+
 
 
 
@@ -1569,10 +1778,12 @@ document.addEventListener(
                         const targetId =
                             button.dataset.target;
 
+
                         const panel =
                             document.getElementById(
                                 targetId
                             );
+
 
                         if (!panel) {
                             return;
@@ -1649,17 +1860,22 @@ document.addEventListener(
                                     '.conversation-history'
                                 );
 
+
                             if (history) {
 
                                 history.scrollTop =
                                     history.scrollHeight;
+
                             }
+
                         }
 
                     }
+
                 );
 
             }
+
         );
 
 
@@ -1676,13 +1892,17 @@ document.addEventListener(
                     '[data-target="availability-details-{{ old('availability_id') }}"]'
                 );
 
+
             if (errorButton) {
+
                 errorButton.click();
+
             }
 
         @endif
 
     }
+
 );
 
 </script>

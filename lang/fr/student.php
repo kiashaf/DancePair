@@ -425,4 +425,35 @@ return [
 
 'contact_info_warning' =>
     'N’incluez pas de numéro de téléphone, d’adresse courriel ou de coordonnées de réseaux sociaux.',
+
+    'lesson_type' => 'Type de cours',
+
+'select_lesson_type' => 'Sélectionnez un type de cours',
+
+'lesson_type_online' => 'En ligne',
+
+'lesson_type_face_to_face' => 'En personne',
+
+'lesson_type_public_place' => 'Lieu public',
+
+'lesson_type_not_configured' =>
+    'Aucun type de cours n’a encore été configuré pour ce cours.',
+
+'invalid_lesson_type' =>
+    'Le type de cours sélectionné n’est pas offert pour ce cours.',
+
+'select_lesson_type_required' =>
+    'Veuillez sélectionner l’un des types de cours offerts par le professeur.',
+
+'cancellation_policy' =>
+    'Politique d’annulation :',
+
+'cancellation_policy_online' =>
+    'En ligne : remboursement complet jusqu’à 2 heures avant le cours.',
+
+'cancellation_policy_face_to_face' =>
+    'En personne : remboursement complet jusqu’à 6 heures avant le cours.',
+
+'cancellation_policy_public_place' =>
+    'Lieu public : remboursement complet jusqu’à 24 heures avant le cours.',
 ];

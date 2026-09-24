@@ -159,6 +159,7 @@
 
 
     <form
+        id="student_profile_form"
         method="POST"
         action="{{ route('student.profile.update') }}"
         enctype="multipart/form-data"
@@ -280,6 +281,12 @@
                     <small class="text-muted d-block mt-2">
                         {{ __('student.photo_help') }}
                     </small>
+
+                    <div
+                        id="profile_photo_error"
+                        class="alert alert-danger mt-2 mb-0 d-none"
+                        role="alert"
+                    ></div>
 
 
                 </div>
@@ -699,11 +706,163 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    const profileForm =
+        document.getElementById('student_profile_form');
+
     const photoInput =
         document.getElementById('profile_photo');
 
     const photoFileName =
         document.getElementById('profile_photo_file_name');
+
+    const photoError =
+        document.getElementById('profile_photo_error');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PROFILE PHOTO RULES
+    |--------------------------------------------------------------------------
+    |
+    | Keep this aligned with Laravel validation:
+    | max:5120 = 5 MB
+    |
+    */
+
+    const MAX_PHOTO_SIZE =
+        5 * 1024 * 1024;
+
+    const ALLOWED_PHOTO_TYPES = [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+    ];
+
+    const tooLargeMessage =
+        @json(app()->getLocale() === 'fr'
+            ? 'La photo de profil doit faire 5 Mo ou moins. Veuillez choisir une image plus petite.'
+            : 'The profile photo must be 5 MB or smaller. Please choose a smaller image.');
+
+    const invalidTypeMessage =
+        @json(app()->getLocale() === 'fr'
+            ? 'Veuillez choisir une image JPG, PNG ou WebP.'
+            : 'Please choose a JPG, PNG, or WebP image.');
+
+
+    function hidePhotoError() {
+
+        if (!photoError) {
+            return;
+        }
+
+        photoError.textContent = '';
+        photoError.classList.add('d-none');
+
+    }
+
+
+    function showPhotoError(message) {
+
+        if (!photoError) {
+            return;
+        }
+
+        photoError.textContent = message;
+        photoError.classList.remove('d-none');
+
+    }
+
+
+    function updatePhotoFileName() {
+
+        if (!photoFileName) {
+            return;
+        }
+
+
+        if (
+            photoInput
+            &&
+            photoInput.files
+            &&
+            photoInput.files.length > 0
+        ) {
+
+            photoFileName.textContent =
+                photoInput.files[0].name;
+
+            photoFileName.classList.add(
+                'has-file'
+            );
+
+        } else {
+
+            photoFileName.textContent = '—';
+
+            photoFileName.classList.remove(
+                'has-file'
+            );
+
+        }
+
+    }
+
+
+    function validateSelectedPhoto() {
+
+        hidePhotoError();
+
+
+        if (
+            !photoInput
+            ||
+            !photoInput.files
+            ||
+            photoInput.files.length === 0
+        ) {
+
+            return true;
+
+        }
+
+
+        const file =
+            photoInput.files[0];
+
+
+        if (
+            file.type
+            &&
+            !ALLOWED_PHOTO_TYPES.includes(
+                file.type
+            )
+        ) {
+
+            showPhotoError(
+                invalidTypeMessage
+            );
+
+            return false;
+
+        }
+
+
+        if (
+            file.size > MAX_PHOTO_SIZE
+        ) {
+
+            showPhotoError(
+                tooLargeMessage
+            );
+
+            return false;
+
+        }
+
+
+        return true;
+
+    }
 
 
     if (
@@ -716,26 +875,35 @@ document.addEventListener('DOMContentLoaded', function () {
             'change',
             function () {
 
+                updatePhotoFileName();
+                validateSelectedPhoto();
+
+            }
+        );
+
+    }
+
+
+    if (profileForm) {
+
+        profileForm.addEventListener(
+            'submit',
+            function (event) {
+
                 if (
-                    this.files
-                    &&
-                    this.files.length > 0
+                    !validateSelectedPhoto()
                 ) {
 
-                    photoFileName.textContent =
-                        this.files[0].name;
+                    event.preventDefault();
 
-                    photoFileName.classList.add(
-                        'has-file'
-                    );
+                    if (photoError) {
 
-                } else {
+                        photoError.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                        });
 
-                    photoFileName.textContent = '—';
-
-                    photoFileName.classList.remove(
-                        'has-file'
-                    );
+                    }
 
                 }
 

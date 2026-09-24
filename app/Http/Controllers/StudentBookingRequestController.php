@@ -17,7 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use App\Notifications\NewBookingRequestNotification;
 class StudentBookingRequestController extends Controller
 {
     /*
@@ -491,47 +491,24 @@ class StudentBookingRequestController extends Controller
             $booking->teacher?->user;
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | BOOKING ACTIVITY NOTIFICATION
-        |--------------------------------------------------------------------------
-        |
-        | Your old controller required BookingActivityNotifier directly.
-        |
-        | Because that class currently does not exist, Laravel crashed before
-        | the booking request could even run.
-        |
-        | Now:
-        | - If the service exists, use it.
-        | - If it does not exist yet, booking still works.
-        |
-        */
+  /*
+|--------------------------------------------------------------------------
+| SEND NEW LESSON REQUEST NOTIFICATION
+|--------------------------------------------------------------------------
+|
+| Every new lesson request must notify the teacher.
+| This is independent from the optional booking message.
+|
+*/
 
-        $activityNotifierClass =
-            'App\\Services\\BookingActivityNotifier';
+if ($teacherUser) {
 
-
-        if (class_exists($activityNotifierClass)) {
-
-            try {
-
-                app($activityNotifierClass)->notifyBoth(
-                    booking: $booking,
-                    action: 'request_created',
-                    actorRole: 'student',
-                    actorName: $studentUser?->name
-                        ?? Auth::user()?->name
-                );
-
-            } catch (\Throwable $exception) {
-
-                report(
-                    $exception
-                );
-            }
-        }
-
-
+    $teacherUser->notify(
+        new NewBookingRequestNotification(
+            $booking
+        )
+    );
+}
         /*
         |--------------------------------------------------------------------------
         | OPTIONAL MESSAGE NOTIFICATION

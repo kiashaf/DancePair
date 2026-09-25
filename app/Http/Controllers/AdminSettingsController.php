@@ -28,6 +28,16 @@ class AdminSettingsController extends Controller
             15
         );
 
+        $profilePhotoMaxMb = (int) Setting::getValue(
+            'profile_photo_max_mb',
+            5
+        );
+
+        $introVideoMaxMb = (int) Setting::getValue(
+            'intro_video_max_mb',
+            50
+        );
+
 
         /*
         |--------------------------------------------------------------------------
@@ -58,7 +68,9 @@ class AdminSettingsController extends Controller
                 'admin',
                 'platformCommissionPercent',
                 'commissionHistory',
-                'danceStyles'
+                'danceStyles',
+                'profilePhotoMaxMb',
+                'introVideoMaxMb'
             )
         );
     }
@@ -100,6 +112,20 @@ class AdminSettingsController extends Controller
                 'numeric',
                 'min:0',
                 'max:100',
+            ],
+
+            'profile_photo_max_mb' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:20',
+            ],
+
+            'intro_video_max_mb' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:60',
             ],
         ]);
 
@@ -177,6 +203,27 @@ class AdminSettingsController extends Controller
         Setting::setValue(
             'platform_commission_percent',
             $newCommissionPercent
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | PROFILE MEDIA LIMITS
+        |--------------------------------------------------------------------------
+        */
+
+        Setting::setValue(
+            'profile_photo_max_mb',
+            (int) $validated[
+                'profile_photo_max_mb'
+            ]
+        );
+
+        Setting::setValue(
+            'intro_video_max_mb',
+            (int) $validated[
+                'intro_video_max_mb'
+            ]
         );
 
 

@@ -183,18 +183,48 @@
 /* GENERAL SAVE */
 
 .dp-btn-general-save {
+    min-width: 170px;
+    height: 46px;
+
+    padding: 0 24px;
+
     color: #FFFFFF;
+
+    border: 0;
+    border-radius: 12px;
 
     background:
         linear-gradient(
-            135deg,
-            #111827,
-            #334155
+            110deg,
+            #F72585,
+            #8B3DFF
         );
 
+    font-size: 12px;
+    font-weight: 800;
+
     box-shadow:
-        0 7px 17px
-        rgba(15, 23, 42, .13);
+        0 10px 24px
+        rgba(180, 40, 170, .20);
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        opacity .18s ease;
+}
+
+.dp-btn-general-save:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 30px
+        rgba(180, 40, 170, .28);
+
+    opacity: .96;
+}
+
+.dp-btn-general-save:active {
+    transform: translateY(0);
 }
 
 
@@ -1285,23 +1315,161 @@
 
 
 
-        <div class="settings-save-bar">
+        {{-- =================================================
+           PROFILE MEDIA LIMITS
+        ================================================== --}}
+
+        <div class="settings-section">
+
+            <div class="settings-section-title">
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Limites des médias de profil'
+                    : 'Profile Media Limits'
+                }}
+
+            </div>
 
 
-            <button
-                type="submit"
-                class="
-                    dp-settings-btn
-                    dp-btn-general-save
-                "
-            >
-                Save Changes
-            </button>
+            <div class="settings-section-subtitle">
 
+                {{ app()->getLocale() === 'fr'
+                    ? 'Définissez la taille maximale des photos de profil et des vidéos de présentation.'
+                    : 'Set the maximum upload size for profile photos and introduction videos.'
+                }}
+
+            </div>
+
+
+            <div class="row g-4">
+
+
+                {{-- PROFILE PHOTO LIMIT --}}
+
+                <div class="col-md-6">
+
+                    <label class="settings-label">
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Taille maximale de la photo de profil'
+                            : 'Profile Photo Max Size'
+                        }}
+
+                    </label>
+
+
+                    <div class="input-group">
+
+                        <input
+                            type="number"
+                            name="profile_photo_max_mb"
+                            class="form-control"
+                            min="1"
+                            max="20"
+                            step="1"
+                            value="{{ old(
+                                'profile_photo_max_mb',
+                                $profilePhotoMaxMb
+                            ) }}"
+                            required
+                        >
+
+
+                        <span class="input-group-text">
+                            MB
+                        </span>
+
+                    </div>
+
+
+                    <small class="settings-help">
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Valeur autorisée : de 1 à 20 MB.'
+                            : 'Allowed range: 1 to 20 MB.'
+                        }}
+
+                    </small>
+
+                </div>
+
+
+
+                {{-- INTRO VIDEO LIMIT --}}
+
+                <div class="col-md-6">
+
+                    <label class="settings-label">
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Taille maximale de la vidéo de présentation'
+                            : 'Introduction Video Max Size'
+                        }}
+
+                    </label>
+
+
+                    <div class="input-group">
+
+                        <input
+                            type="number"
+                            name="intro_video_max_mb"
+                            class="form-control"
+                            min="1"
+                            max="60"
+                            step="1"
+                            value="{{ old(
+                                'intro_video_max_mb',
+                                $introVideoMaxMb
+                            ) }}"
+                            required
+                        >
+
+
+                        <span class="input-group-text">
+                            MB
+                        </span>
+
+                    </div>
+
+
+                    <small class="settings-help">
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Valeur autorisée : de 1 à 60 MB.'
+                            : 'Allowed range: 1 to 60 MB.'
+                        }}
+
+                    </small>
+
+                </div>
+
+            </div>
 
         </div>
 
-    </form>
+
+
+        {{-- SAVE BUTTON INSIDE PROFILE MEDIA LIMITS --}}
+
+<div class="settings-save-bar">
+
+    <button
+        type="submit"
+        class="
+            dp-settings-btn
+            dp-btn-general-save
+        "
+    >
+        Save Changes
+    </button>
+
+</div>
+
+
+</div>
+
+</form>
 
 
 

@@ -2360,38 +2360,17 @@
                             </div>
 
 
-                            @auth
-
-                                @if(auth()->user()->role === 'student')
-
-                                    <a
-                                        href="{{ route('student.teachers.show', $teacher) }}"
-                                        class="home-teacher-profile-btn"
-                                    >
-                                        {{ __('home.view_profile') }}
-                                    </a>
-
-                                @else
-
-                                    <a
-                                        href="{{ route('public.find-teacher') }}"
-                                        class="home-teacher-profile-btn"
-                                    >
-                                        {{ __('home.view_profile') }}
-                                    </a>
-
-                                @endif
-
-                            @else
-
-                                <a
-                                    href="{{ route('public.find-teacher') }}"
-                                    class="home-teacher-profile-btn"
-                                >
-                                    {{ __('home.view_profile') }}
-                                </a>
-
-                            @endauth
+                            <a
+    href="{{ auth()->check()
+        ? route('student.teachers.show', $teacher)
+        : route('public.instructor-access', [
+            'teacher' => $teacher->id
+        ])
+    }}"
+    class="home-teacher-profile-btn"
+>
+    {{ __('home.view_profile') }}
+</a>
 
                         </div>
 

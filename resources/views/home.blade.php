@@ -1690,6 +1690,184 @@
     }
 
 }
+/* =========================================================
+   IPHONE SMALL SCREEN FIX ONLY
+========================================================= */
+
+@media (max-width: 430px) {
+
+html,
+body.home-page {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+
+.home-teachers-section {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+
+.home-teachers-container {
+    width: calc(100% - 24px);
+    max-width: 100%;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    padding-left: 0;
+    padding-right: 0;
+}
+
+
+.home-teachers-header {
+    width: 100%;
+    max-width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+
+.home-teachers-header h2 {
+    min-width: 0;
+    max-width: 65%;
+
+    font-size: 16px;
+    line-height: 1.2;
+
+    white-space: normal;
+}
+
+
+.home-view-all-teachers {
+    flex: 0 0 auto;
+
+    max-width: 35%;
+
+    white-space: normal;
+    text-align: right;
+
+    line-height: 1.2;
+}
+
+
+.home-teachers-grid {
+    width: 100%;
+    max-width: 100%;
+
+    grid-template-columns:
+        minmax(0, 1fr);
+
+    overflow: hidden;
+}
+
+
+.home-teacher-card {
+    width: 100%;
+    max-width: 100%;
+
+    min-width: 0;
+
+    overflow: hidden;
+}
+
+
+.home-teacher-card-top {
+    width: 100%;
+    max-width: 100%;
+
+    min-width: 0;
+}
+
+
+.home-teacher-main-info {
+    flex: 1 1 auto;
+
+    width: auto;
+    max-width: 100%;
+
+    min-width: 0;
+}
+
+
+.home-teacher-main-info h3 {
+    max-width: 100%;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.home-teacher-rating {
+    min-width: 0;
+
+    flex-wrap: wrap;
+}
+
+
+.home-teacher-styles {
+    width: 100%;
+    max-width: 100%;
+
+    flex-wrap: wrap;
+
+    overflow: hidden;
+}
+
+
+.home-teacher-styles span {
+    max-width: 100%;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.home-teacher-card-footer {
+    width: 100%;
+    max-width: 100%;
+
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+.home-teacher-rate {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+
+.home-teacher-profile-btn {
+    flex: 0 0 auto;
+
+    max-width: 48%;
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+    white-space: nowrap;
+}
+
+}
     </style>
 
 </head>

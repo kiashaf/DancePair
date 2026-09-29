@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="{{ asset('logo/logo.png') }}">
 <link rel="shortcut icon" type="image/png" href="{{ asset('logo/logo.png') }}">
 <link rel="apple-touch-icon" href="{{ asset('logo/dancepair-192.png') }}">
-<link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+<!-- <link rel="manifest" href="{{ asset('manifest.webmanifest') }}"> -->
 
 <meta name="theme-color" content="#080717">
 

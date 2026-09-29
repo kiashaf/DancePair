@@ -2855,24 +2855,17 @@ document.addEventListener(
         userAgent.includes('android');
 
     const isIOS =
-        !isAndroid &&
-        (
-            userAgent.includes('iphone') ||
-            userAgent.includes('ipad') ||
-            userAgent.includes('ipod')
-        );
+        /iphone|ipad|ipod/i.test(userAgent);
 
     const isStandalone =
         window.matchMedia('(display-mode: standalone)').matches ||
         window.navigator.standalone === true;
 
-    if (isStandalone) {
-        localStorage.setItem('dancepairInstalled', 'yes');
-    }
-
-    const dancePairInstalled =
-        localStorage.getItem('dancepairInstalled') === 'yes';
-
+    /*
+    |--------------------------------------------------------------------------
+    | Android / Chromium install support
+    |--------------------------------------------------------------------------
+    */
     window.addEventListener(
         'beforeinstallprompt',
         function (event) {
@@ -2881,27 +2874,40 @@ document.addEventListener(
 
             dancePairInstallPrompt = event;
 
-            if (
-                !isStandalone &&
-                !dancePairInstalled
-            ) {
+            if (!isStandalone) {
                 installBanner.style.display = 'block';
             }
         }
     );
 
+    /*
+    |--------------------------------------------------------------------------
+    | iPhone / iPad
+    |--------------------------------------------------------------------------
+    */
     if (
         isIOS &&
-        !isStandalone &&
-        !dancePairInstalled
+        !isStandalone
     ) {
         installBanner.style.display = 'block';
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | INSTALL BUTTON
+    |--------------------------------------------------------------------------
+    */
     installButton.addEventListener(
         'click',
         async function () {
 
+            /*
+            |--------------------------------------------------------------------------
+            | Android:
+            | Chrome / Samsung Internet / Edge etc.
+            | If browser supports beforeinstallprompt
+            |--------------------------------------------------------------------------
+            */
             if (
                 isAndroid &&
                 dancePairInstallPrompt
@@ -2916,13 +2922,36 @@ document.addEventListener(
                 return;
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | iPhone / iPad
+            |--------------------------------------------------------------------------
+            */
             if (isIOS) {
 
                 alert(
                     @json(
                         app()->getLocale() === 'fr'
-                            ? "Ajoutez DancePair à votre écran d’accueil :\n\n1. Ouvrez DancePair dans Safari.\n2. Appuyez sur Partager.\n3. Choisissez « Sur l’écran d’accueil ».\n4. Appuyez sur Ajouter."
-                            : "Add DancePair to your Home Screen:\n\n1. Open DancePair in Safari.\n2. Tap the Share button.\n3. Tap \"Add to Home Screen\".\n4. Tap \"Add\"."
+                            ? "Installer DancePair :\n\n1. Appuyez sur Partager.\n2. Choisissez « Sur l’écran d’accueil ».\n3. Appuyez sur Ajouter."
+                            : "Install DancePair:\n\n1. Tap the Share button.\n2. Choose \"Add to Home Screen\".\n3. Tap \"Add\"."
+                    )
+                );
+
+                return;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Android browser without direct install prompt
+            |--------------------------------------------------------------------------
+            */
+            if (isAndroid) {
+
+                alert(
+                    @json(
+                        app()->getLocale() === 'fr'
+                            ? "Pour installer DancePair :\n\nOuvrez le menu de votre navigateur (⋮ ou ☰), puis choisissez « Installer l’application » ou « Ajouter à l’écran d’accueil »."
+                            : "To install DancePair:\n\nOpen your browser menu (⋮ or ☰), then choose \"Install app\" or \"Add to Home screen\"."
                     )
                 );
 
@@ -2932,6 +2961,11 @@ document.addEventListener(
         }
     );
 
+    /*
+    |--------------------------------------------------------------------------
+    | NOT NOW
+    |--------------------------------------------------------------------------
+    */
     installLater.addEventListener(
         'click',
         function () {
@@ -2941,18 +2975,19 @@ document.addEventListener(
         }
     );
 
+    /*
+    |--------------------------------------------------------------------------
+    | INSTALL FINISHED
+    |--------------------------------------------------------------------------
+    */
     window.addEventListener(
         'appinstalled',
         function () {
 
-            localStorage.setItem(
-                'dancepairInstalled',
-                'yes'
-            );
-
             installBanner.style.display = 'none';
 
             dancePairInstallPrompt = null;
+
         }
     );
 </script>

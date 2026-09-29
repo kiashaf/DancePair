@@ -2723,7 +2723,7 @@ document.addEventListener(
 );
 
 </script>
-<script>
+<!-- <script>
     if ('serviceWorker' in navigator) {
 
         window.addEventListener('load', function () {
@@ -2742,7 +2742,7 @@ document.addEventListener(
         });
 
     }
-</script>
+</script> -->
 <div id="dancepair-install-banner" style="
     display:none;
     position:fixed;
@@ -2837,79 +2837,110 @@ document.addEventListener(
 
 </div>
 <script>
-    let dancePairInstallPrompt = null;
+    const installBanner =
+        document.getElementById('dancepair-install-banner');
 
-    const installBanner = document.getElementById('dancepair-install-banner');
-    const installButton = document.getElementById('dancepair-install-button');
-    const installLater = document.getElementById('dancepair-install-later');
+    const installButton =
+        document.getElementById('dancepair-install-button');
 
-    const isDancePairInstalled =
-        window.matchMedia('(display-mode: standalone)').matches ||
-        window.navigator.standalone === true;
+    const installLater =
+        document.getElementById('dancepair-install-later');
 
     const isIOS =
         /iphone|ipad|ipod/i.test(window.navigator.userAgent);
 
-    window.addEventListener('beforeinstallprompt', function (event) {
+    const isAndroid =
+        /android/i.test(window.navigator.userAgent);
 
-        event.preventDefault();
+    const isStandalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true;
 
-        dancePairInstallPrompt = event;
+    /*
+    |--------------------------------------------------------------------------
+    | If DancePair was opened from Home Screen
+    |--------------------------------------------------------------------------
+    */
+    if (isStandalone) {
 
-        if (!isDancePairInstalled) {
-            installBanner.style.display = 'block';
-        }
+        localStorage.setItem(
+            'dancepairInstalled',
+            'yes'
+        );
 
-    });
-
-    if (
-        isIOS &&
-        !isDancePairInstalled
-    ) {
-        installBanner.style.display = 'block';
     }
 
-    installButton.addEventListener('click', async function () {
+    const dancePairInstalled =
+        localStorage.getItem('dancepairInstalled') === 'yes';
 
-        if (isIOS) {
+    /*
+    |--------------------------------------------------------------------------
+    | Show banner only if not installed
+    |--------------------------------------------------------------------------
+    */
+    if (
+        (isIOS || isAndroid) &&
+        !isStandalone &&
+        !dancePairInstalled
+    ) {
 
-            alert(
-                'To install DancePair on your iPhone:\n\n' +
-                '1. Tap the Share button in Safari.\n' +
-                '2. Tap "Add to Home Screen".\n' +
-                '3. Tap "Add".'
-            );
+        installBanner.style.display = 'block';
 
-            return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Install / Add to Home Screen instructions
+    |--------------------------------------------------------------------------
+    */
+    installButton.addEventListener(
+        'click',
+        function () {
+
+            if (isIOS) {
+
+                alert(
+                    @json(
+                        app()->getLocale() === 'fr'
+                            ? "Ajoutez DancePair à votre écran d’accueil :\n\n1. Ouvrez DancePair dans Safari.\n2. Appuyez sur Partager.\n3. Choisissez « Sur l’écran d’accueil ».\n4. Appuyez sur Ajouter.\n\nEnsuite, ouvrez DancePair depuis son icône."
+                            : "Add DancePair to your Home Screen:\n\n1. Open DancePair in Safari.\n2. Tap the Share button.\n3. Tap \"Add to Home Screen\".\n4. Tap \"Add\".\n\nThen open DancePair from its new icon."
+                    )
+                );
+
+                return;
+            }
+
+            if (isAndroid) {
+
+                alert(
+                    @json(
+                        app()->getLocale() === 'fr'
+                            ? "Ajoutez DancePair à votre écran d’accueil :\n\n1. Appuyez sur le menu Chrome ⋮.\n2. Appuyez sur « Ajouter à l’écran d’accueil ».\n3. Choisissez « Créer un raccourci » si cette option apparaît.\n4. Appuyez sur Ajouter.\n\nEnsuite, ouvrez DancePair depuis son icône."
+                            : "Add DancePair to your Home Screen:\n\n1. Tap the Chrome menu ⋮.\n2. Tap \"Add to Home screen\".\n3. Choose \"Create shortcut\" if shown.\n4. Tap \"Add\".\n\nThen open DancePair from its new icon."
+                    )
+                );
+
+                return;
+            }
+
         }
+    );
 
-        if (!dancePairInstallPrompt) {
-            return;
-        }
 
-        dancePairInstallPrompt.prompt();
+    /*
+    |--------------------------------------------------------------------------
+    | Not now
+    |--------------------------------------------------------------------------
+    */
+    installLater.addEventListener(
+        'click',
+        function () {
 
-        const result =
-            await dancePairInstallPrompt.userChoice;
-
-        if (result.outcome === 'accepted') {
             installBanner.style.display = 'none';
+
         }
-
-        dancePairInstallPrompt = null;
-    });
-
-    installLater.addEventListener('click', function () {
-        installBanner.style.display = 'none';
-    });
-
-    window.addEventListener('appinstalled', function () {
-
-        installBanner.style.display = 'none';
-
-        dancePairInstallPrompt = null;
-
-    });
+    );
 </script>
 </body>
 </html>

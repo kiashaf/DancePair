@@ -58,6 +58,8 @@ use App\Http\Controllers\AdminConversationController;
 
 use App\Http\Controllers\AdminPageViewController;
 
+use App\Http\Controllers\AdminPendingDanceStyleController;
+
 use App\Http\Controllers\HomeController;
 
 
@@ -1853,7 +1855,22 @@ Route::post(
 
     )->name('admin.payments.refund');
 
-
+    Route::get(
+        '/admin/pending-dance-styles',
+        [AdminPendingDanceStyleController::class, 'index']
+    )->name('admin.pending-dance-styles.index');
+    
+    
+    Route::post(
+        '/admin/pending-dance-styles/{danceStyle}/approve',
+        [AdminPendingDanceStyleController::class, 'approve']
+    )->name('admin.pending-dance-styles.approve');
+    
+    
+    Route::delete(
+        '/admin/pending-dance-styles/{danceStyle}/reject',
+        [AdminPendingDanceStyleController::class, 'reject']
+    )->name('admin.pending-dance-styles.reject');
 
 /*
 

@@ -1918,267 +1918,331 @@
 
                     {{-- ========================================= --}}
 
+                    {{-- ========================================= --}}
+{{-- DANCE STYLES --}}
+{{-- ========================================= --}}
 
+<div class="mb-4">
 
-                    <div class="mb-4">
+    <label class="form-label fw-bold mb-3">
+        {{ __('teacher.dance_styles_hourly_rates') }}
+    </label>
 
+    <div class="row g-3">
 
+        @foreach($danceStyles as $style)
 
-                        <label class="form-label fw-bold mb-3">
+            @php
 
+                $teacherStyle =
+                    $teacher
+                        ->danceStyles
+                        ->firstWhere(
+                            'id',
+                            $style->id
+                        );
 
+                $isSelected =
+                    $teacherStyle !== null;
 
-                            {{ __('teacher.dance_styles_hourly_rates') }}
+                $currentRate =
+                    $teacherStyle
+                        ? $teacherStyle
+                            ->pivot
+                            ->hourly_rate
+                        : null;
 
+                $isPendingCustomStyle =
+                    (bool) ($style->pending ?? false)
+                    &&
+                    (int) ($style->submitted_by_teacher_id ?? 0)
+                    ===
+                    (int) $teacher->id;
 
+            @endphp
+
+            <div class="col-md-6">
+
+                <div class="dance-style-price-card">
+
+                    <div class="form-check mb-2">
+
+                        <input
+                            class="form-check-input dance-style-checkbox"
+                            type="checkbox"
+                            name="dance_styles[]"
+                            value="{{ $style->id }}"
+                            id="style_{{ $style->id }}"
+                            data-style-id="{{ $style->id }}"
+                            {{ $isSelected ? 'checked' : '' }}
+                        >
+
+                        <label
+                            class="form-check-label fw-semibold"
+                            for="style_{{ $style->id }}"
+                        >
+
+                            {{ $style->name }}
+
+                            @if($isPendingCustomStyle)
+
+                                <span class="badge bg-warning text-dark ms-2">
+
+                                    {{ app()->getLocale() === 'fr'
+                                        ? 'En attente'
+                                        : 'Pending'
+                                    }}
+
+                                </span>
+
+                            @endif
 
                         </label>
-
-
-
-
-
-                        <div class="row g-3">
-
-
-
-
-
-                            @foreach($danceStyles as $style)
-
-
-
-                                @php
-
-
-
-                                    $teacherStyle =
-
-                                        $teacher
-
-                                            ->danceStyles
-
-                                            ->firstWhere(
-
-                                                'id',
-
-                                                $style->id
-
-                                            );
-
-
-
-                                    $isSelected =
-
-                                        $teacherStyle !== null;
-
-
-
-                                    $currentRate =
-
-                                        $teacherStyle
-
-                                            ? $teacherStyle
-
-                                                ->pivot
-
-                                                ->hourly_rate
-
-                                            : null;
-
-
-
-                                @endphp
-
-
-
-
-
-                                <div class="col-md-6">
-
-
-
-                                    <div class="dance-style-price-card">
-
-
-
-                                        <div class="form-check mb-2">
-
-
-
-                                            <input
-
-                                                class="form-check-input dance-style-checkbox"
-
-                                                type="checkbox"
-
-                                                name="dance_styles[]"
-
-                                                value="{{ $style->id }}"
-
-                                                id="style_{{ $style->id }}"
-
-                                                data-style-id="{{ $style->id }}"
-
-                                                {{ $isSelected ? 'checked' : '' }}
-
-                                            >
-
-
-
-
-
-                                            <label
-
-                                                class="form-check-label fw-semibold"
-
-                                                for="style_{{ $style->id }}"
-
-                                            >
-
-
-
-                                                {{ $style->name }}
-
-
-
-                                            </label>
-
-
-
-                                        </div>
-
-
-
-
-
-                                        <div
-
-                                            id="rate_box_{{ $style->id }}"
-
-                                            class="dance-style-rate"
-
-                                            @if(!$isSelected)
-
-                                                style="display:none;"
-
-                                            @endif
-
-                                        >
-
-
-
-                                            <label
-
-                                                for="rate_{{ $style->id }}"
-
-                                                class="form-label small text-muted"
-
-                                            >
-
-
-
-                                                {{ __('teacher.hourly_rate') }}
-
-
-
-                                            </label>
-
-
-
-
-
-                                            <div class="input-group">
-
-
-
-                                                <span class="input-group-text">
-
-
-
-                                                    $
-
-
-
-                                                </span>
-
-
-
-
-
-                                                <input
-
-                                                    type="number"
-
-                                                    id="rate_{{ $style->id }}"
-
-                                                    name="dance_rates[{{ $style->id }}]"
-
-                                                    class="form-control"
-
-                                                    step="0.01"
-
-                                                    min="0"
-
-                                                    value="{{ old(
-
-                                                        'dance_rates.' . $style->id,
-
-                                                        $currentRate
-
-                                                    ) }}"
-
-                                                    placeholder="0.00"
-
-                                                >
-
-
-
-
-
-                                                <span class="input-group-text">
-
-
-
-                                                    CAD / {{ __('teacher.hour') }}
-
-
-
-                                                </span>
-
-
-
-                                            </div>
-
-
-
-                                        </div>
-
-
-
-                                    </div>
-
-
-
-                                </div>
-
-
-
-                            @endforeach
-
-
-
-                        </div>
-
-
 
                     </div>
 
 
+                    <div
+                        id="rate_box_{{ $style->id }}"
+                        class="dance-style-rate"
+                        @if(!$isSelected)
+                            style="display:none;"
+                        @endif
+                    >
+
+                        <label
+                            for="rate_{{ $style->id }}"
+                            class="form-label small text-muted"
+                        >
+                            {{ __('teacher.hourly_rate') }}
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                $
+                            </span>
+
+                            <input
+                                type="number"
+                                id="rate_{{ $style->id }}"
+                                name="dance_rates[{{ $style->id }}]"
+                                class="form-control"
+                                step="0.01"
+                                min="0"
+                                value="{{ old(
+                                    'dance_rates.' . $style->id,
+                                    $currentRate
+                                ) }}"
+                                placeholder="0.00"
+                            >
+
+                            <span class="input-group-text">
+                                CAD / {{ __('teacher.hour') }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        @endforeach
 
 
+        @php
+
+            $oldCustomDanceStyles =
+                old(
+                    'custom_dance_styles',
+                    []
+                );
+
+            $hasOldCustomDanceStyles =
+                collect(
+                    $oldCustomDanceStyles
+                )->contains(
+                    function ($row) {
+
+                        return
+                            trim(
+                                (string) (
+                                    $row['name']
+                                    ?? ''
+                                )
+                            )
+                            !==
+                            ''
+                            ||
+                            (
+                                $row['rate']
+                                ?? ''
+                            )
+                            !==
+                            '';
+                    }
+                );
+
+        @endphp
 
 
+        <div class="col-12">
+
+            <div class="border rounded p-3 bg-light">
+
+                <div class="form-check">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="custom_dance_style_toggle"
+                        {{ $hasOldCustomDanceStyles ? 'checked' : '' }}
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="custom_dance_style_toggle"
+                    >
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Autre / Style non répertorié'
+                            : 'Other / Style not listed'
+                        }}
+
+                    </label>
+
+                </div>
+
+
+                <div
+                    id="custom_dance_style_fields"
+                    class="mt-3"
+                    @if(!$hasOldCustomDanceStyles)
+                        style="display:none;"
+                    @endif
+                >
+
+                    <div id="custom_dance_styles_container">
+
+                        @if($hasOldCustomDanceStyles)
+
+                            @foreach(
+                                $oldCustomDanceStyles
+                                as $customIndex => $customDanceStyle
+                            )
+
+                                <div
+                                    class="custom-dance-style-row border rounded p-3 mb-3"
+                                    data-custom-style-row
+                                >
+
+                                    <div class="row g-3 align-items-end">
+
+                                        <div class="col-md-6">
+
+                                            <label class="form-label">
+
+                                                {{ app()->getLocale() === 'fr'
+                                                    ? 'Nom du style de danse'
+                                                    : 'Dance Style Name'
+                                                }}
+
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                name="custom_dance_styles[{{ $customIndex }}][name]"
+                                                class="form-control custom-dance-style-name"
+                                                value="{{ $customDanceStyle['name'] ?? '' }}"
+                                                maxlength="255"
+                                                placeholder="{{ app()->getLocale() === 'fr'
+                                                    ? 'Ex. Afro Fusion'
+                                                    : 'e.g. Afro Fusion'
+                                                }}"
+                                            >
+
+                                        </div>
+
+
+                                        <div class="col-md-5">
+
+                                            <label class="form-label">
+                                                {{ __('teacher.hourly_rate') }}
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <span class="input-group-text">
+                                                    $
+                                                </span>
+
+                                                <input
+                                                    type="number"
+                                                    name="custom_dance_styles[{{ $customIndex }}][rate]"
+                                                    class="form-control custom-dance-style-rate"
+                                                    value="{{ $customDanceStyle['rate'] ?? '' }}"
+                                                    step="0.01"
+                                                    min="0"
+                                                    max="99999.99"
+                                                    placeholder="0.00"
+                                                >
+
+                                                <span class="input-group-text">
+                                                    CAD / {{ __('teacher.hour') }}
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="col-md-1">
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-danger btn-sm w-100"
+                                                data-remove-custom-style
+                                            >
+                                                ×
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            @endforeach
+
+                        @endif
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="add_custom_dance_style"
+                        class="btn btn-outline-primary btn-sm"
+                    >
+
+                        + {{ app()->getLocale() === 'fr'
+                            ? 'Ajouter un autre style'
+                            : 'Add another style'
+                        }}
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
                     {{-- SAVE --}}
 
@@ -2679,7 +2743,255 @@ document.addEventListener(
             );
 
 
+            const customDanceStyleToggle =
+    document.getElementById(
+        'custom_dance_style_toggle'
+    );
 
+const customDanceStyleFields =
+    document.getElementById(
+        'custom_dance_style_fields'
+    );
+
+const customDanceStylesContainer =
+    document.getElementById(
+        'custom_dance_styles_container'
+    );
+
+const addCustomDanceStyleButton =
+    document.getElementById(
+        'add_custom_dance_style'
+    );
+
+let customDanceStyleIndex =
+    customDanceStylesContainer
+        ? customDanceStylesContainer
+            .querySelectorAll(
+                '[data-custom-style-row]'
+            )
+            .length
+        : 0;
+
+
+const isFrench =
+    document.documentElement.lang
+        .toLowerCase()
+        .startsWith('fr');
+
+
+function createCustomDanceStyleRow() {
+
+    const index =
+        customDanceStyleIndex++;
+
+    const row =
+        document.createElement(
+            'div'
+        );
+
+    row.className =
+        'custom-dance-style-row border rounded p-3 mb-3';
+
+    row.setAttribute(
+        'data-custom-style-row',
+        ''
+    );
+
+    row.innerHTML = `
+
+        <div class="row g-3 align-items-end">
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    ${isFrench
+                        ? 'Nom du style de danse'
+                        : 'Dance Style Name'
+                    }
+                </label>
+
+                <input
+                    type="text"
+                    name="custom_dance_styles[${index}][name]"
+                    class="form-control custom-dance-style-name"
+                    maxlength="255"
+                    placeholder="${isFrench
+                        ? 'Ex. Afro Fusion'
+                        : 'e.g. Afro Fusion'
+                    }"
+                >
+
+            </div>
+
+
+            <div class="col-md-5">
+
+                <label class="form-label">
+                    ${isFrench
+                        ? 'Tarif horaire'
+                        : 'Hourly Rate'
+                    }
+                </label>
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+                        $
+                    </span>
+
+                    <input
+                        type="number"
+                        name="custom_dance_styles[${index}][rate]"
+                        class="form-control custom-dance-style-rate"
+                        step="0.01"
+                        min="0"
+                        max="99999.99"
+                        placeholder="0.00"
+                    >
+
+                    <span class="input-group-text">
+                        CAD / ${isFrench
+                            ? 'heure'
+                            : 'hour'
+                        }
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-1">
+
+                <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm w-100"
+                    data-remove-custom-style
+                >
+                    ×
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    customDanceStylesContainer
+        .appendChild(
+            row
+        );
+}
+
+
+function ensureCustomRow() {
+
+    if (
+        !customDanceStylesContainer
+            .querySelector(
+                '[data-custom-style-row]'
+            )
+    ) {
+
+        createCustomDanceStyleRow();
+
+    }
+}
+
+
+if (customDanceStyleToggle) {
+
+    customDanceStyleToggle
+        .addEventListener(
+            'change',
+            function () {
+
+                if (this.checked) {
+
+                    customDanceStyleFields
+                        .style
+                        .display =
+                        'block';
+
+                    ensureCustomRow();
+
+                } else {
+
+                    customDanceStyleFields
+                        .style
+                        .display =
+                        'none';
+
+                    customDanceStylesContainer
+                        .innerHTML =
+                        '';
+
+                    customDanceStyleIndex =
+                        0;
+
+                }
+
+            }
+        );
+
+}
+
+
+if (addCustomDanceStyleButton) {
+
+    addCustomDanceStyleButton
+        .addEventListener(
+            'click',
+            function () {
+
+                createCustomDanceStyleRow();
+
+            }
+        );
+
+}
+
+
+if (customDanceStylesContainer) {
+
+    customDanceStylesContainer
+        .addEventListener(
+            'click',
+            function (event) {
+
+                const removeButton =
+                    event.target.closest(
+                        '[data-remove-custom-style]'
+                    );
+
+                if (!removeButton) {
+                    return;
+                }
+
+                const row =
+                    removeButton.closest(
+                        '[data-custom-style-row]'
+                    );
+
+                if (row) {
+
+                    row.remove();
+
+                }
+
+                if (
+                    customDanceStyleToggle
+                    &&
+                    customDanceStyleToggle.checked
+                ) {
+
+                    ensureCustomRow();
+
+                }
+
+            }
+        );
+
+}
         const profilePhotoInput =
 
             document.getElementById(

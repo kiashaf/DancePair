@@ -199,6 +199,20 @@
 
 
                 <a
+                    href="{{ route('admin.pending-dance-styles.index') }}"
+                    class="{{ request()->routeIs('admin.pending-dance-styles.*')
+                        ? 'active'
+                        : ''
+                    }}"
+                >
+                    {{ app()->getLocale() === 'fr'
+                        ? 'Styles de danse en attente'
+                        : 'Pending Dance Styles'
+                    }}
+                </a>
+
+
+                <a
                     href="{{ route('admin.platform-messages') }}"
                     class="dw-sidebar-link
                         {{ request()->routeIs('admin.platform-messages*') ? 'active' : '' }}"

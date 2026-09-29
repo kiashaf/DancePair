@@ -1,0 +1,25 @@
+{
+    "name": "DancePair",
+    "short_name": "DancePair",
+    "description": "Find dance instructors, book lessons and manage your DancePair experience.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#080717",
+    "theme_color": "#080717",
+    "orientation": "portrait-primary",
+    "icons": [
+      {
+        "src": "/logo/dancepair-192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "/logo/dancepair-512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ]
+  }

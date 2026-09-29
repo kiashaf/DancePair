@@ -6,7 +6,18 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="{{ asset('logo/logo.png') }}">
 <link rel="shortcut icon" type="image/png" href="{{ asset('logo/logo.png') }}">
-<link rel="apple-touch-icon" href="{{ asset('logo/logo.png') }}">
+<link rel="apple-touch-icon" href="{{ asset('logo/dancepair-192.png') }}">
+<link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+
+<meta name="theme-color" content="#080717">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="apple-mobile-web-app-title" content="DancePair">
 
     <meta
         name="viewport"
@@ -2712,6 +2723,193 @@ document.addEventListener(
 );
 
 </script>
-</body>
+<script>
+    if ('serviceWorker' in navigator) {
 
+        window.addEventListener('load', function () {
+
+            navigator.serviceWorker
+                .register('/sw.js')
+                .catch(function (error) {
+
+                    console.error(
+                        'DancePair service worker registration failed:',
+                        error
+                    );
+
+                });
+
+        });
+
+    }
+</script>
+<div id="dancepair-install-banner" style="
+    display:none;
+    position:fixed;
+    left:16px;
+    right:16px;
+    bottom:16px;
+    z-index:9999;
+    padding:16px;
+    border-radius:16px;
+    background:#100E25;
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+    color:#fff;
+">
+
+    <div style="
+        display:flex;
+        align-items:center;
+        gap:12px;
+    ">
+
+        <img
+            src="{{ asset('logo/dancepair-192.png') }}"
+            alt="DancePair"
+            style="
+                width:52px;
+                height:52px;
+                border-radius:12px;
+            "
+        >
+
+        <div style="flex:1;">
+            <div style="
+                font-size:15px;
+                font-weight:900;
+                margin-bottom:4px;
+            ">
+                Install DancePair
+            </div>
+
+            <div style="
+                font-size:12px;
+                color:#B8B3C2;
+                line-height:1.4;
+            ">
+                Add DancePair to your home screen for faster access.
+            </div>
+        </div>
+
+    </div>
+
+
+    <div style="
+        display:flex;
+        gap:10px;
+        margin-top:14px;
+    ">
+
+        <button
+            type="button"
+            id="dancepair-install-later"
+            style="
+                flex:1;
+                min-height:42px;
+                border-radius:10px;
+                border:1px solid rgba(255,255,255,.15);
+                background:transparent;
+                color:#fff;
+                font-weight:800;
+            "
+        >
+            Not now
+        </button>
+
+        <button
+            type="button"
+            id="dancepair-install-button"
+            style="
+                flex:1;
+                min-height:42px;
+                border:0;
+                border-radius:10px;
+                background:linear-gradient(90deg,#F72585,#7437FF);
+                color:#fff;
+                font-weight:900;
+            "
+        >
+            Install
+        </button>
+
+    </div>
+
+</div>
+<script>
+    let dancePairInstallPrompt = null;
+
+    const installBanner = document.getElementById('dancepair-install-banner');
+    const installButton = document.getElementById('dancepair-install-button');
+    const installLater = document.getElementById('dancepair-install-later');
+
+    const isDancePairInstalled =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true;
+
+    const isIOS =
+        /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+
+    window.addEventListener('beforeinstallprompt', function (event) {
+
+        event.preventDefault();
+
+        dancePairInstallPrompt = event;
+
+        if (!isDancePairInstalled) {
+            installBanner.style.display = 'block';
+        }
+
+    });
+
+    if (
+        isIOS &&
+        !isDancePairInstalled
+    ) {
+        installBanner.style.display = 'block';
+    }
+
+    installButton.addEventListener('click', async function () {
+
+        if (isIOS) {
+
+            alert(
+                'To install DancePair on your iPhone:\n\n' +
+                '1. Tap the Share button in Safari.\n' +
+                '2. Tap "Add to Home Screen".\n' +
+                '3. Tap "Add".'
+            );
+
+            return;
+        }
+
+        if (!dancePairInstallPrompt) {
+            return;
+        }
+
+        dancePairInstallPrompt.prompt();
+
+        const result =
+            await dancePairInstallPrompt.userChoice;
+
+        if (result.outcome === 'accepted') {
+            installBanner.style.display = 'none';
+        }
+
+        dancePairInstallPrompt = null;
+    });
+
+    installLater.addEventListener('click', function () {
+        installBanner.style.display = 'none';
+    });
+
+    window.addEventListener('appinstalled', function () {
+
+        installBanner.style.display = 'none';
+
+        dancePairInstallPrompt = null;
+
+    });
+</script>
+</body>
 </html>

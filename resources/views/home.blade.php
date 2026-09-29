@@ -2902,22 +2902,14 @@ document.addEventListener(
         'click',
         async function () {
 
-            if (isAndroid && dancePairInstallPrompt) {
+            if (
+                isAndroid &&
+                dancePairInstallPrompt
+            ) {
 
                 dancePairInstallPrompt.prompt();
 
-                const result =
-                    await dancePairInstallPrompt.userChoice;
-
-                if (result.outcome === 'accepted') {
-
-                    localStorage.setItem(
-                        'dancepairInstalled',
-                        'yes'
-                    );
-
-                    installBanner.style.display = 'none';
-                }
+                await dancePairInstallPrompt.userChoice;
 
                 dancePairInstallPrompt = null;
 
@@ -2943,7 +2935,9 @@ document.addEventListener(
     installLater.addEventListener(
         'click',
         function () {
+
             installBanner.style.display = 'none';
+
         }
     );
 

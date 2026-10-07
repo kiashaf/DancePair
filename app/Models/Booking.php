@@ -116,5 +116,13 @@ class Booking extends Model
     {
         return $this->hasMany(BookingMessage::class)
             ->orderBy('created_at', 'asc');
+
     }
+
+    public function promotionRedemptions()
+{
+    return $this->hasMany(PromotionRedemption::class);
+}
+
+
 }

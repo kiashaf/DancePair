@@ -6,12 +6,15 @@ use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\Setting;
 use App\Models\Student;
+use App\Models\Promotion;
+use App\Models\PromotionRedemption;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+
 use App\Notifications\StudentPaymentConfirmedNotification;
 use App\Notifications\TeacherPaymentReceivedNotification;
 
@@ -58,6 +61,7 @@ class StudentPaymentController extends Controller
             Auth::id()
         )->firstOrFail();
 
+
         /*
         |--------------------------------------------------------------------------
         | SECURITY
@@ -68,6 +72,7 @@ class StudentPaymentController extends Controller
             (int) $booking->student_id === (int) $student->id,
             403
         );
+
 
         /*
         |--------------------------------------------------------------------------
@@ -84,6 +89,7 @@ class StudentPaymentController extends Controller
                 );
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | ALREADY PAID
@@ -98,6 +104,7 @@ class StudentPaymentController extends Controller
                     'This lesson has already been paid.'
                 );
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -134,6 +141,7 @@ class StudentPaymentController extends Controller
             2
         );
 
+
         /*
         |--------------------------------------------------------------------------
         | CREATE / UPDATE PENDING PAYMENT
@@ -146,6 +154,7 @@ class StudentPaymentController extends Controller
             ],
             [
                 'student_id' => $student->id,
+
                 'teacher_id' => $booking->teacher_id,
 
                 'amount' => $amount,
@@ -160,6 +169,7 @@ class StudentPaymentController extends Controller
             ]
         );
 
+
         /*
         |--------------------------------------------------------------------------
         | LOAD BOOKING INFORMATION
@@ -171,6 +181,7 @@ class StudentPaymentController extends Controller
             'teacher.danceStyles',
             'danceStyle',
         ]);
+
 
         /*
         |--------------------------------------------------------------------------
@@ -189,13 +200,103 @@ class StudentPaymentController extends Controller
             $danceStyle?->pivot?->hourly_rate
             ?? 0
         );
+/*
+|--------------------------------------------------------------------------
+| ACTIVE PAYMENT PROMOTIONS
+|--------------------------------------------------------------------------
+*/
+
+$activeFreePromotion = Promotion::where(
+    'teacher_id',
+    $booking->teacher_id
+)
+    ->where('type', 'free_session')
+    ->where('is_active', true)
+    ->where(function ($query) {
+        $query
+            ->whereNull('starts_at')
+            ->orWhere('starts_at', '<=', now());
+    })
+    ->where(function ($query) {
+        $query
+            ->whereNull('ends_at')
+            ->orWhere('ends_at', '>=', now());
+    })
+    ->first();
+
+$eligibleForFreeSession = false;
+
+if ($activeFreePromotion) {
+    $alreadyUsedFreeSession =
+        PromotionRedemption::where(
+            'student_id',
+            $student->id
+        )
+            ->where(
+                'teacher_id',
+                $booking->teacher_id
+            )
+            ->whereHas(
+                'promotion',
+                function ($query) {
+                    $query->where(
+                        'type',
+                        'free_session'
+                    );
+                }
+            )
+            ->exists();
+
+    $eligibleForFreeSession =
+        !$alreadyUsedFreeSession;
+}
+
+$hasDiscountCodePromotion =
+    Promotion::where(
+        'teacher_id',
+        $booking->teacher_id
+    )
+        ->where(
+            'type',
+            'discount_code'
+        )
+        ->where(
+            'is_active',
+            true
+        )
+        ->where(function ($query) {
+            $query
+                ->whereNull('starts_at')
+                ->orWhere(
+                    'starts_at',
+                    '<=',
+                    now()
+                );
+        })
+        ->where(function ($query) {
+            $query
+                ->whereNull('ends_at')
+                ->orWhere(
+                    'ends_at',
+                    '>=',
+                    now()
+                );
+        })
+        ->exists();
+
+$hasPaymentPromotion =
+    $eligibleForFreeSession
+    || $hasDiscountCodePromotion;
 
         return view(
             'student.payments.show',
             compact(
                 'booking',
                 'payment',
-                'hourlyRate'
+                'hourlyRate',
+                'eligibleForFreeSession',
+                'hasDiscountCodePromotion',
+                'hasPaymentPromotion'
             )
         );
     }
@@ -217,6 +318,7 @@ class StudentPaymentController extends Controller
             Auth::id()
         )->firstOrFail();
 
+
         /*
         |--------------------------------------------------------------------------
         | SECURITY
@@ -227,6 +329,7 @@ class StudentPaymentController extends Controller
             (int) $booking->student_id === (int) $student->id,
             403
         );
+
 
         /*
         |--------------------------------------------------------------------------
@@ -239,6 +342,12 @@ class StudentPaymentController extends Controller
                 'cancellation_policy' => [
                     'required',
                     'accepted',
+                ],
+
+                'discount_code' => [
+                    'nullable',
+                    'string',
+                    'max:50',
                 ],
             ],
             [
@@ -254,6 +363,7 @@ class StudentPaymentController extends Controller
             ]
         );
 
+
         /*
         |--------------------------------------------------------------------------
         | BOOKING MUST BE CONFIRMED
@@ -266,6 +376,7 @@ class StudentPaymentController extends Controller
                 'This lesson must be accepted before payment.'
             );
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -282,6 +393,7 @@ class StudentPaymentController extends Controller
                 );
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | LOAD RELATIONS
@@ -292,6 +404,7 @@ class StudentPaymentController extends Controller
             'teacher.user',
             'danceStyle',
         ]);
+
 
         /*
         |--------------------------------------------------------------------------
@@ -304,17 +417,500 @@ class StudentPaymentController extends Controller
             $booking->id
         )->firstOrFail();
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | PROMOTION
+        |--------------------------------------------------------------------------
+        */
+
+        $originalAmount = round(
+            (float) $booking->price,
+            2
+        );
+
+        $promotion = null;
+
+        $discountPercent = 0;
+
+        $discountAmount = 0;
+
+        $finalAmount = $originalAmount;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DISCOUNT CODE
+        |--------------------------------------------------------------------------
+        */
+
+        $discountCode = strtoupper(
+            trim(
+                (string) $request->input(
+                    'discount_code'
+                )
+            )
+        );
+
+        if ($discountCode !== '') {
+            $promotion = Promotion::where(
+                'teacher_id',
+                $booking->teacher_id
+            )
+                ->where(
+                    'type',
+                    'discount_code'
+                )
+                ->where(
+                    'code',
+                    $discountCode
+                )
+                ->where(
+                    'is_active',
+                    true
+                )
+                ->where(
+                    function ($query) {
+                        $query
+                            ->whereNull('starts_at')
+                            ->orWhere(
+                                'starts_at',
+                                '<=',
+                                now()
+                            );
+                    }
+                )
+                ->where(
+                    function ($query) {
+                        $query
+                            ->whereNull('ends_at')
+                            ->orWhere(
+                                'ends_at',
+                                '>=',
+                                now()
+                            );
+                    }
+                )
+                ->first();
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | INVALID / EXPIRED CODE
+            |--------------------------------------------------------------------------
+            */
+
+            if (!$promotion) {
+                return back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        app()->getLocale() === 'fr'
+                            ? 'Ce code promotionnel est invalide ou expiré.'
+                            : 'This discount code is invalid or expired.'
+                    );
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | USAGE LIMIT
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                $promotion->usage_limit !== null
+                &&
+                $promotion->used_count >= $promotion->usage_limit
+            ) {
+                return back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        app()->getLocale() === 'fr'
+                            ? 'Ce code promotionnel a atteint sa limite d’utilisation.'
+                            : 'This discount code has reached its usage limit.'
+                    );
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | STUDENT ALREADY USED CODE
+            |--------------------------------------------------------------------------
+            */
+
+            $alreadyUsed = PromotionRedemption::where(
+                'promotion_id',
+                $promotion->id
+            )
+                ->where(
+                    'student_id',
+                    $student->id
+                )
+                ->exists();
+
+            if ($alreadyUsed) {
+                return back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        app()->getLocale() === 'fr'
+                            ? 'Vous avez déjà utilisé ce code promotionnel.'
+                            : 'You have already used this discount code.'
+                    );
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | CALCULATE CODE DISCOUNT
+            |--------------------------------------------------------------------------
+            */
+
+            $discountPercent = (float) (
+                $promotion->discount_percent
+            );
+
+            $discountAmount = round(
+                $originalAmount
+                    * ($discountPercent / 100),
+                2
+            );
+
+            $finalAmount = max(
+                0,
+                round(
+                    $originalAmount
+                        - $discountAmount,
+                    2
+                )
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FIRST SESSION FREE
+        |--------------------------------------------------------------------------
+        |
+        | Only checked when the student did NOT submit a discount code.
+        |
+        */
+
+        if (!$promotion) {
+            $freePromotion = Promotion::where(
+                'teacher_id',
+                $booking->teacher_id
+            )
+                ->where(
+                    'type',
+                    'free_session'
+                )
+                ->where(
+                    'is_active',
+                    true
+                )
+                ->where(
+                    function ($query) {
+                        $query
+                            ->whereNull('starts_at')
+                            ->orWhere(
+                                'starts_at',
+                                '<=',
+                                now()
+                            );
+                    }
+                )
+                ->where(
+                    function ($query) {
+                        $query
+                            ->whereNull('ends_at')
+                            ->orWhere(
+                                'ends_at',
+                                '>=',
+                                now()
+                            );
+                    }
+                )
+                ->first();
+
+            if ($freePromotion) {
+                $alreadyUsedFreeSession =
+                    PromotionRedemption::where(
+                        'student_id',
+                        $student->id
+                    )
+                        ->where(
+                            'teacher_id',
+                            $booking->teacher_id
+                        )
+                        ->whereHas(
+                            'promotion',
+                            function ($query) {
+                                $query->where(
+                                    'type',
+                                    'free_session'
+                                );
+                            }
+                        )
+                        ->exists();
+
+                if (!$alreadyUsedFreeSession) {
+                    $promotion = $freePromotion;
+
+                    $discountPercent = 100;
+
+                    $discountAmount = $originalAmount;
+
+                    $finalAmount = 0;
+                }
+            }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE PAYMENT WITH PROMOTION SNAPSHOT
+        |--------------------------------------------------------------------------
+        */
+
+        $commissionPercent = (float) Setting::getValue(
+            'platform_commission_percent',
+            0
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DANCEPAIR COMMISSION
+        |--------------------------------------------------------------------------
+        |
+        | Discount Code:
+        | DancePair keeps its commission based on ORIGINAL price.
+        | The discount comes from the Teacher's share.
+        |
+        | First Session Free:
+        | Student pays $0.
+        | Teacher receives $0.
+        | DancePair receives $0.
+        |
+        */
+
+        if (
+            $promotion
+            &&
+            $promotion->type === 'free_session'
+        ) {
+            $platformFee = 0;
+        } else {
+            $platformFee = round(
+                $originalAmount
+                    * ($commissionPercent / 100),
+                2
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | TEACHER AMOUNT
+        |--------------------------------------------------------------------------
+        */
+
+        $teacherAmount = round(
+            $finalAmount - $platformFee,
+            2
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SAFETY - TEACHER AMOUNT CANNOT BE NEGATIVE
+        |--------------------------------------------------------------------------
+        */
+
+        $teacherAmount = max(
+            0,
+            $teacherAmount
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SAVE PAYMENT SNAPSHOT
+        |--------------------------------------------------------------------------
+        */
+
+        $payment->update([
+            'promotion_id' =>
+                $promotion?->id,
+
+            'promotion_code' =>
+                $promotion?->type === 'discount_code'
+                    ? $promotion->code
+                    : null,
+
+            'original_amount' =>
+                $originalAmount,
+
+            'discount_percent' =>
+                $promotion
+                    ? $discountPercent
+                    : null,
+
+            'discount_amount' =>
+                $discountAmount,
+
+            'amount' =>
+                $finalAmount,
+
+            'platform_fee' =>
+                $platformFee,
+
+            'teacher_amount' =>
+                $teacherAmount,
+        ]);
+
+
         /*
         |--------------------------------------------------------------------------
         | SAVE CANCELLATION POLICY ACCEPTANCE
         |--------------------------------------------------------------------------
         */
 
-        if (!$payment->cancellation_policy_accepted_at) {
+        if (
+            !$payment
+                ->cancellation_policy_accepted_at
+        ) {
+            $payment->update([
+                'cancellation_policy_accepted_at' =>
+                    now(),
+            ]);
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FREE SESSION - NO STRIPE REQUIRED
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $promotion
+            &&
+            $promotion->type === 'free_session'
+            &&
+            (float) $payment->amount === 0.0
+        ) {
+            $existingFreeRedemption =
+                PromotionRedemption::where(
+                    'booking_id',
+                    $booking->id
+                )->first();
+
+            if (!$existingFreeRedemption) {
+                PromotionRedemption::create([
+                    'promotion_id' =>
+                        $promotion->id,
+
+                    'student_id' =>
+                        $student->id,
+
+                    'teacher_id' =>
+                        $booking->teacher_id,
+
+                    'booking_id' =>
+                        $booking->id,
+
+                    'discount_percent' =>
+                        100,
+
+                    'discount_amount' =>
+                        $originalAmount,
+
+                    'redeemed_at' =>
+                        now(),
+                ]);
+            }
 
             $payment->update([
-                'cancellation_policy_accepted_at' => now(),
+                'status' =>
+                    'paid',
+
+                'payment_provider' =>
+                    'promotion',
+
+                'paid_at' =>
+                    now(),
             ]);
+
+            $booking->update([
+                'paid' => true,
+            ]);
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | LOAD NOTIFICATION DATA
+            |--------------------------------------------------------------------------
+            */
+
+            $booking->load([
+                'student.user',
+                'teacher.user',
+                'danceStyle',
+            ]);
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | STUDENT NOTIFICATION
+            |--------------------------------------------------------------------------
+            */
+
+            if ($booking->student?->user) {
+                $booking
+                    ->student
+                    ->user
+                    ->notify(
+                        new StudentPaymentConfirmedNotification(
+                            $booking,
+                            $payment
+                        )
+                    );
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | TEACHER NOTIFICATION
+            |--------------------------------------------------------------------------
+            */
+
+            if ($booking->teacher?->user) {
+                $booking
+                    ->teacher
+                    ->user
+                    ->notify(
+                        new TeacherPaymentReceivedNotification(
+                            $booking,
+                            $payment
+                        )
+                    );
+            }
+
+
+            return redirect()
+                ->route(
+                    'student.bookings'
+                )
+                ->with(
+                    'success',
+                    app()->getLocale() === 'fr'
+                        ? 'Votre première séance gratuite a été appliquée.'
+                        : 'Your free first session has been applied.'
+                );
         }
 
 
@@ -343,14 +939,17 @@ class StudentPaymentController extends Controller
         */
 
         $platformFeeCents = (int) round(
-            ((float) $payment->platform_fee) * 100
+            (
+                (float) $payment->platform_fee
+            ) * 100
         );
 
         $paymentIntentData = [
-
             'transfer_data' => [
                 'destination' =>
-                    $booking->teacher->stripe_account_id,
+                    $booking
+                        ->teacher
+                        ->stripe_account_id,
             ],
 
             'metadata' => [
@@ -376,10 +975,11 @@ class StudentPaymentController extends Controller
         */
 
         if ($platformFeeCents > 0) {
-
-            $paymentIntentData['application_fee_amount'] =
-                $platformFeeCents;
+            $paymentIntentData[
+                'application_fee_amount'
+            ] = $platformFeeCents;
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -394,6 +994,7 @@ class StudentPaymentController extends Controller
             );
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | STRIPE SECRET KEY
@@ -403,6 +1004,7 @@ class StudentPaymentController extends Controller
         Stripe::setApiKey(
             env('STRIPE_SECRET')
         );
+
 
         /*
         |--------------------------------------------------------------------------
@@ -417,8 +1019,11 @@ class StudentPaymentController extends Controller
         $endTime = $startTime
             ->copy()
             ->addMinutes(
-                (int) ($booking->duration ?? 60)
+                (int) (
+                    $booking->duration ?? 60
+                )
             );
+
 
         /*
         |--------------------------------------------------------------------------
@@ -434,8 +1039,8 @@ class StudentPaymentController extends Controller
         */
 
         $session = Session::create([
-
             'mode' => 'payment',
+
 
             /*
             |--------------------------------------------------------------------------
@@ -447,13 +1052,16 @@ class StudentPaymentController extends Controller
                 'enabled' => false,
             ],
 
+
             /*
             |--------------------------------------------------------------------------
             | STRIPE CONNECT - DESTINATION CHARGE
             |--------------------------------------------------------------------------
             */
 
-            'payment_intent_data' => $paymentIntentData,
+            'payment_intent_data' =>
+                $paymentIntentData,
+
 
             /*
             |--------------------------------------------------------------------------
@@ -464,36 +1072,62 @@ class StudentPaymentController extends Controller
             'line_items' => [
                 [
                     'price_data' => [
+                        'currency' =>
+                            strtolower(
+                                $payment->currency
+                                    ?? 'CAD'
+                            ),
 
-                        'currency' => strtolower(
-                            $payment->currency ?? 'CAD'
-                        ),
-
-                        'unit_amount' => (int) round(
-                            ((float) $payment->amount) * 100
-                        ),
+                        'unit_amount' =>
+                            (int) round(
+                                (
+                                    (float)
+                                    $payment->amount
+                                ) * 100
+                            ),
 
                         'product_data' => [
-
                             'name' =>
-                                ($booking->danceStyle->name ?? 'Dance Lesson')
+                                (
+                                    $booking
+                                        ->danceStyle
+                                        ->name
+                                    ?? 'Dance Lesson'
+                                )
                                 . ' with '
-                                . ($booking->teacher->user->name ?? 'Teacher'),
+                                . (
+                                    $booking
+                                        ->teacher
+                                        ->user
+                                        ->name
+                                    ?? 'Teacher'
+                                ),
 
                             'description' =>
                                 \Carbon\Carbon::parse(
-                                    $booking->lesson_date
-                                )->format('M d, Y')
+                                    $booking
+                                        ->lesson_date
+                                )
+                                    ->format(
+                                        'M d, Y'
+                                    )
                                 . ' • '
-                                . $startTime->format('g:i A')
+                                . $startTime
+                                    ->format(
+                                        'g:i A'
+                                    )
                                 . ' - '
-                                . $endTime->format('g:i A'),
+                                . $endTime
+                                    ->format(
+                                        'g:i A'
+                                    ),
                         ],
                     ],
 
                     'quantity' => 1,
                 ],
             ],
+
 
             /*
             |--------------------------------------------------------------------------
@@ -502,7 +1136,6 @@ class StudentPaymentController extends Controller
             */
 
             'metadata' => [
-
                 'booking_id' =>
                     (string) $booking->id,
 
@@ -515,6 +1148,7 @@ class StudentPaymentController extends Controller
                 'teacher_id' =>
                     (string) $booking->teacher_id,
             ],
+
 
             /*
             |--------------------------------------------------------------------------
@@ -529,6 +1163,7 @@ class StudentPaymentController extends Controller
                 )
                 . '?session_id={CHECKOUT_SESSION_ID}',
 
+
             /*
             |--------------------------------------------------------------------------
             | CANCEL URL
@@ -542,6 +1177,7 @@ class StudentPaymentController extends Controller
                 ),
         ]);
 
+
         /*
         |--------------------------------------------------------------------------
         | SAVE STRIPE AS PAYMENT PROVIDER
@@ -549,8 +1185,10 @@ class StudentPaymentController extends Controller
         */
 
         $payment->update([
-            'payment_provider' => 'stripe',
+            'payment_provider' =>
+                'stripe',
         ]);
+
 
         /*
         |--------------------------------------------------------------------------
@@ -577,6 +1215,7 @@ class StudentPaymentController extends Controller
             Auth::id()
         )->firstOrFail();
 
+
         /*
         |--------------------------------------------------------------------------
         | SECURITY
@@ -584,9 +1223,12 @@ class StudentPaymentController extends Controller
         */
 
         abort_unless(
-            (int) $booking->student_id === (int) $student->id,
+            (int) $booking->student_id
+                ===
+            (int) $student->id,
             403
         );
+
 
         /*
         |--------------------------------------------------------------------------
@@ -600,12 +1242,15 @@ class StudentPaymentController extends Controller
 
         if (!$sessionId) {
             return redirect()
-                ->route('student.bookings')
+                ->route(
+                    'student.bookings'
+                )
                 ->with(
                     'error',
                     'Invalid payment session.'
                 );
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -621,20 +1266,28 @@ class StudentPaymentController extends Controller
             $sessionId
         );
 
+
         /*
         |--------------------------------------------------------------------------
         | VERIFY PAYMENT
         |--------------------------------------------------------------------------
         */
 
-        if ($session->payment_status !== 'paid') {
+        if (
+            $session->payment_status
+            !==
+            'paid'
+        ) {
             return redirect()
-                ->route('student.bookings')
+                ->route(
+                    'student.bookings'
+                )
                 ->with(
                     'error',
                     'Payment was not completed.'
                 );
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -643,7 +1296,9 @@ class StudentPaymentController extends Controller
         */
 
         $stripeBookingId = (int) (
-            $session->metadata->booking_id
+            $session
+                ->metadata
+                ->booking_id
             ?? 0
         );
 
@@ -655,6 +1310,7 @@ class StudentPaymentController extends Controller
             abort(403);
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | VERIFY STUDENT ID
@@ -662,7 +1318,9 @@ class StudentPaymentController extends Controller
         */
 
         $stripeStudentId = (int) (
-            $session->metadata->student_id
+            $session
+                ->metadata
+                ->student_id
             ?? 0
         );
 
@@ -674,6 +1332,7 @@ class StudentPaymentController extends Controller
             abort(403);
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | GET PAYMENT
@@ -684,6 +1343,7 @@ class StudentPaymentController extends Controller
             'booking_id',
             $booking->id
         )->firstOrFail();
+
 
         /*
         |--------------------------------------------------------------------------
@@ -697,12 +1357,15 @@ class StudentPaymentController extends Controller
             $booking->paid
         ) {
             return redirect()
-                ->route('student.bookings')
+                ->route(
+                    'student.bookings'
+                )
                 ->with(
                     'success',
                     'This payment has already been completed.'
                 );
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -714,6 +1377,7 @@ class StudentPaymentController extends Controller
             $session->payment_intent
             ?: $session->id;
 
+
         /*
         |--------------------------------------------------------------------------
         | UPDATE PAYMENT
@@ -721,16 +1385,19 @@ class StudentPaymentController extends Controller
         */
 
         $payment->update([
+            'status' =>
+                'paid',
 
-            'status' => 'paid',
-
-            'payment_provider' => 'stripe',
+            'payment_provider' =>
+                'stripe',
 
             'transaction_id' =>
                 $transactionId,
 
-            'paid_at' => now(),
+            'paid_at' =>
+                now(),
         ]);
+
 
         /*
         |--------------------------------------------------------------------------
@@ -742,29 +1409,112 @@ class StudentPaymentController extends Controller
             'paid' => true,
         ]);
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | SAVE PROMOTION REDEMPTION
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $payment->promotion_id
+            &&
+            !PromotionRedemption::where(
+                'booking_id',
+                $booking->id
+            )->exists()
+        ) {
+            PromotionRedemption::create([
+                'promotion_id' =>
+                    $payment->promotion_id,
+
+                'student_id' =>
+                    $student->id,
+
+                'teacher_id' =>
+                    $booking->teacher_id,
+
+                'booking_id' =>
+                    $booking->id,
+
+                'discount_percent' =>
+                    $payment->discount_percent,
+
+                'discount_amount' =>
+                    $payment->discount_amount,
+
+                'redeemed_at' =>
+                    now(),
+            ]);
+
+            $promotion = Promotion::find(
+                $payment->promotion_id
+            );
+
+            if (
+                $promotion
+                &&
+                $promotion->type
+                    ===
+                    'discount_code'
+            ) {
+                $promotion->increment(
+                    'used_count'
+                );
+            }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | LOAD NOTIFICATION DATA
+        |--------------------------------------------------------------------------
+        */
+
         $booking->load([
             'student.user',
             'teacher.user',
             'danceStyle',
         ]);
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | STUDENT NOTIFICATION
+        |--------------------------------------------------------------------------
+        */
+
         if ($booking->student?->user) {
-            $booking->student->user->notify(
-                new StudentPaymentConfirmedNotification(
-                    $booking,
-                    $payment
-                )
-            );
+            $booking
+                ->student
+                ->user
+                ->notify(
+                    new StudentPaymentConfirmedNotification(
+                        $booking,
+                        $payment
+                    )
+                );
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | TEACHER NOTIFICATION
+        |--------------------------------------------------------------------------
+        */
+
         if ($booking->teacher?->user) {
-            $booking->teacher->user->notify(
-                new TeacherPaymentReceivedNotification(
-                    $booking,
-                    $payment
-                )
-            );
+            $booking
+                ->teacher
+                ->user
+                ->notify(
+                    new TeacherPaymentReceivedNotification(
+                        $booking,
+                        $payment
+                    )
+                );
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -773,7 +1523,9 @@ class StudentPaymentController extends Controller
         */
 
         return redirect()
-            ->route('student.bookings')
+            ->route(
+                'student.bookings'
+            )
             ->with(
                 'success',
                 'Payment completed successfully.'
@@ -794,6 +1546,7 @@ class StudentPaymentController extends Controller
             Auth::id()
         )->firstOrFail();
 
+
         /*
         |--------------------------------------------------------------------------
         | SECURITY
@@ -801,9 +1554,12 @@ class StudentPaymentController extends Controller
         */
 
         abort_unless(
-            (int) $payment->student_id === (int) $student->id,
+            (int) $payment->student_id
+                ===
+            (int) $student->id,
             403
         );
+
 
         /*
         |--------------------------------------------------------------------------
@@ -811,14 +1567,19 @@ class StudentPaymentController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if ($payment->status !== 'paid') {
+        if (
+            $payment->status !== 'paid'
+        ) {
             return redirect()
-                ->route('student.payments.index')
+                ->route(
+                    'student.payments.index'
+                )
                 ->with(
                     'error',
                     'A receipt is available only for completed payments.'
                 );
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -830,6 +1591,7 @@ class StudentPaymentController extends Controller
             'booking.teacher.user',
             'booking.danceStyle',
         ]);
+
 
         return view(
             'student.payments.receipt',

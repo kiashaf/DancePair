@@ -1190,10 +1190,15 @@
 
                                 class="form-control"
 
-                                min="0"
+                                min="{{ $minimumSessionPrice }}"
 
                             >
-
+                            <small class="text-muted">
+                             {{ app()->getLocale() === 'fr'
+                           ? 'Prix minimum : ' . number_format($minimumSessionPrice, 2) . ' $ CAD'
+                           : 'Minimum price: $' . number_format($minimumSessionPrice, 2) . ' CAD'
+                             }}
+                            </small>
 
 
                         </div>
@@ -2029,7 +2034,7 @@
                                 name="dance_rates[{{ $style->id }}]"
                                 class="form-control"
                                 step="0.01"
-                                min="0"
+                                min="{{ $minimumSessionPrice }}"
                                 value="{{ old(
                                     'dance_rates.' . $style->id,
                                     $currentRate
@@ -2184,7 +2189,7 @@
                                                     class="form-control custom-dance-style-rate"
                                                     value="{{ $customDanceStyle['rate'] ?? '' }}"
                                                     step="0.01"
-                                                    min="0"
+                                                    min="{{ $minimumSessionPrice }}"
                                                     max="99999.99"
                                                     placeholder="0.00"
                                                 >
@@ -2193,8 +2198,14 @@
                                                     CAD / {{ __('teacher.hour') }}
                                                 </span>
 
-                                            </div>
 
+                                            </div>
+                                            <small class="text-muted">
+    {{ app()->getLocale() === 'fr'
+        ? 'Minimum : ' . number_format($minimumSessionPrice, 2) . ' $ CAD'
+        : 'Minimum: $' . number_format($minimumSessionPrice, 2) . ' CAD'
+    }}
+</small>
                                         </div>
 
 
@@ -2844,7 +2855,7 @@ function createCustomDanceStyleRow() {
                         name="custom_dance_styles[${index}][rate]"
                         class="form-control custom-dance-style-rate"
                         step="0.01"
-                        min="0"
+                        min="{{ $minimumSessionPrice }}"
                         max="99999.99"
                         placeholder="0.00"
                     >

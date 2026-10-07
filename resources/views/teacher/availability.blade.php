@@ -104,10 +104,11 @@
                 </label>
 
                 <select
-                    name="start_time"
-                    class="form-select"
-                    required
-                >
+    name="start_time"
+    class="form-select"
+    data-availability-start-time
+    required
+>
 
                     <option value="">
                         --:--
@@ -163,10 +164,11 @@
                 </label>
 
                 <select
-                    name="end_time"
-                    class="form-select"
-                    required
-                >
+    name="end_time"
+    class="form-select"
+    data-availability-end-time
+    required
+>
 
                     <option value="">
                         --:--
@@ -442,7 +444,7 @@
 <div class="card profile-card p-4 mt-4">
 
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 teacher-calendar-navigation">
 
 
         {{-- PREVIOUS --}}
@@ -496,28 +498,30 @@
 
 
     <div
-        style="
-            display:grid;
-            grid-template-columns:repeat(7, 1fr);
-            gap:1px;
-            background:#dee2e6;
-            border:1px solid #dee2e6;
-        "
-    >
+    class="teacher-availability-calendar"
+    style="
+        display:grid;
+        grid-template-columns:repeat(7, 1fr);
+        gap:1px;
+        background:#dee2e6;
+        border:1px solid #dee2e6;
+    "
+>
 
 
         {{-- DAY NAMES --}}
 
         @foreach($dayNames as $dayName)
 
-            <div
-                style="
-                    background:#f1f3f5;
-                    padding:12px;
-                    text-align:center;
-                    font-weight:600;
-                "
-            >
+        <div
+    class="teacher-calendar-weekday"
+    style="
+        background:#f1f3f5;
+        padding:12px;
+        text-align:center;
+        font-weight:600;
+    "
+>
 
                 {{ $dayName }}
 
@@ -531,12 +535,14 @@
 
         @for($i = 1; $i < $startDay; $i++)
 
-            <div
-                style="
-                    background:#f8f9fa;
-                    min-height:120px;
-                "
-            >
+        <div
+    class="teacher-calendar-empty"
+    style="
+        background:#f8f9fa;
+        min-height:120px;
+    "
+>
+
             </div>
 
         @endfor
@@ -590,13 +596,13 @@
 
 
             <div
-                style="
-                    background: {{ $isToday ? '#eef5ff' : '#ffffff' }};
-                    min-height:120px;
-                    padding:10px;
-                "
-            >
-
+    class="teacher-calendar-day {{ $isToday ? 'is-today' : '' }}"
+    style="
+        background: {{ $isToday ? '#eef5ff' : '#ffffff' }};
+        min-height:120px;
+        padding:10px;
+    "
+>
 
                 <div class="d-flex justify-content-between mb-2">
 
@@ -763,7 +769,7 @@
 
         @endphp
 
-
+        <div class="teacher-availability-table-wrapper">
 
         <table class="table align-middle">
 
@@ -1294,10 +1300,11 @@
 
 
                                                     <select
-                                                        name="start_time"
-                                                        class="form-select"
-                                                        required
-                                                    >
+    name="start_time"
+    class="form-select"
+    data-availability-start-time
+    required
+>
 
 
                                                         @php
@@ -1383,10 +1390,11 @@
 
 
                                                     <select
-                                                        name="end_time"
-                                                        class="form-select"
-                                                        required
-                                                    >
+    name="end_time"
+    class="form-select"
+    data-availability-end-time
+    required
+>
 
 
                                                         @php
@@ -1732,6 +1740,7 @@
 
 
         </table>
+        </div>
 
 
     @else
@@ -1749,5 +1758,563 @@
 
 </div>
 
+
+
+<script>
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const startTimeSelects =
+            document.querySelectorAll(
+                '[data-availability-start-time]'
+            );
+
+
+        const timeToMinutes =
+            function (value) {
+
+                if (!value) {
+                    return null;
+                }
+
+                const parts =
+                    value.split(':');
+
+                if (parts.length < 2) {
+                    return null;
+                }
+
+                const hours =
+                    parseInt(
+                        parts[0],
+                        10
+                    );
+
+                const minutes =
+                    parseInt(
+                        parts[1],
+                        10
+                    );
+
+                if (
+                    Number.isNaN(hours)
+                    ||
+                    Number.isNaN(minutes)
+                ) {
+                    return null;
+                }
+
+                return (
+                    hours * 60
+                ) + minutes;
+            };
+
+
+        startTimeSelects.forEach(
+            function (startSelect) {
+
+                const form =
+                    startSelect.closest(
+                        'form'
+                    );
+
+
+                if (!form) {
+                    return;
+                }
+
+
+                const endSelect =
+                    form.querySelector(
+                        '[data-availability-end-time]'
+                    );
+
+
+                if (!endSelect) {
+                    return;
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | SAVE ORIGINAL END TIME OPTIONS
+                |--------------------------------------------------------------------------
+                */
+
+                const originalEndOptions =
+                    Array
+                        .from(
+                            endSelect.options
+                        )
+                        .map(
+                            function (option) {
+
+                                return {
+                                    value:
+                                        option.value,
+
+                                    text:
+                                        option.textContent,
+
+                                    selected:
+                                        option.selected
+                                };
+                            }
+                        );
+
+
+                const rebuildEndTimeOptions =
+                    function () {
+
+                        const startMinutes =
+                            timeToMinutes(
+                                startSelect.value
+                            );
+
+
+                        const previousEndValue =
+                            endSelect.value;
+
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | CLEAR CURRENT LIST COMPLETELY
+                        |--------------------------------------------------------------------------
+                        */
+
+                        endSelect.innerHTML =
+                            '';
+
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | PLACEHOLDER
+                        |--------------------------------------------------------------------------
+                        */
+
+                        const placeholder =
+                            document.createElement(
+                                'option'
+                            );
+
+                        placeholder.value =
+                            '';
+
+                        placeholder.textContent =
+                            '--:--';
+
+                        endSelect.appendChild(
+                            placeholder
+                        );
+
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | NO START TIME SELECTED
+                        |--------------------------------------------------------------------------
+                        |
+                        | Show every End Time.
+                        |
+                        */
+
+                        if (
+                            startMinutes
+                            ===
+                            null
+                        ) {
+
+                            originalEndOptions
+                                .forEach(
+                                    function (
+                                        originalOption
+                                    ) {
+
+                                        if (
+                                            originalOption.value
+                                            ===
+                                            ''
+                                        ) {
+                                            return;
+                                        }
+
+
+                                        const option =
+                                            document.createElement(
+                                                'option'
+                                            );
+
+
+                                        option.value =
+                                            originalOption.value;
+
+
+                                        option.textContent =
+                                            originalOption.text;
+
+
+                                        endSelect.appendChild(
+                                            option
+                                        );
+                                    }
+                                );
+
+
+                            if (
+                                previousEndValue
+                                !==
+                                ''
+                            ) {
+
+                                endSelect.value =
+                                    previousEndValue;
+                            }
+
+
+                            return;
+                        }
+
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | ONLY SHOW END TIMES AFTER START TIME
+                        |--------------------------------------------------------------------------
+                        |
+                        | Example:
+                        |
+                        | From = 08:00
+                        |
+                        | NOT SHOWN:
+                        | 00:00 -> 08:00
+                        |
+                        | SHOWN:
+                        | 08:15 -> 23:45
+                        |
+                        */
+
+                        originalEndOptions
+                            .forEach(
+                                function (
+                                    originalOption
+                                ) {
+
+                                    if (
+                                        originalOption.value
+                                        ===
+                                        ''
+                                    ) {
+                                        return;
+                                    }
+
+
+                                    const endMinutes =
+                                        timeToMinutes(
+                                            originalOption.value
+                                        );
+
+
+                                    if (
+                                        endMinutes
+                                        <=
+                                        startMinutes
+                                    ) {
+
+                                        return;
+                                    }
+
+
+                                    const option =
+                                        document.createElement(
+                                            'option'
+                                        );
+
+
+                                    option.value =
+                                        originalOption.value;
+
+
+                                    option.textContent =
+                                        originalOption.text;
+
+
+                                    endSelect.appendChild(
+                                        option
+                                    );
+                                }
+                            );
+
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | KEEP CURRENT END TIME ONLY IF STILL VALID
+                        |--------------------------------------------------------------------------
+                        */
+
+                        const previousEndMinutes =
+                            timeToMinutes(
+                                previousEndValue
+                            );
+
+
+                        if (
+                            previousEndMinutes
+                            !==
+                            null
+                            &&
+                            previousEndMinutes
+                            >
+                            startMinutes
+                        ) {
+
+                            endSelect.value =
+                                previousEndValue;
+
+                        } else {
+
+                            endSelect.value =
+                                '';
+                        }
+                    };
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | WHEN START TIME CHANGES
+                |--------------------------------------------------------------------------
+                */
+
+                startSelect.addEventListener(
+                    'change',
+                    rebuildEndTimeOptions
+                );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | INITIAL LOAD
+                |--------------------------------------------------------------------------
+                */
+
+                rebuildEndTimeOptions();
+
+            }
+        );
+
+    }
+);
+</script>
+<style>
+
+/* =========================================================
+   MOBILE ONLY - TEACHER AVAILABILITY
+   Desktop stays unchanged
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .teacher-panel .profile-card {
+        padding:16px !important;
+    }
+
+    .teacher-panel
+    .profile-card
+    .row > div {
+        width:100%;
+    }
+
+    .teacher-panel
+    .form-control,
+    .teacher-panel
+    .form-select {
+        width:100%;
+        min-height:44px;
+        font-size:16px;
+    }
+
+
+    .teacher-calendar-navigation {
+        display:grid !important;
+
+        grid-template-columns:
+            auto
+            1fr
+            auto;
+
+        gap:8px;
+
+        align-items:center;
+
+        margin-bottom:16px;
+    }
+
+    .teacher-calendar-navigation h3 {
+        margin:0;
+
+        font-size:16px;
+
+        text-align:center;
+
+        white-space:nowrap;
+    }
+
+    .teacher-calendar-navigation .btn {
+        padding:8px 10px;
+
+        font-size:11px;
+
+        white-space:nowrap;
+    }
+
+
+    .teacher-availability-calendar {
+        display:block !important;
+
+        background:transparent !important;
+
+        border:0 !important;
+    }
+
+
+    .teacher-calendar-weekday {
+        display:none !important;
+    }
+
+
+    .teacher-calendar-empty {
+        display:none !important;
+    }
+
+
+    .teacher-calendar-day {
+        width:100% !important;
+
+        min-height:0 !important;
+
+        margin-bottom:10px;
+
+        padding:14px !important;
+
+        border:1px solid #E5E7EB;
+
+        border-radius:12px;
+
+        background:#FFFFFF !important;
+
+        overflow:visible !important;
+    }
+
+
+    .teacher-calendar-day.is-today {
+        background:#EEF5FF !important;
+
+        border-color:#BFDBFE;
+    }
+
+
+    .teacher-calendar-day
+    > .d-flex:first-child {
+        display:flex !important;
+
+        align-items:center !important;
+
+        justify-content:flex-start !important;
+
+        gap:8px;
+
+        margin-bottom:10px !important;
+    }
+
+
+    .teacher-calendar-day
+    > .d-flex:first-child strong {
+        font-size:15px;
+    }
+
+
+    .teacher-calendar-day
+    > .d-flex:first-child small {
+        font-size:13px;
+
+        font-weight:700;
+
+        white-space:nowrap;
+
+        color:#475569 !important;
+    }
+
+
+    .teacher-calendar-day
+    .border.rounded {
+        margin-bottom:8px !important;
+
+        padding:10px !important;
+
+        border-radius:10px !important;
+    }
+
+
+    .teacher-calendar-day
+    .fw-semibold {
+        font-size:13px;
+    }
+
+
+    .teacher-calendar-day small {
+        white-space:normal;
+    }
+
+
+    .teacher-availability-table-wrapper {
+        width:100%;
+
+        overflow-x:auto;
+
+        -webkit-overflow-scrolling:touch;
+    }
+
+
+    .teacher-availability-table-wrapper table {
+        min-width:760px;
+    }
+
+
+    .teacher-availability-table-wrapper th,
+    .teacher-availability-table-wrapper td {
+        white-space:nowrap;
+    }
+
+}
+
+
+@media (max-width: 430px) {
+
+    .teacher-calendar-navigation {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+    .teacher-calendar-navigation h3 {
+        grid-column:1 / -1;
+        grid-row:1;
+
+        margin-bottom:4px;
+    }
+
+    .teacher-calendar-navigation a:first-child {
+        grid-column:1;
+        grid-row:2;
+    }
+
+    .teacher-calendar-navigation a:last-child {
+        grid-column:2;
+        grid-row:2;
+
+        text-align:center;
+    }
+
+}
+
+</style>
 
 @endsection

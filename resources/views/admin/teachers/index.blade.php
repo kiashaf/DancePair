@@ -223,6 +223,47 @@
                             <div class="teacher-actions">
 
 
+                                {{-- LOGIN AS CLIENT --}}
+                                @if($teacher->user)
+
+                                    <form
+                                        method="POST"
+                                        action="{{ route(
+                                            'admin.impersonate.start',
+                                            $teacher->user->id
+                                        ) }}"
+                                    >
+
+                                        @csrf
+
+                                        <input
+                                            type="hidden"
+                                            name="as"
+                                            value="teacher"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="admin-edit-btn"
+                                            title="Login as Teacher"
+                                            style="
+                                                display:inline-flex;
+                                                align-items:center;
+                                                justify-content:center;
+                                                min-width:38px;
+                                                padding-left:10px;
+                                                padding-right:10px;
+                                                cursor:pointer;
+                                            "
+                                        >
+                                            👁
+                                        </button>
+
+                                    </form>
+
+                                @endif
+
+
                                 {{-- EDIT --}}
                                 <a
                                     href="{{ route(

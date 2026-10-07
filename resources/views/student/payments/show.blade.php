@@ -538,7 +538,65 @@
         text-align: center;
     }
 }
+/* =========================================================
+   PROMOTIONS
+========================================================= */
 
+.payment-promotion {
+    margin-bottom: 18px;
+    padding: 16px;
+    border: 1px solid #B9DFF2;
+    border-radius: 14px;
+    background: #FFFFFF;
+}
+
+.payment-promotion-title {
+    margin-bottom: 5px;
+    color: #0369A1;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.payment-promotion-text {
+    margin-bottom: 12px;
+    color: #64748B;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.payment-promotion-free {
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #F0FDF4;
+    color: #166534;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.payment-promotion-code-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.payment-promotion-code {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #CBD5E1;
+    border-radius: 10px;
+    background: #FFFFFF;
+    font-size: 13px;
+    text-transform: uppercase;
+    outline: none;
+}
+
+.payment-promotion-code:focus {
+    border-color: #0284C7;
+    box-shadow: 0 0 0 3px rgba(2,132,199,.10);
+}
 </style>
 
 
@@ -904,7 +962,77 @@
         >
 
             @csrf
+            @if($hasPaymentPromotion)
 
+<div class="payment-promotion">
+
+    <div class="payment-promotion-title">
+        {{ app()->getLocale() === 'fr'
+            ? 'Promotion disponible'
+            : 'Promotion Available'
+        }}
+    </div>
+
+    @if($eligibleForFreeSession)
+
+        <div class="payment-promotion-free">
+
+            {{ app()->getLocale() === 'fr'
+                ? '🎉 Vous êtes admissible à votre première séance gratuite avec cet instructeur. La promotion sera appliquée automatiquement.'
+                : '🎉 You are eligible for your first free session with this instructor. The promotion will be applied automatically.'
+            }}
+
+        </div>
+
+    @endif
+
+
+    @if($hasDiscountCodePromotion)
+
+        @if($eligibleForFreeSession)
+            <div
+                style="
+                    margin:14px 0;
+                    border-top:1px solid #E2E8F0;
+                "
+            ></div>
+        @endif
+
+        <div class="payment-promotion-text">
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Vous avez un code promotionnel privé de cet instructeur? Entrez-le ci-dessous.'
+                : 'Have a private discount code from this instructor? Enter it below.'
+            }}
+
+        </div>
+
+        <label
+            for="discount_code"
+            class="payment-promotion-code-label"
+        >
+            {{ app()->getLocale() === 'fr'
+                ? 'Code promotionnel'
+                : 'Discount Code'
+            }}
+        </label>
+
+        <input
+            type="text"
+            id="discount_code"
+            name="discount_code"
+            class="payment-promotion-code"
+            value="{{ old('discount_code') }}"
+            maxlength="50"
+            placeholder="WELCOME10"
+            autocomplete="off"
+        >
+
+    @endif
+
+</div>
+
+@endif
 
             <div class="payment-policy">
 

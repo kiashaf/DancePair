@@ -42,4 +42,15 @@ class Student extends Model
     return $this->hasMany(Review::class)
         ->where('reviewer_type', 'teacher');
     }
+
+
+    public function promotionRedemptions()
+{
+    return $this->hasMany(PromotionRedemption::class);
+}
+
+public function packages()
+{
+    return $this->hasMany(StudentPackage::class);
+}
 }

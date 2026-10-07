@@ -2874,9 +2874,12 @@ document.addEventListener(
 
             dancePairInstallPrompt = event;
 
-            if (!isStandalone) {
-                installBanner.style.display = 'block';
-            }
+            if (
+    isAndroid &&
+    !isStandalone
+) {
+    installBanner.style.display = 'block';
+}
         }
     );
 

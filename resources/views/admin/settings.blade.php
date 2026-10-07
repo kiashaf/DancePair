@@ -1312,9 +1312,173 @@
             </div>
 
         </div>
+        {{-- =================================================
+           PRICING RULES
+        ================================================== --}}
+
+        <div class="settings-section">
+
+            <div class="settings-section-title">
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Règles de tarification'
+                    : 'Pricing Rules'
+                }}
+
+            </div>
 
 
+            <div class="settings-section-subtitle">
 
+                {{ app()->getLocale() === 'fr'
+                    ? 'Définissez le prix minimum qu’un instructeur peut demander pour une séance.'
+                    : 'Set the minimum price an instructor can charge for a session.'
+                }}
+
+            </div>
+
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <label class="settings-label">
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Prix minimum par séance'
+                            : 'Minimum Session Price'
+                        }}
+
+                    </label>
+
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            $
+                        </span>
+
+                        <input
+                            type="number"
+                            name="minimum_session_price"
+                            class="form-control"
+                            min="1"
+                            max="10000"
+                            step="0.01"
+                            value="{{ old(
+                                'minimum_session_price',
+                                $minimumSessionPrice
+                            ) }}"
+                            required
+                        >
+
+                        <span class="input-group-text">
+                            CAD
+                        </span>
+
+                    </div>
+
+
+                    <small class="settings-help">
+
+                        {{ app()->getLocale() === 'fr'
+                            ? 'Les instructeurs ne pourront pas fixer un prix inférieur à ce montant.'
+                            : 'Instructors will not be able to set a price below this amount.'
+                        }}
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="settings-section mt-4">
+    <div class="settings-section-header">
+        <div>
+            <h4 class="settings-section-title">
+                {{ app()->getLocale() === 'fr'
+                    ? 'Limites des promotions'
+                    : 'Promotion Limits'
+                }}
+            </h4>
+
+            <p class="settings-section-description">
+                {{ app()->getLocale() === 'fr'
+                    ? 'Définissez le rabais maximal que les instructeurs peuvent offrir.'
+                    : 'Set the maximum discount instructors can offer.'
+                }}
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6 mb-3">
+            <label
+                for="maximumPackageDiscountPercent"
+                class="form-label"
+            >
+                {{ app()->getLocale() === 'fr'
+                    ? 'Rabais maximum — forfaits'
+                    : 'Maximum Package Discount'
+                }}
+            </label>
+
+            <div class="input-group">
+                <input
+                    type="number"
+                    name="maximum_package_discount_percent"
+                    id="maximumPackageDiscountPercent"
+                    class="form-control"
+                    min="1"
+                    max="100"
+                    step="1"
+                    value="{{ old(
+                        'maximum_package_discount_percent',
+                        $maximumPackageDiscountPercent
+                    ) }}"
+                    required
+                >
+
+                <span class="input-group-text">%</span>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label
+                for="maximumDiscountCodePercent"
+                class="form-label"
+            >
+                {{ app()->getLocale() === 'fr'
+                    ? 'Rabais maximum — codes promotionnels'
+                    : 'Maximum Discount Code Discount'
+                }}
+            </label>
+
+            <div class="input-group">
+                <input
+                    type="number"
+                    name="maximum_discount_code_percent"
+                    id="maximumDiscountCodePercent"
+                    class="form-control"
+                    min="1"
+                    max="100"
+                    step="1"
+                    value="{{ old(
+                        'maximum_discount_code_percent',
+                        $maximumDiscountCodePercent
+                    ) }}"
+                    required
+                >
+
+                <span class="input-group-text">%</span>
+            </div>
+        </div>
+
+    </div>
+</div>
         {{-- =================================================
            PROFILE MEDIA LIMITS
         ================================================== --}}
@@ -1449,6 +1613,81 @@
         </div>
 
 
+        {{-- =================================================
+   DANCEPAIR MESSAGE ICON
+================================================== --}}
+
+<div class="settings-section">
+
+    <div class="settings-section-title">
+
+        {{ app()->getLocale() === 'fr'
+            ? 'Icône des messages DancePair'
+            : 'DancePair Message Icon'
+        }}
+
+    </div>
+
+
+    <div class="settings-section-subtitle">
+
+        {{ app()->getLocale() === 'fr'
+            ? 'Choisissez si l’icône flottante des messages DancePair doit être affichée aux clients.'
+            : 'Choose whether the floating DancePair message icon is visible to clients.'
+        }}
+
+    </div>
+
+
+    <input
+        type="hidden"
+        name="show_platform_message_widget"
+        value="0"
+    >
+
+
+    <div class="form-check form-switch">
+
+        <input
+            type="checkbox"
+            class="form-check-input"
+            id="showPlatformMessageWidget"
+            name="show_platform_message_widget"
+            value="1"
+            @checked(
+                old(
+                    'show_platform_message_widget',
+                    $showPlatformMessageWidget
+                )
+            )
+        >
+
+
+        <label
+            class="form-check-label"
+            for="showPlatformMessageWidget"
+        >
+
+            {{ app()->getLocale() === 'fr'
+                ? 'Afficher l’icône de messages'
+                : 'Show message icon'
+            }}
+
+        </label>
+
+    </div>
+
+
+    <small class="settings-help">
+
+        {{ app()->getLocale() === 'fr'
+            ? 'Si cette option est désactivée, l’icône flottante DancePair ne sera pas affichée aux étudiants et aux instructeurs.'
+            : 'When disabled, the floating DancePair icon will not be shown to students or instructors.'
+        }}
+
+    </small>
+
+</div>
 
         {{-- SAVE BUTTON INSIDE PROFILE MEDIA LIMITS --}}
 

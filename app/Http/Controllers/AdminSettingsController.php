@@ -28,6 +28,11 @@ class AdminSettingsController extends Controller
             15
         );
 
+        $minimumSessionPrice = (float) Setting::getValue(
+            'minimum_session_price',
+            20
+        );
+
         $profilePhotoMaxMb = (int) Setting::getValue(
             'profile_photo_max_mb',
             5
@@ -37,6 +42,22 @@ class AdminSettingsController extends Controller
             'intro_video_max_mb',
             50
         );
+
+        $maximumPackageDiscountPercent = (int) Setting::getValue(
+            'maximum_package_discount_percent',
+            50
+        );
+
+        $maximumDiscountCodePercent = (int) Setting::getValue(
+            'maximum_discount_code_percent',
+            50
+        );
+
+        $showPlatformMessageWidget =
+            (int) Setting::getValue(
+                'show_platform_message_widget',
+                1
+            ) === 1;
 
 
         /*
@@ -67,10 +88,14 @@ class AdminSettingsController extends Controller
             compact(
                 'admin',
                 'platformCommissionPercent',
+                'minimumSessionPrice',
                 'commissionHistory',
                 'danceStyles',
                 'profilePhotoMaxMb',
-                'introVideoMaxMb'
+                'maximumPackageDiscountPercent',
+                'maximumDiscountCodePercent',
+                'introVideoMaxMb',
+                'showPlatformMessageWidget'
             )
         );
     }
@@ -114,6 +139,13 @@ class AdminSettingsController extends Controller
                 'max:100',
             ],
 
+            'minimum_session_price' => [
+                'required',
+                'numeric',
+                'min:1',
+                'max:10000',
+            ],
+
             'profile_photo_max_mb' => [
                 'required',
                 'integer',
@@ -126,6 +158,25 @@ class AdminSettingsController extends Controller
                 'integer',
                 'min:1',
                 'max:60',
+            ],
+
+            'maximum_package_discount_percent' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:100',
+            ],
+
+            'maximum_discount_code_percent' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:100',
+            ],
+
+            'show_platform_message_widget' => [
+                'required',
+                'boolean',
             ],
         ]);
 
@@ -203,6 +254,43 @@ class AdminSettingsController extends Controller
         Setting::setValue(
             'platform_commission_percent',
             $newCommissionPercent
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | MINIMUM SESSION PRICE
+        |--------------------------------------------------------------------------
+        */
+
+        Setting::setValue(
+            'minimum_session_price',
+            (float) $validated[
+                'minimum_session_price'
+            ]
+        );
+
+        Setting::setValue(
+            'maximum_package_discount_percent',
+            (int) $validated[
+                'maximum_package_discount_percent'
+            ]
+        );
+
+        Setting::setValue(
+            'maximum_discount_code_percent',
+            (int) $validated[
+                'maximum_discount_code_percent'
+            ]
+        );
+
+        Setting::setValue(
+            'show_platform_message_widget',
+            $request->boolean(
+                'show_platform_message_widget'
+            )
+                ? 1
+                : 0
         );
 
 

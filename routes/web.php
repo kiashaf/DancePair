@@ -22,6 +22,7 @@ use App\Http\Controllers\TeacherReviewController;
 
 use App\Http\Controllers\TeacherEarningController;
 
+use App\Http\Controllers\TeacherPromotionController;
 
 
 use App\Http\Controllers\StudentDashboardController;
@@ -38,6 +39,7 @@ use App\Http\Controllers\StudentReviewController;
 
 use App\Http\Controllers\StudentPaymentController;
 
+use App\Http\Controllers\StudentPackageController;
 
 
 use App\Http\Controllers\AdminDashboardController;
@@ -59,6 +61,8 @@ use App\Http\Controllers\AdminConversationController;
 use App\Http\Controllers\AdminPageViewController;
 
 use App\Http\Controllers\AdminPendingDanceStyleController;
+
+use App\Http\Controllers\AdminImpersonationController;
 
 use App\Http\Controllers\HomeController;
 
@@ -883,7 +887,7 @@ Route::middleware([
 
     'auth',
 
-    'verified',
+    'verified.impersonation',
 
 ])->group(function () {
 
@@ -979,7 +983,7 @@ Route::post(
 
             'auth',
 
-            'verified',
+            'verified.impersonation',
 
         ])
 
@@ -999,7 +1003,7 @@ Route::post(
 
                 'auth',
 
-                'verified',
+                'verified.impersonation',
 
             ])
 
@@ -1049,9 +1053,17 @@ Route::middleware([
 
     'auth',
 
-    'verified',
+    'verified.impersonation',
 
 ])->group(function () {
+
+    Route::post(
+        '/impersonate/stop',
+        [
+            AdminImpersonationController::class,
+            'stop',
+        ]
+    )->name('admin.impersonate.stop');
 
 
 
@@ -1382,6 +1394,43 @@ Route::delete(
     )->name('teacher.earnings');
 
 
+    /*
+|--------------------------------------------------------------------------
+| Promotions
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/teacher/promotions',
+    [TeacherPromotionController::class, 'index']
+)->name('teacher.promotions.index');
+
+Route::get(
+    '/teacher/promotions/create',
+    [TeacherPromotionController::class, 'create']
+)->name('teacher.promotions.create');
+
+Route::post(
+    '/teacher/promotions',
+    [TeacherPromotionController::class, 'store']
+)->name('teacher.promotions.store');
+
+Route::get(
+    '/teacher/promotions/{promotion}/edit',
+    [TeacherPromotionController::class, 'edit']
+)->name('teacher.promotions.edit');
+
+Route::put(
+    '/teacher/promotions/{promotion}',
+    [TeacherPromotionController::class, 'update']
+)->name('teacher.promotions.update');
+
+Route::delete(
+    '/teacher/promotions/{promotion}',
+    [TeacherPromotionController::class, 'destroy']
+)->name('teacher.promotions.destroy');
+
+
 
 
 
@@ -1678,6 +1727,21 @@ Route::delete(
         [StudentPaymentController::class, 'receipt']
 
     )->name('student.payments.receipt');
+    /*
+|--------------------------------------------------------------------------
+| Student Packages
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/student/packages/{teacher}/{promotion}/checkout',
+    [StudentPackageController::class, 'checkout']
+)->name('student.packages.checkout');
+
+Route::get(
+    '/student/packages/{studentPackage}/success',
+    [StudentPackageController::class, 'success']
+)->name('student.packages.success');
 
 
 
@@ -2102,7 +2166,13 @@ Route::get(
 
     )->name('admin.students.update');
 
-
+    Route::post(
+        '/admin/impersonate/{user}',
+        [
+            AdminImpersonationController::class,
+            'start',
+        ]
+    )->name('admin.impersonate.start');
 
     Route::post(
 

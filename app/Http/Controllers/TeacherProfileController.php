@@ -55,6 +55,10 @@ class TeacherProfileController extends Controller
             Auth::id()
 
         )->firstOrFail();
+        $minimumSessionPrice = (float) Setting::getValue(
+            'minimum_session_price',
+            20
+        );
 
 
 
@@ -170,7 +174,9 @@ class TeacherProfileController extends Controller
 
                 'selectedProvince',
 
-                'cities'
+                'cities',
+
+                'minimumSessionPrice'
 
             )
 
@@ -203,6 +209,10 @@ class TeacherProfileController extends Controller
                 $user->id
 
             )->firstOrFail();
+            $minimumSessionPrice = (float) Setting::getValue(
+                'minimum_session_price',
+                20
+            );
 
 
 
@@ -452,7 +462,7 @@ class TeacherProfileController extends Controller
 
                     'numeric',
 
-                    'min:0',
+                    'min:' . $minimumSessionPrice,
 
                 ],
 
@@ -612,7 +622,7 @@ class TeacherProfileController extends Controller
 
                     'numeric',
 
-                    'min:0',
+                    'min:' . $minimumSessionPrice,
 
                     'max:99999.99',
 
@@ -656,7 +666,7 @@ class TeacherProfileController extends Controller
 
                     'numeric',
 
-                    'min:0',
+                    'min:' . $minimumSessionPrice,
 
                     'max:99999.99',
 

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\TrackPageView;
+use App\Http\Middleware\VerifiedOrImpersonating;
 
 return Application::configure(
     basePath: dirname(__DIR__)
@@ -14,6 +15,8 @@ return Application::configure(
     ->withRouting(
 
         web: __DIR__ . '/../routes/web.php',
+
+        api: __DIR__ . '/../routes/api.php',
 
         commands: __DIR__ . '/../routes/console.php',
 
@@ -29,6 +32,11 @@ return Application::configure(
                     'stripe/webhook',
                 ]
             );
+
+            $middleware->alias([
+                'verified.impersonation' =>
+                    VerifiedOrImpersonating::class,
+            ]);
 
             $middleware->web(
                 append: [

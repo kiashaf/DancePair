@@ -720,18 +720,59 @@
                         $type =
                             $notification->data['type']
                             ?? 'default';
+                            $action =
+    $notification->data['action']
+    ?? null;
 
-                        $title =
-                            $notification->data['title']
-                            ?? __('student.notification');
+if ($type === 'booking_activity') {
 
-                        $message =
-                            $notification->data['message']
-                            ?? '';
+    if ($action === 'request_accepted') {
+        $type = 'booking_accepted';
+    }
+
+    if ($action === 'request_rejected') {
+        $type = 'booking_rejected';
+    }
+}
+$title =
+    app()->getLocale() === 'fr'
+        ? (
+            $notification->data['title_fr']
+            ?? $notification->data['title']
+            ?? __('student.notification')
+        )
+        : (
+            $notification->data['title_en']
+            ?? $notification->data['title']
+            ?? __('student.notification')
+        );
+
+        $message =
+    app()->getLocale() === 'fr'
+        ? (
+            $notification->data['message_fr']
+            ?? $notification->data['message']
+            ?? ''
+        )
+        : (
+            $notification->data['message_en']
+            ?? $notification->data['message']
+            ?? ''
+        );
 
                         $url =
                             $notification->data['url']
                             ?? '#';
+                            if (
+    $type === 'booking_accepted'
+    &&
+    !empty($notification->data['booking_id'])
+) {
+    $url = route(
+        'student.payments.show',
+        $notification->data['booking_id']
+    );
+}
 
                     @endphp
 

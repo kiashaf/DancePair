@@ -886,6 +886,189 @@
 
 
 {{-- =========================================================
+   ACTIVE PROMOTIONS
+========================================================= --}}
+
+@php
+    $visiblePromotions = $teacher->promotions
+        ->filter(function ($promotion) {
+
+            if (!in_array(
+                $promotion->type,
+                [
+                    'free_session',
+                    'discount_code',
+                ],
+                true
+            )) {
+                return false;
+            }
+
+            if (!$promotion->is_active) {
+                return false;
+            }
+
+            if (
+                $promotion->starts_at
+                &&
+                now()->lt($promotion->starts_at)
+            ) {
+                return false;
+            }
+
+            if (
+                $promotion->ends_at
+                &&
+                now()->gt($promotion->ends_at)
+            ) {
+                return false;
+            }
+
+            return true;
+        });
+@endphp
+
+
+@if($visiblePromotions->isNotEmpty())
+
+    <div class="card profile-card p-4 mb-4">
+
+        <div class="availability-header">
+
+            <h3>
+                {{ app()->getLocale() === 'fr'
+                    ? 'Promotions'
+                    : 'Promotions'
+                }}
+            </h3>
+
+            <small class="text-muted">
+
+                {{ app()->getLocale() === 'fr'
+                    ? 'Offres disponibles avec cet instructeur.'
+                    : 'Available offers from this instructor.'
+                }}
+
+            </small>
+
+        </div>
+
+
+        <div
+            style="
+                display:grid;
+                grid-template-columns:
+                    repeat(auto-fit, minmax(240px, 1fr));
+                gap:14px;
+            "
+        >
+
+            @foreach($visiblePromotions as $promotion)
+
+                {{-- =====================================================
+                   FIRST SESSION FREE
+                ====================================================== --}}
+
+                @if($promotion->type === 'free_session')
+
+                    <div
+                        style="
+                            padding:18px;
+                            border:1px solid #BBE4F7;
+                            border-radius:14px;
+                            background:#FFFFFF;
+                        "
+                    >
+
+                        <div
+                            style="
+                                font-size:15px;
+                                font-weight:700;
+                                color:#0369A1;
+                                margin-bottom:7px;
+                            "
+                        >
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Première séance gratuite'
+                                : 'First Session Free'
+                            }}
+                        </div>
+
+
+                        <div
+                            style="
+                                font-size:12px;
+                                line-height:1.55;
+                                color:#64748B;
+                            "
+                        >
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Votre première séance admissible avec cet instructeur est gratuite. Cette offre est appliquée automatiquement au paiement.'
+                                : 'Your eligible first session with this instructor is free. This offer is applied automatically at checkout.'
+                            }}
+                        </div>
+
+                    </div>
+
+                @endif
+
+
+                {{-- =====================================================
+                   DISCOUNT CODE
+                ====================================================== --}}
+
+                @if($promotion->type === 'discount_code')
+
+                    <div
+                        style="
+                            padding:18px;
+                            border:1px solid #BBE4F7;
+                            border-radius:14px;
+                            background:#FFFFFF;
+                        "
+                    >
+
+                        <div
+                            style="
+                                font-size:15px;
+                                font-weight:700;
+                                color:#0369A1;
+                                margin-bottom:7px;
+                            "
+                        >
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Code promotionnel disponible'
+                                : 'Discount Code Available'
+                            }}
+                        </div>
+
+
+                        <div
+                            style="
+                                font-size:12px;
+                                line-height:1.55;
+                                color:#64748B;
+                            "
+                        >
+                            {{ app()->getLocale() === 'fr'
+                                ? 'Cet instructeur offre des codes promotionnels privés. Demandez-lui un code dans votre conversation et entrez-le au moment du paiement.'
+                                : 'This instructor offers private discount codes. Ask the instructor for a code in your conversation and enter it during payment.'
+                            }}
+                        </div>
+
+                    </div>
+
+                @endif
+
+            @endforeach
+
+        </div>
+
+    </div>
+
+@endif
+
+{{-- =========================================================
    AVAILABLE CLASSES
 ========================================================= --}}
 

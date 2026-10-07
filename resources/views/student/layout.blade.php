@@ -5,38 +5,56 @@
 <head>
 
     <meta charset="UTF-8">
+
     <link rel="icon" type="image/png" href="{{ asset('logo/logo.png') }}">
-<link rel="shortcut icon" type="image/png" href="{{ asset('logo/logo.png') }}">
-<link rel="apple-touch-icon" href="{{ asset('logo/logo.png') }}">
+
+    <link rel="shortcut icon" type="image/png" href="{{ asset('logo/logo.png') }}">
+
+    <link rel="apple-touch-icon" href="{{ asset('logo/logo.png') }}">
+
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
 
+
     <title>
+
         @yield('title', __('student.panel')) | DancePair
+
     </title>
 
+
     @vite([
+
         'resources/css/app.css',
+
         'resources/js/app.js'
+
     ])
 
+
 </head>
+
 
 
 <body class="student-panel">
 
 
+
 @php
 
     $sidebarUnreadNotifications =
+
         auth()->check()
+
             ? auth()->user()->unreadNotifications()->count()
+
             : 0;
 
 @endphp
+
 
 
 <div class="container-fluid">
@@ -78,6 +96,7 @@
 
 
                 {{-- DASHBOARD --}}
+
                 <a
                     href="{{ route('student.dashboard') }}"
 
@@ -130,6 +149,7 @@
 
 
                 {{-- FIND TEACHERS --}}
+
                 <a
                     href="{{ route('student.teachers') }}"
 
@@ -145,6 +165,7 @@
 
 
                 {{-- BOOKINGS --}}
+
                 <a
                     href="{{ route('student.bookings') }}"
 
@@ -160,6 +181,7 @@
 
 
                 {{-- PAYMENTS --}}
+
                 <a
                     href="{{ route('student.payments.index') }}"
 
@@ -175,6 +197,7 @@
 
 
                 {{-- REVIEWS --}}
+
                 <a
                     href="{{ route('student.reviews') }}"
 
@@ -190,6 +213,7 @@
 
 
                 {{-- PROFILE --}}
+
                 <a
                     href="{{ route('student.profile.edit') }}"
 
@@ -254,6 +278,7 @@
 
 
             {{-- TOP BAR --}}
+
             <div
                 class="
                     topbar
@@ -274,6 +299,7 @@
 
 
                     {{-- MOBILE MENU BUTTON --}}
+
                     <button
                         type="button"
                         class="mobile-sidebar-toggle"
@@ -317,7 +343,9 @@
                     "
                 >
 
+
                     {{-- LANGUAGE SWITCH --}}
+
                     <div
                         style="
                             display:flex;
@@ -342,9 +370,11 @@
                             EN
                         </a>
 
+
                         <span style="color:#9CA3AF;">
                             /
                         </span>
+
 
                         <a
                             href="{{ route('language.switch', 'fr') }}"
@@ -363,11 +393,14 @@
                     </div>
 
 
+
                     {{-- NOTIFICATION INDICATOR --}}
+
                     <a
                         href="{{ route('student.dashboard') }}"
                         style="
                             position:relative;
+
                             width:38px;
                             height:38px;
 
@@ -426,22 +459,180 @@
                     </a>
 
 
-                    {{-- AVATAR --}}
-                    <div class="avatar">
 
-                        {{ strtoupper(
-                            substr(
-                                auth()->user()->name,
-                                0,
-                                1
-                            )
-                        ) }}
+                    {{-- =================================================
+                       AVATAR / USER MENU
+                    ================================================== --}}
+
+                    <div
+                        class="dp-user-menu"
+                        style="
+                            position:relative;
+                            flex-shrink:0;
+                        "
+                    >
+
+                        <button
+                            type="button"
+                            class="avatar"
+                            data-user-menu-toggle
+                            aria-expanded="false"
+                            aria-label="{{ app()->getLocale() === 'fr'
+                                ? 'Ouvrir le menu du compte'
+                                : 'Open account menu'
+                            }}"
+                            style="
+                                border:0;
+                                padding:0;
+                                margin:0;
+                                cursor:pointer;
+                                overflow:hidden;
+                            "
+                        >
+
+                            @if(auth()->user()->student?->profile_photo)
+
+                                <img
+                                    src="{{ asset(
+                                        'storage/' .
+                                        auth()->user()->student->profile_photo
+                                    ) }}"
+                                    alt="{{ auth()->user()->name }}"
+                                    style="
+                                        width:100%;
+                                        height:100%;
+                                        object-fit:cover;
+                                        border-radius:50%;
+                                        display:block;
+                                    "
+                                >
+
+                            @else
+
+                                {{ strtoupper(
+                                    substr(
+                                        auth()->user()->name,
+                                        0,
+                                        1
+                                    )
+                                ) }}
+
+                            @endif
+
+                        </button>
+
+
+
+                        {{-- DROPDOWN --}}
+
+                        <div
+                            data-user-menu-dropdown
+                            style="
+                                position:absolute;
+
+                                top:calc(100% + 10px);
+                                right:0;
+
+                                width:180px;
+
+                                display:none;
+
+                                padding:8px;
+
+                                border:1px solid #E5E7EB;
+                                border-radius:12px;
+
+                                background:#FFFFFF;
+
+                                box-shadow:
+                                    0 12px 30px
+                                    rgba(15,23,42,.14);
+
+                                z-index:99999;
+                            "
+                        >
+
+
+                            {{-- HOME --}}
+
+                            <a
+                                href="{{ route('home') }}"
+                                style="
+                                    display:block;
+
+                                    width:100%;
+
+                                    padding:10px 12px;
+
+                                    border-radius:8px;
+
+                                    color:#334155;
+
+                                    font-size:12px;
+                                    font-weight:700;
+
+                                    text-decoration:none;
+                                "
+                            >
+                                {{ app()->getLocale() === 'fr'
+                                    ? 'Accueil'
+                                    : 'Home'
+                                }}
+                            </a>
+
+
+
+                            {{-- SIGN OUT --}}
+
+                            <form
+                                method="POST"
+                                action="{{ route('logout') }}"
+                                style="margin:0;"
+                            >
+
+                                @csrf
+
+                                <button
+                                    type="submit"
+                                    style="
+                                        display:block;
+
+                                        width:100%;
+
+                                        padding:10px 12px;
+
+                                        border:0;
+                                        border-radius:8px;
+
+                                        background:transparent;
+
+                                        color:#DC2626;
+
+                                        font-size:12px;
+                                        font-weight:700;
+
+                                        text-align:left;
+
+                                        cursor:pointer;
+                                    "
+                                >
+                                    {{ app()->getLocale() === 'fr'
+                                        ? 'Déconnexion'
+                                        : 'Sign out'
+                                    }}
+                                </button>
+
+                            </form>
+
+                        </div>
 
                     </div>
+
 
                 </div>
 
             </div>
+
 
 
             <main class="p-4">
@@ -450,6 +641,7 @@
 
             </main>
 
+
         </div>
 
     </div>
@@ -457,7 +649,151 @@
 </div>
 
 
-@include('partials.platform-message-widget')
+
+{{-- =================================================
+   PLATFORM MESSAGE WIDGET
+================================================== --}}
+
+@if(
+
+    (int) \App\Models\Setting::getValue(
+
+        'show_platform_message_widget',
+
+        1
+
+    ) === 1
+
+)
+
+    @include('partials.platform-message-widget')
+
+@endif
+
+
+
+{{-- =================================================
+   AVATAR DROPDOWN SCRIPT
+================================================== --}}
+
+<script>
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const userMenu =
+            document.querySelector(
+                '.dp-user-menu'
+            );
+
+
+        if (!userMenu) {
+
+            return;
+        }
+
+
+        const toggle =
+            userMenu.querySelector(
+                '[data-user-menu-toggle]'
+            );
+
+
+        const dropdown =
+            userMenu.querySelector(
+                '[data-user-menu-dropdown]'
+            );
+
+
+        if (
+            !toggle
+            ||
+            !dropdown
+        ) {
+
+            return;
+        }
+
+
+        const closeMenu =
+            function () {
+
+                dropdown.style.display =
+                    'none';
+
+
+                toggle.setAttribute(
+                    'aria-expanded',
+                    'false'
+                );
+            };
+
+
+        toggle.addEventListener(
+            'click',
+            function (event) {
+
+                event.stopPropagation();
+
+
+                const isOpen =
+                    dropdown.style.display
+                    ===
+                    'block';
+
+
+                if (isOpen) {
+
+                    closeMenu();
+
+                    return;
+                }
+
+
+                dropdown.style.display =
+                    'block';
+
+
+                toggle.setAttribute(
+                    'aria-expanded',
+                    'true'
+                );
+            }
+        );
+
+
+        dropdown.addEventListener(
+            'click',
+            function (event) {
+
+                event.stopPropagation();
+            }
+        );
+
+
+        document.addEventListener(
+            'click',
+            closeMenu
+        );
+
+
+        document.addEventListener(
+            'keydown',
+            function (event) {
+
+                if (
+                    event.key
+                    ===
+                    'Escape'
+                ) {
+
+                    closeMenu();
+                }
+            }
+        );
+    }
+);
+</script>
 
 
 </body>
